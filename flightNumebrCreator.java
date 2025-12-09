@@ -20,8 +20,8 @@ public class flightNumebrCreator {
         // Seed + Airline Hash ensures unique numbers per airline
         Random flightNumberGenerator = new Random(dailySeed + fnc_AirlineCode.hashCode());
 
-        String airlineCodePath = "C:/Users/Joshua/Desktop/Database/Airlines/Airlines_Master.txt";
-        String timeTableMaster = "C:/Users/Joshua/Desktop/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        String airlineCodePath = "Database/Airlines/Airlines_Master.txt";
+        String timeTableMaster = "Database/Timetable/Departure_Timetable_Master - Copy.txt";
 
         // --- 2. GET PREFIX FROM MASTER FILE (e.g., PAL -> PR) ---
         File airlineCodeMaster = new File(airlineCodePath);
@@ -101,7 +101,7 @@ public class flightNumebrCreator {
     }
 
     public static boolean isNewDay() throws FileNotFoundException {
-        String datePath = "C:/Users/Joshua/Desktop/Database/Date.txt";
+        String datePath = "/Database/Date.txt";
         File dateFile = new File(datePath);
         LocalDate today = LocalDate.now();
 
@@ -135,7 +135,7 @@ public class flightNumebrCreator {
         return false;
     }
     private void updateDateFile(LocalDate today) throws FileNotFoundException {
-        File dateFile = new File("C:/Users/Joshua/Desktop/Database/Date.txt");
+        File dateFile = new File("Database/Date.txt");
         try (PrintWriter pw = new PrintWriter(dateFile)) {
             pw.write(today.toString());
         }

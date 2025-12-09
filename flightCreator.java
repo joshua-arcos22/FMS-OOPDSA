@@ -32,7 +32,7 @@ public class flightCreator {
     }
 
     public void blockCreator() throws FileNotFoundException{
-        String timeTable_Database =  "C:/Users/Joshua/Desktop/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        String timeTable_Database =  "Database/Timetable/Departure_Timetable_Master - Copy.txt";
         File scheduleReader = new File(timeTable_Database);
         Scanner scheduleLineReader = new Scanner(scheduleReader);
         boolean isExisting = false;
