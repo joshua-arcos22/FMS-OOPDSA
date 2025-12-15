@@ -47,11 +47,10 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         SearchContainer = new javax.swing.JPanel();
         SearchField = new javax.swing.JTextField();
         SearchButton = new javax.swing.JButton();
-        SortContainer = new javax.swing.JPanel();
-        Arrival = new javax.swing.JToggleButton();
-        Departures = new javax.swing.JToggleButton();
         BottomContainer = new javax.swing.JPanel();
         jToggleButton1 = new javax.swing.JToggleButton();
+        Arrival = new javax.swing.JToggleButton();
+        Departures = new javax.swing.JToggleButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         FlightTable = new javax.swing.JTable();
 
@@ -67,8 +66,21 @@ public class MainFlightDisplay extends javax.swing.JFrame {
 
         SearchContainer.setBackground(new java.awt.Color(255, 255, 255));
 
-        SearchField.setBackground(new java.awt.Color(255, 255, 255));
-        SearchField.setText("jTextField1");
+        SearchField.setForeground(new java.awt.Color(204, 204, 204));
+        SearchField.setText("Search for a flight");
+        SearchField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                SearchFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                SearchFieldFocusLost(evt);
+            }
+        });
+        SearchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchFieldActionPerformed(evt);
+            }
+        });
 
         SearchButton.setBackground(new java.awt.Color(0, 102, 255));
         SearchButton.setText("Search");
@@ -93,9 +105,30 @@ public class MainFlightDisplay extends javax.swing.JFrame {
             .addComponent(SearchButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        SortContainer.setBackground(new java.awt.Color(255, 255, 255));
-        SortContainer.setMaximumSize(new java.awt.Dimension(356, 40));
-        SortContainer.setMinimumSize(new java.awt.Dimension(356, 40));
+        javax.swing.GroupLayout TopContainerLayout = new javax.swing.GroupLayout(TopContainer);
+        TopContainer.setLayout(TopContainerLayout);
+        TopContainerLayout.setHorizontalGroup(
+            TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TopContainerLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(Title, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(SearchContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
+        );
+        TopContainerLayout.setVerticalGroup(
+            TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TopContainerLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SearchContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Title))
+                .addContainerGap(39, Short.MAX_VALUE))
+        );
+
+        BottomContainer.setBackground(new java.awt.Color(255, 255, 255));
+
+        jToggleButton1.setText("BACK");
 
         Arrival.setBackground(new java.awt.Color(0, 153, 255));
         Arrival.setText("Arrival");
@@ -121,70 +154,34 @@ public class MainFlightDisplay extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout SortContainerLayout = new javax.swing.GroupLayout(SortContainer);
-        SortContainer.setLayout(SortContainerLayout);
-        SortContainerLayout.setHorizontalGroup(
-            SortContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SortContainerLayout.createSequentialGroup()
-                .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        SortContainerLayout.setVerticalGroup(
-            SortContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SortContainerLayout.createSequentialGroup()
-                .addGroup(SortContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6))
-        );
-
-        javax.swing.GroupLayout TopContainerLayout = new javax.swing.GroupLayout(TopContainer);
-        TopContainer.setLayout(TopContainerLayout);
-        TopContainerLayout.setHorizontalGroup(
-            TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(TopContainerLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(Title, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(SearchContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
-            .addComponent(SortContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        TopContainerLayout.setVerticalGroup(
-            TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(TopContainerLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(SearchContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Title))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                .addComponent(SortContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        BottomContainer.setBackground(new java.awt.Color(255, 255, 255));
-
-        jToggleButton1.setText("BACK");
-
         javax.swing.GroupLayout BottomContainerLayout = new javax.swing.GroupLayout(BottomContainer);
         BottomContainer.setLayout(BottomContainerLayout);
         BottomContainerLayout.setHorizontalGroup(
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BottomContainerLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BottomContainerLayout.createSequentialGroup()
+                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(BottomContainerLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(53, 53, 53))))
         );
         BottomContainerLayout.setVerticalGroup(
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BottomContainerLayout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
+                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
 
-        FlightTable.setBackground(new java.awt.Color(255, 255, 255));
         FlightTable.setForeground(new java.awt.Color(0, 102, 204));
         FlightTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -230,17 +227,19 @@ public class MainFlightDisplay extends javax.swing.JFrame {
             .addComponent(TopContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(BottomContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(ContainerLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 4, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         ContainerLayout.setVerticalGroup(
             ContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ContainerLayout.createSequentialGroup()
                 .addComponent(TopContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(BottomContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(BottomContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -279,7 +278,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         model.setRowCount(0);
 
         // 3. Define the file path
-        String filePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        String filePath = "C:/Users/alken/OneDrive/Desktop/SCHOOL/BU Sophoromore IT/DSA Project/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
         File file = new File(filePath);
 
         try {
@@ -325,7 +324,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
     model.setRowCount(0);
 
     // 3. Define the file path
-    String filePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+    String filePath = "C:/Users/alken/OneDrive/Desktop/SCHOOL/BU Sophoromore IT/DSA Project/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
     File file = new File(filePath);
 
     try {
@@ -379,6 +378,26 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         
     }//GEN-LAST:event_DeparturesActionPerformed
 
+    private void SearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFieldActionPerformed
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_SearchFieldActionPerformed
+
+    private void SearchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusGained
+        // TODO add your handling code here:
+        
+        SearchField.setText("");
+        SearchField.setForeground(Color.BLACK);
+    }//GEN-LAST:event_SearchFieldFocusGained
+
+    private void SearchFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusLost
+        // TODO add your handling code here:
+        
+        SearchField.setText("Search for a flight");
+        SearchField.setForeground(Color.LIGHT_GRAY);
+    }//GEN-LAST:event_SearchFieldFocusLost
+
     /**
      * @param args the command line arguments
      */
@@ -413,7 +432,6 @@ public class MainFlightDisplay extends javax.swing.JFrame {
     private javax.swing.JButton SearchButton;
     private javax.swing.JPanel SearchContainer;
     private javax.swing.JTextField SearchField;
-    private javax.swing.JPanel SortContainer;
     private javax.swing.JLabel Title;
     private javax.swing.JPanel TopContainer;
     private javax.swing.JPanel jPanel1;
