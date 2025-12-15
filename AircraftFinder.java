@@ -1,4 +1,4 @@
-package com.mycompany.lipad_bantay;
+
 import java.io.*;
 import java.util.*;;
 
