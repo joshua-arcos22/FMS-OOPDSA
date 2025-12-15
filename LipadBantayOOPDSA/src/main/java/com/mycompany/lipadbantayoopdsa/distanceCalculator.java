@@ -14,46 +14,49 @@ public class distanceCalculator {
     private double latitude_2;
     private double longitude_2;
 
-    // Matches your provided constructor
     public distanceCalculator(String departure_airportCode, String arrival_airportCode, String aircraftType){
-        // Extract first 4 characters for ICAO code (e.g. "RPVM" from "RPVM(Mactan)")
+        // Extract first 4 characters for ICAO code
         this.departure_airportCode = departure_airportCode.substring(0,4).toUpperCase();
         this.arrival_airportCode = arrival_airportCode.substring(0,4).toUpperCase();
         this.aircraftType = aircraftType;
     }
 
-    // MODIFIED: Returns duration in minutes (int) so the other class can use it.
-    // Also fixed the math division logic to ensure precision.
     public int calculateFlightDurationMinutes() throws FileNotFoundException {
-        // Adjusted paths to match typical flat file execution, or update to "Database/Airports/..." if you prefer
-        String dc_airportMaster = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt"; 
-        String dc_aircraftTypeMaster = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
+        // UPDATED: Relative paths starting from the Project Root
+        String dc_airportMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt"; 
+        String dc_aircraftTypeMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
         
         File dc_airportReader = new File(dc_airportMaster);
         File dc_aircraftReader = new File(dc_aircraftTypeMaster);
 
         // 1. Get Origin Coordinates
-        try (Scanner scanner = new Scanner(dc_airportReader)) {
-            while(scanner.hasNextLine()){
-                String line = scanner.nextLine();
-                String[] parts = line.split("-");
-                if (parts.length > 4 && departure_airportCode.equals(parts[1])){
-                    latitude_1 = parseCoordinate(parts[3]);
-                    longitude_1 = parseCoordinate(parts[4]);
-                    break;
+        if (dc_airportReader.exists()) {
+            try (Scanner scanner = new Scanner(dc_airportReader)) {
+                while(scanner.hasNextLine()){
+                    String line = scanner.nextLine();
+                    String[] parts = line.split("-");
+                    if (parts.length > 4 && departure_airportCode.equals(parts[1])){
+                        latitude_1 = parseCoordinate(parts[3]);
+                        longitude_1 = parseCoordinate(parts[4]);
+                        break;
+                    }
                 }
             }
+        } else {
+             System.err.println("Error: Airport Database not found at " + dc_airportReader.getAbsolutePath());
         }
 
         // 2. Get Destination Coordinates
-        try (Scanner scanner = new Scanner(dc_airportReader)) {
-            while(scanner.hasNextLine()){
-                String line = scanner.nextLine();
-                String[] parts = line.split("-");
-                if (parts.length > 4 && arrival_airportCode.equals(parts[1])){
-                    latitude_2 = parseCoordinate(parts[3]);
-                    longitude_2 = parseCoordinate(parts[4]);
-                    break;
+        if (dc_airportReader.exists()) {
+            try (Scanner scanner = new Scanner(dc_airportReader)) {
+                while(scanner.hasNextLine()){
+                    String line = scanner.nextLine();
+                    String[] parts = line.split("-");
+                    if (parts.length > 4 && arrival_airportCode.equals(parts[1])){
+                        latitude_2 = parseCoordinate(parts[3]);
+                        longitude_2 = parseCoordinate(parts[4]);
+                        break;
+                    }
                 }
             }
         }
@@ -74,30 +77,32 @@ public class distanceCalculator {
 
         // 4. Get Speed and Calculate Duration
         int speed = 0;
-        try (Scanner scanner = new Scanner(dc_aircraftReader)) {
-            while(scanner.hasNextLine()){
-                String line = scanner.nextLine();
-                String[] parts = line.split("-");
-                if (aircraftType.equals(parts[0])){
-                    speed = Integer.parseInt(parts[1]); // Aircraft speed
-                    break;
+        if (dc_aircraftReader.exists()) {
+            try (Scanner scanner = new Scanner(dc_aircraftReader)) {
+                while(scanner.hasNextLine()){
+                    String line = scanner.nextLine();
+                    String[] parts = line.split("-");
+                    if (aircraftType.equals(parts[0])){
+                        speed = Integer.parseInt(parts[1]); 
+                        break;
+                    }
                 }
             }
+        } else {
+            System.err.println("Error: Aircraft Database not found at " + dc_aircraftReader.getAbsolutePath());
         }
 
-        if (speed == 0) return 0; // Avoid division by zero if aircraft not found
+        if (speed == 0) return 0; 
 
         double durationHours = distanceKm / speed;
-        return (int) Math.round(durationHours * 60); // Return total minutes
+        return (int) Math.round(durationHours * 60); 
     }
 
-    // Helper to parse "12/18/39/N" format correctly
     private double parseCoordinate(String raw) {
         String[] parts = raw.split("/");
         double deg = Double.parseDouble(parts[0]);
         double min = Double.parseDouble(parts[1]);
         double sec = Double.parseDouble(parts[2]);
-        // Fixed: Use 60.0 and 3600.0 to force double division
         return deg + (min / 60.0) + (sec / 3600.0);
     }
 }

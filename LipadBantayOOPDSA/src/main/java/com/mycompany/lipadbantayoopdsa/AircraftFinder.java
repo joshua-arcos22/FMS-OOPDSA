@@ -13,8 +13,14 @@ public class AircraftFinder {
 
 
     public void payloadGenerator() throws FileNotFoundException{
-        String aircraftMasterFile = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
-        File aircraftFopen = new File(aircraftMasterFile);
+        String aircraftFopen = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
+        File file = new File(aircraftFopen);
+        // Optional: Check if it works
+        if (file.exists()) {
+        } else {
+            System.out.println("Error: File not found at " + file.getAbsolutePath());
+        }
+        
         Scanner aircraftMasterReader = new Scanner(aircraftFopen);
 
         while (aircraftMasterReader.hasNextLine()) {
@@ -32,14 +38,14 @@ public class AircraftFinder {
 
         
 
-        if (aircraft_MaxPax == 0){
-            Random aircraftPayloadGenerator_Freighter = new Random();
-            int aircraft_payloadCargo = aircraftPayloadGenerator_Freighter.nextInt(aircraft_MaxCargo);
-            System.out.println("Current Passenger Load : " + 0 + " PAX");
-            System.out.println("Current Cargo Load: " + aircraft_payloadCargo  + " KG");
-        } 
+//        if (aircraft_MaxPax == 0){
+//            Random aircraftPayloadGenerator_Freighter = new Random();
+//            int aircraft_payloadCargo = aircraftPayloadGenerator_Freighter.nextInt(aircraft_MaxCargo);
+//            System.out.println("Current Passenger Load : " + 0 + " PAX");
+//            System.out.println("Current Cargo Load: " + aircraft_payloadCargo  + " KG");
+//        } 
         
-        else if (aircraft_MaxPax > 0) {
+        if (aircraft_MaxPax > 0) {
             Random aircraftPayloadGenerator_Commercial = new Random();
             int aircraft_payloadPax = aircraftPayloadGenerator_Commercial.nextInt(aircraft_MaxPax);
 

@@ -1,8 +1,7 @@
 package com.mycompany.lipadbantayoopdsa;
-import java.io.*;
-import java.text.BreakIterator;
-import java.util.*;
 
+import java.io.*;
+import java.util.*;
 
 public class flightCreator {
     private String fc_AirlineCode;
@@ -11,46 +10,47 @@ public class flightCreator {
     private String fc_ArrivingAirport;
     private String fc_Day;
 
-
-
-
-    flightCreator(  String fc_AirlineCode,
-                    String fc_ArrivingAirport,
-                    String fc_DepartureAirport,
-                    String fc_Day
-                    ) throws   FileNotFoundException {
+    flightCreator(String fc_AirlineCode,
+                  String fc_ArrivingAirport,
+                  String fc_DepartureAirport,
+                  String fc_Day
+                  ) throws FileNotFoundException {
 
         this.fc_AirlineCode = fc_AirlineCode;
         this.fc_DepartureAirport = fc_DepartureAirport.toUpperCase();
         this.fc_ArrivingAirport = fc_ArrivingAirport.toUpperCase();
         this.fc_Day = fc_Day.toUpperCase();
 
-            flightNumebrCreator flightNumber = new flightNumebrCreator();
-            flightNumber.fnc_InitializeAllFlightNumbers();
-            
-            ArrivalTimetableGenerator.generate();
-
-
-
+        // Note: Make sure this class name matches your actual file (Typo: flightNumebrCreator vs flightNumberCreator)
+        flightNumebrCreator flightNumber = new flightNumebrCreator();
+        flightNumber.fnc_InitializeAllFlightNumbers();
+        
+        ArrivalTimetableGenerator.generate();
     }
 
-    public void blockCreator() throws FileNotFoundException{
-        String timeTable_Database =  "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+    public void blockCreator() throws FileNotFoundException {
+        // UPDATED: Relative path starting from Project Root
+        String timeTable_Database = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        
         File scheduleReader = new File(timeTable_Database);
+        
+        // Simple safety check
+        if (!scheduleReader.exists()) {
+             System.err.println("Error: Timetable file not found at " + scheduleReader.getAbsolutePath());
+             return;
+        }
+
         Scanner scheduleLineReader = new Scanner(scheduleReader);
         boolean isExisting = false;
+        
         while (scheduleLineReader.hasNextLine()) {
             String lineReader = scheduleLineReader.nextLine();
             String timeTableDetails[] = lineReader.split("-");
 
-
-
-             if(fc_AirlineCode.equalsIgnoreCase(timeTableDetails[0]) &&  
-                timeTableDetails[2].substring(0,4).equals(fc_DepartureAirport) && 
-                timeTableDetails[3].substring(0,4).equals(fc_ArrivingAirport) &&
-                fc_Day.equalsIgnoreCase("ALL")) {
-
-
+            if(fc_AirlineCode.equalsIgnoreCase(timeTableDetails[0]) &&  
+               timeTableDetails[2].substring(0,4).equals(fc_DepartureAirport) && 
+               timeTableDetails[3].substring(0,4).equals(fc_ArrivingAirport) &&
+               fc_Day.equalsIgnoreCase("ALL")) {
 
                 System.out.println("Airline: " + timeTableDetails[0]);
                 System.out.println("Flight Number: " + "Not implemented");
@@ -66,18 +66,17 @@ public class flightCreator {
                 distanceCalculator flightDistance = new distanceCalculator(timeTableDetails[2].substring(0, 4), timeTableDetails[3].substring(0, 4), timeTableDetails[1]);
                 flightDistance.calculateFlightDurationMinutes();
 
-                
-
                 System.out.println();
                 isExisting = true;
             }  
             // if (!(isExisting)) {
-            //     System.out.println("Flight Does not Exist");
-            //     break;
-                
+            //      System.out.println("Flight Does not Exist");
+            //      break;
             // }
         }
+        scheduleLineReader.close(); // Good practice to close the scanner
     }
+}
 
 
 
@@ -133,4 +132,3 @@ public class flightCreator {
 
 
 
-}

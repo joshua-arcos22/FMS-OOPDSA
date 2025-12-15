@@ -1,28 +1,26 @@
-package com.mycompany.lipadbantayoopdsa; // Make sure package matches your project
+package com.mycompany.lipadbantayoopdsa; 
 
 import java.io.*;
 import java.util.Scanner;
 
 public class ArrivalTimetableGenerator {
 
-    // You can update these paths to match your absolute file paths if needed
-    private static final String INPUT_PATH = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
-    private static final String OUTPUT_PATH = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+    // UPDATED: Relative paths starting from the Project Root
+    // This looks inside: LipadBantayOOPDSA -> src -> main -> java -> ...
+    private static final String INPUT_PATH = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+    private static final String OUTPUT_PATH = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
 
-    // This is the method you will call from flightCreator
     public static void generate() {
         System.out.println("--- Starting Arrival Timetable Generation ---");
         try {
-            // Check if input file exists before proceeding
+            // Check if input file exists using the relative path
             File checkFile = new File(INPUT_PATH);
-            if (!checkFile.exists()) {
-                // Fallback for the absolute path found in your code snippet if relative fails
-                // You can edit this path to match your exact computer setup
-                 checkFile = new File("C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt");
-            }
+            
+            // (Removed the specific "C:/Users/Joshua..." fallback here so it works for everyone)
             
             if (!checkFile.exists()) {
-                System.err.println("Error: Departure Timetable file not found.");
+                // Helpful error message telling the user exactly where it looked
+                System.err.println("Error: Departure Timetable file not found at: " + checkFile.getAbsolutePath());
                 return;
             }
 
@@ -33,7 +31,6 @@ public class ArrivalTimetableGenerator {
                 String line = fileScanner.nextLine().trim();
                 if (line.isEmpty()) continue;
 
-                // Format: AIRLINE-AIRCRAFT-ORIGIN-DEST-FREQ-TIME-FLIGHTNUM
                 String[] parts = line.split("-");
 
                 if (parts.length >= 7) {
@@ -46,21 +43,16 @@ public class ArrivalTimetableGenerator {
                     String flightNum = parts[6];
 
                     // --- CALLING YOUR PROVIDED CLASS ---
-                    // using the constructor from distanceCalculator.java
                     distanceCalculator dc = new distanceCalculator(origin, dest, aircraft);
                     
-                    // using the method to get minutes
                     int durationMinutes = dc.calculateFlightDurationMinutes();
-
-                    // Calculate Arrival Time (HHmm)
                     String arrivalTime = calculateArrivalTime(depTime, durationMinutes);
 
-                    // Swap Origin/Dest and write the new line
                     String newLine = String.join("-", 
                         airline, 
                         aircraft, 
-                        dest,   // Swapped
-                        origin, // Swapped
+                        dest,   
+                        origin, 
                         freq, 
                         arrivalTime, 
                         flightNum
@@ -79,7 +71,6 @@ public class ArrivalTimetableGenerator {
         }
     }
 
-    // Helper method
     private static String calculateArrivalTime(String depTime, int durationMinutes) {
         try {
             int hours = Integer.parseInt(depTime.substring(0, 2));

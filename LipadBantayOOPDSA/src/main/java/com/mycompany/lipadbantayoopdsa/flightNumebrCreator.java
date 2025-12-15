@@ -6,12 +6,12 @@ import java.time.*;
 
 public class flightNumebrCreator {
 
-    // Defined file paths
-    private final String airlineCodePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt";
-    private final String timeTableMaster = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
-    private final String datePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Date.txt";
+    // UPDATED: Relative paths starting from the Project Root
+    private final String airlineCodePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt";
+    private final String timeTableMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+    private final String datePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Date.txt";
 
-    // Constructor no longer needs specific airline code
+    // Constructor 
     public flightNumebrCreator() {
     }
 
@@ -21,7 +21,6 @@ public class flightNumebrCreator {
         long dailySeed = today.toEpochDay();
 
         // --- 2. LOAD AIRLINE PREFIXES INTO A MAP ---
-        // key = AirlineName (e.g., PAL), value = Prefix (e.g., PR)
         Map<String, String> airlinePrefixMap = new HashMap<>();
         File airlineCodeMaster = new File(airlineCodePath);
 
@@ -31,7 +30,6 @@ public class flightNumebrCreator {
                     String line = masterReader.nextLine().trim();
                     if (!line.isEmpty()) {
                         String[] parts = line.split("-");
-                        // Expecting format: AIRLINE-PREFIX (e.g., PAL-PR)
                         if (parts.length >= 2) {
                             airlinePrefixMap.put(parts[0].toUpperCase(), parts[1]);
                         }
@@ -39,7 +37,7 @@ public class flightNumebrCreator {
                 }
             }
         } else {
-            System.out.println("Error: Airline Master file not found at " + airlineCodePath);
+            System.err.println("Error: Airline Master file not found at " + airlineCodeMaster.getAbsolutePath());
             return;
         }
 
@@ -52,30 +50,24 @@ public class flightNumebrCreator {
                 while (timeTableReader.hasNextLine()) {
                     String currentLine = timeTableReader.nextLine();
                     
-                    // Skip empty lines
                     if (currentLine.trim().isEmpty()) {
                         updatedContent.add(currentLine);
                         continue;
                     }
 
-                    // SPLIT THE LINE
                     String[] parts = currentLine.split("-");
-                    String airlineCode = parts[0].toUpperCase(); // First part is the airline (e.g., PAL, AIRASIA)
+                    String airlineCode = parts[0].toUpperCase(); 
 
-                    // CHECK: Do we have a prefix for this airline?
                     if (airlinePrefixMap.containsKey(airlineCode)) {
                         String prefix = airlinePrefixMap.get(airlineCode);
                         
-                        // Clean up the end of the line (Remove existing Flight IDs if present)
                         String lastPart = parts[parts.length - 1];
                         String baseLine = currentLine;
 
-                        // Check if the last part is a Flight ID (contains letters)
-                        // This prevents appending a new ID to a line that already has one
+                        // Check if existing ID is present
                         boolean hasExistingID = lastPart.matches(".*[A-Za-z].*");
                         
                         if (hasExistingID) {
-                            // Find the last dash and cut off the old ID
                             int lastDash = currentLine.lastIndexOf("-");
                             if (lastDash != -1) {
                                 baseLine = currentLine.substring(0, lastDash);
@@ -83,23 +75,19 @@ public class flightNumebrCreator {
                         }
 
                         // GENERATE UNIQUE ID
-                        // We use the dailySeed + the Airline Code's Hash.
-                        // This ensures "PAL" gets different random numbers than "CEBU" even on the same day.
                         Random flightNumberGenerator = new Random(dailySeed + airlineCode.hashCode() + baseLine.hashCode()); 
-                        // Added baseLine.hashCode() to ensure different lines for the same airline get different numbers
                         
                         int flightNum = 1000 + flightNumberGenerator.nextInt(9000);
-                        String newFlightCode = prefix + flightNum; // e.g., Z2 + 4921
+                        String newFlightCode = prefix + flightNum; 
 
                         updatedContent.add(baseLine + "-" + newFlightCode);
                     } else {
-                        // Airline code not in master list? Just keep the line as is.
                         updatedContent.add(currentLine);
                     }
                 }
             }
         } else {
-             System.out.println("Error: Timetable file not found at " + timeTableMaster);
+             System.err.println("Error: Timetable file not found at " + timeTableFile.getAbsolutePath());
              return;
         }
 
