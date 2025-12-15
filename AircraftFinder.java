@@ -13,7 +13,7 @@ public class AircraftFinder {
 
 
     public void payloadGenerator() throws FileNotFoundException{
-        String aircraftMasterFile = "Lipad_Bantay/target/classes/com/mycompany/lipad_bantay/Database/Aircrafts/Aircraft_Master.txt";
+        String aircraftMasterFile = "/Database/Aircrafts/Aircraft_Master.txt";
         File aircraftFopen = new File(aircraftMasterFile);
         Scanner aircraftMasterReader = new Scanner(aircraftFopen);
 

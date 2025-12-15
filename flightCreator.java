@@ -33,7 +33,7 @@ public class flightCreator {
     }
 
     public void blockCreator() throws FileNotFoundException{
-        String timeTable_Database =  "Lipad_Bantay/target/classes/com/mycompany/lipad_bantay/Database/Departure_Timetable_Master - Copy.txt";
+        String timeTable_Database =  "/Database/Departure_Timetable_Master - Copy.txt";
         File scheduleReader = new File(timeTable_Database);
         Scanner scheduleLineReader = new Scanner(scheduleReader);
         boolean isExisting = false;

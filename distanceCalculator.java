@@ -22,8 +22,8 @@ public class distanceCalculator {
     }
 
     public void getDuration_Distance() throws FileNotFoundException {
-        String dc_airportMaster = "Lipad_Bantay/target/classes/com/mycompany/lipad_bantay/Database/Database/Airports/Airport_Master.txt";
-        String dc_aircraftTypeMaster = "Lipad_Bantay/target/classes/com/mycompany/lipad_bantay/Database/Database/Aircrafts/Aircraft_Master.txt";
+        String dc_airportMaster = "/Database/Airports/Airport_Master.txt";
+        String dc_aircraftTypeMaster = "/Database/Aircrafts/Aircraft_Master.txt";
         File dc_aircraftReader = new File(dc_aircraftTypeMaster);
         File dc_airportReader = new File(dc_airportMaster);
         Scanner dc_airport_reader = new Scanner(dc_airportReader);
