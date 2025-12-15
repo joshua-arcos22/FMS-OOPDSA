@@ -1,4 +1,4 @@
-package Lipad_Bantay.src.main.java.com.mycompany.lipad_bantay;
+package com.mycompany.lipad_bantay;
 import com.sun.source.tree.WhileLoopTree;
 
 import java.io.*;
