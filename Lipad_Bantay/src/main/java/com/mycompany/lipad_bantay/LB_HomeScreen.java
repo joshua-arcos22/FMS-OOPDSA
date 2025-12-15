@@ -19,7 +19,7 @@ public class LB_HomeScreen extends javax.swing.JFrame {
      */
     public LB_HomeScreen() {
         initComponents();
-        loadTimeTable();
+//        loadTimeTable();
     }
 
     /**
@@ -320,28 +320,28 @@ public class LB_HomeScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     
-    public void loadTimeTable(){
-        DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-        
-     
-        model.setRowCount(0);
-
-        
-        
-        String path = 
-        File timetableOpen = new File()
+//    public void loadTimeTable(){
+//        DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
+//        
+//     
+//        model.setRowCount(0);
+//
+//        
+//        
+//        String path = 
+////        File timetableOpen = new File()
 
         // 4. Loop through and add to table
-        for (String line : rawFlights) {
-            if (!line.trim().isEmpty()) {
-                // Split the string by the dash "-"
-                String[] rowData = line.split("-");
-
-                // Add the row to the table model
-                model.addRow(rowData);
-            }
-        }
-    }
+//        for (String line : rawFlights) {
+//            if (!line.trim().isEmpty()) {
+//                // Split the string by the dash "-"
+//                String[] rowData = line.split("-");
+//
+//                // Add the row to the table model
+//                model.addRow(rowData);
+//            }
+//        }
+    
     
     
     private void jToggleButtonAirlineActionPerformed(java.awt.event.ActionEvent evt) {                                                     
