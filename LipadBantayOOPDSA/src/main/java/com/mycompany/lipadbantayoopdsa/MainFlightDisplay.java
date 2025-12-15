@@ -85,6 +85,11 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         SearchButton.setBackground(new java.awt.Color(0, 102, 255));
         SearchButton.setText("Search");
         SearchButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        SearchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout SearchContainerLayout = new javax.swing.GroupLayout(SearchContainer);
         SearchContainer.setLayout(SearchContainerLayout);
@@ -160,16 +165,14 @@ public class MainFlightDisplay extends javax.swing.JFrame {
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BottomContainerLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(BottomContainerLayout.createSequentialGroup()
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(BottomContainerLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53))))
+                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(BottomContainerLayout.createSequentialGroup()
+                .addGap(61, 61, 61)
+                .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53))
         );
         BottomContainerLayout.setVerticalGroup(
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,10 +269,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    
-    
-
+  
     public void loadFlightsToTableDeparture() {
         // 1. Get the model from your JTable
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
@@ -296,8 +296,8 @@ public class MainFlightDisplay extends javax.swing.JFrame {
                     // Handle the 6 vs 7 column issue (PAL vs CebuPac)
                     if (rowData.length == 6) {
                         // If missing Flight No., add an empty placeholder
-                        String[] adjustedRow = { 
-                            rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], rowData[6], "" 
+                        String[] adjustedRow = {
+                            rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "" // Correct: Only use rowData[0] through rowData[5], then add ""
                         };
                         model.addRow(adjustedRow);
                     } else {
@@ -343,7 +343,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
                 if (rowData.length == 6) {
                     // If missing Flight No., add an empty placeholder
                     String[] adjustedRow = { 
-                        rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], rowData[6], "" 
+                        rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "" 
                     };
                     model.addRow(adjustedRow);
                 } else {
@@ -360,6 +360,88 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         
     }
 }
+    // Helper method
+    private String getActiveTimetablePath() {
+        // Departure file path
+        String departurePath = "C:/Users/alken/OneDrive/Desktop/SCHOOL/BU Sophoromore IT/DSA Project/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        
+        String arrivalPath = "C:/Users/alken/OneDrive/Desktop/SCHOOL/BU Sophoromore IT/DSA Project/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+        
+        // Assuming Departure is the default/active view if neither button has been clicked yet.
+        if (Arrival.getBackground().equals(Color.WHITE)) {
+            return arrivalPath;
+        } else {
+            // This covers the initial state and when the Departures button is clicked
+            return departurePath;
+        }
+    }
+    
+        public void searchFlights() {
+        // 1. Get the current active file path
+        String filePath = getActiveTimetablePath();
+        File file = new File(filePath);
+
+        // 2. Get the search term and normalize it for comparison
+        String searchTerm = SearchField.getText().trim().toLowerCase();
+
+        // Check if the current text is the placeholder text
+        String placeholderText = "search for a flight".toLowerCase();
+
+        // A simple check: if the text is the placeholder, treat it as an empty search.
+        if (searchTerm.equals(placeholderText) || searchTerm.isEmpty()) {
+            // Reload all flights based on the active tab (Arrival or Departure)
+            if (Arrival.getBackground().equals(Color.WHITE)) {
+                loadFlightsToTableArrival();
+            } else {
+                loadFlightsToTableDeparture();
+            }
+            return;
+        }
+
+        DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
+        model.setRowCount(0); // Clear existing data
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] rowData = line.split("-");
+
+                    // 3. Check if any column in the row contains the search term
+                    boolean match = false;
+                    for (String data : rowData) {
+                        if (data.trim().toLowerCase().contains(searchTerm)) {
+                            match = true;
+                            break;
+                        }
+                    }
+
+                    // 4. If there is a match, add the row to the table
+                    if (match) {
+                        // Replicate your existing logic for handling 6 vs 7 columns
+                        if (rowData.length == 6) {
+                            String[] adjustedRow = {
+                                rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "" // Add empty Flight No.
+                            };
+                            model.addRow(adjustedRow);
+                        } else {
+                            model.addRow(rowData);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // Log the error instead of silently swallowing it
+            logger.log(Level.SEVERE, "Error reading flight file for search.", e);
+        }
+    }
+    
+    private void resetSearchField() {
+        SearchField.setText("Search for a flight");
+        
+        SearchField.setForeground(Color.LIGHT_GRAY);
+    }
     
     private void ArrivalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArrivalActionPerformed
         Arrival.setBackground(Color.WHITE);
@@ -367,6 +449,8 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         Departures.setBackground(Color.getHSBColor(0.5833f, 0.8f, 1.0f));
         Departures.setForeground(Color.WHITE);
         loadFlightsToTableArrival();
+        
+        resetSearchField();
     }//GEN-LAST:event_ArrivalActionPerformed
 
     private void DeparturesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeparturesActionPerformed
@@ -376,12 +460,12 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         Arrival.setForeground(Color.WHITE);
         loadFlightsToTableDeparture();
         
+        resetSearchField();
     }//GEN-LAST:event_DeparturesActionPerformed
 
     private void SearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFieldActionPerformed
         // TODO add your handling code here:
-        
-        
+        searchFlights();
     }//GEN-LAST:event_SearchFieldActionPerformed
 
     private void SearchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusGained
@@ -394,9 +478,16 @@ public class MainFlightDisplay extends javax.swing.JFrame {
     private void SearchFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusLost
         // TODO add your handling code here:
         
-        SearchField.setText("Search for a flight");
-        SearchField.setForeground(Color.LIGHT_GRAY);
+        if (SearchField.getText().trim().isEmpty()) {
+            SearchField.setText("Search for a flight");
+            SearchField.setForeground(Color.LIGHT_GRAY);
+        }   
     }//GEN-LAST:event_SearchFieldFocusLost
+
+    private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
+        // TODO add your handling code here:
+        searchFlights();
+    }//GEN-LAST:event_SearchButtonActionPerformed
 
     /**
      * @param args the command line arguments
