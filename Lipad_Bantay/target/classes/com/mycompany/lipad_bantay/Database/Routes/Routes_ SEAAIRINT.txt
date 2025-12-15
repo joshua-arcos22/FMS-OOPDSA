@@ -1,4 +1,0 @@
-XO
-B737F-RPLC(Clark)-RPVM(Cebu)
-B737F-RPLC(Clark)-RPLL(Manila)
-B737F-RPLC(Clark)-RPMD(Davao)
