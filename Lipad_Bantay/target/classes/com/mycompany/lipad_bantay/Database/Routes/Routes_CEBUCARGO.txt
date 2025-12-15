@@ -1,0 +1,7 @@
+C5J
+ATR72F-RPLL(Manila)-RPVM(Cebu)
+ATR72F-RPLL(Manila)-RPMD(Davao)
+ATR72F-RPLL(Manila)-RPMR(GeneralSantos)
+ATR72F-RPLL(Manila)-RPMY(CagayanDeOro)
+ATR72F-RPLL(Manila)-RPVP(PuertoPrincesa)
+ATR72F-RPVM(Cebu)-RPMD(Davao)
