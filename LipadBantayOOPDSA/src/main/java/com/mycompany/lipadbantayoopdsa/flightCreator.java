@@ -25,8 +25,10 @@ public class flightCreator {
         this.fc_ArrivingAirport = fc_ArrivingAirport.toUpperCase();
         this.fc_Day = fc_Day.toUpperCase();
 
-//            flightNumebrCreator flightNumber = new flightNumebrCreator(fc_AirlineCode);
-//            flightNumber.fnc_CreateflightNumber();
+            flightNumebrCreator flightNumber = new flightNumebrCreator();
+            flightNumber.fnc_InitializeAllFlightNumbers();
+            
+            ArrivalTimetableGenerator.generate();
 
 
 
@@ -61,10 +63,10 @@ public class flightCreator {
                 AircraftFinder randomLoadGenerator = new AircraftFinder(timeTableDetails[1]);
                 randomLoadGenerator.payloadGenerator();
 
-                distanceCalculator flightDistance = new distanceCalculator(timeTableDetails[2].substring(0,4), timeTableDetails[3].substring(0,4), timeTableDetails[1]);
-                 flightDistance.getDuration_Distance();
+                distanceCalculator flightDistance = new distanceCalculator(timeTableDetails[2].substring(0, 4), timeTableDetails[3].substring(0, 4), timeTableDetails[1]);
+                flightDistance.calculateFlightDurationMinutes();
 
-
+                
 
                 System.out.println();
                 isExisting = true;

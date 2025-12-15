@@ -4,6 +4,7 @@
  */
 package com.mycompany.lipadbantayoopdsa;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,7 +28,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
      */
     public MainFlightDisplay() {
         initComponents();
-        loadFlightsToTable();
+        loadFlightsToTableDeparture();
     }
 
     /**
@@ -98,7 +99,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
 
         Arrival.setBackground(new java.awt.Color(0, 153, 255));
         Arrival.setText("Arrival");
-        Arrival.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Arrival.setBorder(null);
         Arrival.setMaximumSize(new java.awt.Dimension(120, 35));
         Arrival.setMinimumSize(new java.awt.Dimension(120, 35));
         Arrival.setPreferredSize(new java.awt.Dimension(120, 35));
@@ -110,7 +111,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
 
         Departures.setBackground(new java.awt.Color(0, 153, 255));
         Departures.setText("Departure");
-        Departures.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Departures.setBorder(null);
         Departures.setMaximumSize(new java.awt.Dimension(120, 35));
         Departures.setMinimumSize(new java.awt.Dimension(120, 35));
         Departures.setPreferredSize(new java.awt.Dimension(120, 35));
@@ -187,20 +188,20 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         FlightTable.setForeground(new java.awt.Color(0, 102, 204));
         FlightTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Ariline", "Aircraft", "Origin", "Destination", "Frequency", "Time"
+                "Ariline", "Aircraft", "Origin", "Destination", "Frequency", "Time", "Flight Number"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -212,6 +213,15 @@ public class MainFlightDisplay extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(FlightTable);
+        if (FlightTable.getColumnModel().getColumnCount() > 0) {
+            FlightTable.getColumnModel().getColumn(0).setResizable(false);
+            FlightTable.getColumnModel().getColumn(1).setResizable(false);
+            FlightTable.getColumnModel().getColumn(2).setResizable(false);
+            FlightTable.getColumnModel().getColumn(3).setResizable(false);
+            FlightTable.getColumnModel().getColumn(4).setResizable(false);
+            FlightTable.getColumnModel().getColumn(5).setResizable(false);
+            FlightTable.getColumnModel().getColumn(6).setResizable(false);
+        }
 
         javax.swing.GroupLayout ContainerLayout = new javax.swing.GroupLayout(Container);
         Container.setLayout(ContainerLayout);
@@ -261,7 +271,53 @@ public class MainFlightDisplay extends javax.swing.JFrame {
     
     
 
-    public void loadFlightsToTable() {
+    public void loadFlightsToTableDeparture() {
+        // 1. Get the model from your JTable
+        DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
+
+        // 2. Clear existing data
+        model.setRowCount(0);
+
+        // 3. Define the file path
+        String filePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        File file = new File(filePath);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            int count = 0; // Counter for the 20 flight limit
+
+            // 4. Loop through the file (Stop if line is null OR count reaches 20)
+            while ((line = br.readLine()) != null) {
+
+                if (!line.trim().isEmpty()) {
+                    // Split the string by the dash "-"
+                    String[] rowData = line.split("-");
+
+                    // Handle the 6 vs 7 column issue (PAL vs CebuPac)
+                    if (rowData.length == 6) {
+                        // If missing Flight No., add an empty placeholder
+                        String[] adjustedRow = { 
+                            rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], rowData[6], "" 
+                        };
+                        model.addRow(adjustedRow);
+                    } else {
+                        // If it has all 7 columns, add directly
+                        model.addRow(rowData);
+                    }
+
+                    count++; // Increment the counter
+                }
+            }
+            br.close();
+
+        } catch (IOException e) {
+
+        }
+    }
+    
+    
+    public void loadFlightsToTableArrival() {
     // 1. Get the model from your JTable
     DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
 
@@ -269,7 +325,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
     model.setRowCount(0);
 
     // 3. Define the file path
-    String filePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+    String filePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
     File file = new File(filePath);
 
     try {
@@ -288,7 +344,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
                 if (rowData.length == 6) {
                     // If missing Flight No., add an empty placeholder
                     String[] adjustedRow = { 
-                        rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "" 
+                        rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], rowData[6], "" 
                     };
                     model.addRow(adjustedRow);
                 } else {
@@ -307,11 +363,20 @@ public class MainFlightDisplay extends javax.swing.JFrame {
 }
     
     private void ArrivalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArrivalActionPerformed
-        // TODO add your handling code here:
+        Arrival.setBackground(Color.WHITE);
+        Arrival.setForeground(Color.BLACK);
+        Departures.setBackground(Color.getHSBColor(0.5833f, 0.8f, 1.0f));
+        Departures.setForeground(Color.WHITE);
+        loadFlightsToTableArrival();
     }//GEN-LAST:event_ArrivalActionPerformed
 
     private void DeparturesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeparturesActionPerformed
-        // TODO add your handling code here:
+        Departures.setBackground(Color.WHITE);
+        Departures.setForeground(Color.BLACK);
+        Arrival.setBackground(Color.getHSBColor(0.5833f, 0.8f, 1.0f));
+        Arrival.setForeground(Color.WHITE);
+        loadFlightsToTableDeparture();
+        
     }//GEN-LAST:event_DeparturesActionPerformed
 
     /**

@@ -1,116 +1,127 @@
 package com.mycompany.lipadbantayoopdsa;
+
 import java.io.*;
 import java.util.*;
 import java.time.*;
 
 public class flightNumebrCreator {
 
-    private String fnc_AirlineCode;
+    // Defined file paths
+    private final String airlineCodePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt";
+    private final String timeTableMaster = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+    private final String datePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Date.txt";
 
-    flightNumebrCreator(String fnc_AirlineCode){
-        this.fnc_AirlineCode = fnc_AirlineCode;
+    // Constructor no longer needs specific airline code
+    public flightNumebrCreator() {
     }
 
-
-    public void fnc_CreateflightNumber() throws FileNotFoundException {
-        // --- 1. SETUP (Date & Random) ---
+    public void fnc_InitializeAllFlightNumbers() throws FileNotFoundException {
+        // --- 1. SETUP (Date) ---
         LocalDate today = LocalDate.now();
         long dailySeed = today.toEpochDay();
-        // Seed + Airline Hash ensures unique numbers per airline
-        Random flightNumberGenerator = new Random(dailySeed + fnc_AirlineCode.hashCode());
 
-        String airlineCodePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt";
-        String timeTableMaster = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
-
-        // --- 2. GET PREFIX FROM MASTER FILE (e.g., PAL -> PR) ---
+        // --- 2. LOAD AIRLINE PREFIXES INTO A MAP ---
+        // key = AirlineName (e.g., PAL), value = Prefix (e.g., PR)
+        Map<String, String> airlinePrefixMap = new HashMap<>();
         File airlineCodeMaster = new File(airlineCodePath);
-        String currentPrefix = "";
 
-        try (Scanner masterReader = new Scanner(airlineCodeMaster)) {
-            while (masterReader.hasNextLine()) {
-                String line = masterReader.nextLine();
-                String[] parts = line.split("-");
-                // Expected format: PAL-PR (AirlineCode-Prefix)
-                if (parts.length >= 2 && parts[0].equalsIgnoreCase(fnc_AirlineCode)) {
-                    currentPrefix = parts[1]; // Found "PR"
-                    break;
+        if (airlineCodeMaster.exists()) {
+            try (Scanner masterReader = new Scanner(airlineCodeMaster)) {
+                while (masterReader.hasNextLine()) {
+                    String line = masterReader.nextLine().trim();
+                    if (!line.isEmpty()) {
+                        String[] parts = line.split("-");
+                        // Expecting format: AIRLINE-PREFIX (e.g., PAL-PR)
+                        if (parts.length >= 2) {
+                            airlinePrefixMap.put(parts[0].toUpperCase(), parts[1]);
+                        }
+                    }
                 }
             }
-        }
-
-        if (currentPrefix.isEmpty()) {
-            System.out.println("Error: Prefix not found for " + fnc_AirlineCode);
+        } else {
+            System.out.println("Error: Airline Master file not found at " + airlineCodePath);
             return;
         }
 
-        // --- 3. PROCESS TIMETABLE ---
+        // --- 3. PROCESS TIMETABLE (Batch Update) ---
         File timeTableFile = new File(timeTableMaster);
-        ArrayList<String> fileContent = new ArrayList<>();
+        ArrayList<String> updatedContent = new ArrayList<>();
 
         if (timeTableFile.exists()) {
             try (Scanner timeTableReader = new Scanner(timeTableFile)) {
                 while (timeTableReader.hasNextLine()) {
                     String currentLine = timeTableReader.nextLine();
-
-                    // SPLIT THE LINE
-                    String[] parts = currentLine.split("-");
-
-                    // CHECK 1: Does this line belong to the current airline?
-                    // If the line starts with "CEB", but we are running "PAL", SKIP IT (save as is).
-                    if (!parts[0].equalsIgnoreCase(fnc_AirlineCode)) {
-                        fileContent.add(currentLine);
+                    
+                    // Skip empty lines
+                    if (currentLine.trim().isEmpty()) {
+                        updatedContent.add(currentLine);
                         continue;
                     }
 
-                    // CHECK 2: Clean up the end of the line
-                    // We look at the very last item in the array.
-                    String lastPart = parts[parts.length - 1];
-                    String baseLine = currentLine;
+                    // SPLIT THE LINE
+                    String[] parts = currentLine.split("-");
+                    String airlineCode = parts[0].toUpperCase(); // First part is the airline (e.g., PAL, AIRASIA)
 
-                    // If the last part starts with a LETTER (e.g., "P" for PR, "5" for 5J, "A" for AirAsia)
-                    // It means there is ALREADY a flight number there. We must cut it off.
-                    // (Times usually start with digits like 1845, IDs start with letters/codes)
-                    boolean hasExistingID = lastPart.matches(".*[A-Za-z].*");
+                    // CHECK: Do we have a prefix for this airline?
+                    if (airlinePrefixMap.containsKey(airlineCode)) {
+                        String prefix = airlinePrefixMap.get(airlineCode);
+                        
+                        // Clean up the end of the line (Remove existing Flight IDs if present)
+                        String lastPart = parts[parts.length - 1];
+                        String baseLine = currentLine;
 
-                    if (hasExistingID) {
-                        // Find the last dash and remove everything after it
-                        int lastDash = currentLine.lastIndexOf("-");
-                        if (lastDash != -1) {
-                            baseLine = currentLine.substring(0, lastDash);
+                        // Check if the last part is a Flight ID (contains letters)
+                        // This prevents appending a new ID to a line that already has one
+                        boolean hasExistingID = lastPart.matches(".*[A-Za-z].*");
+                        
+                        if (hasExistingID) {
+                            // Find the last dash and cut off the old ID
+                            int lastDash = currentLine.lastIndexOf("-");
+                            if (lastDash != -1) {
+                                baseLine = currentLine.substring(0, lastDash);
+                            }
                         }
+
+                        // GENERATE UNIQUE ID
+                        // We use the dailySeed + the Airline Code's Hash.
+                        // This ensures "PAL" gets different random numbers than "CEBU" even on the same day.
+                        Random flightNumberGenerator = new Random(dailySeed + airlineCode.hashCode() + baseLine.hashCode()); 
+                        // Added baseLine.hashCode() to ensure different lines for the same airline get different numbers
+                        
+                        int flightNum = 1000 + flightNumberGenerator.nextInt(9000);
+                        String newFlightCode = prefix + flightNum; // e.g., Z2 + 4921
+
+                        updatedContent.add(baseLine + "-" + newFlightCode);
+                    } else {
+                        // Airline code not in master list? Just keep the line as is.
+                        updatedContent.add(currentLine);
                     }
-
-                    // CHECK 3: Generate and Append
-                    int flightNum = 1000 + flightNumberGenerator.nextInt(9000);
-                    String newFlightCode = currentPrefix + flightNum; // e.g., PR + 1234
-
-                    fileContent.add(baseLine + "-" + newFlightCode);
                 }
             }
+        } else {
+             System.out.println("Error: Timetable file not found at " + timeTableMaster);
+             return;
         }
 
-        // --- 4. WRITE BACK TO FILE ---
+        // --- 4. WRITE UPDATED CONTENT BACK TO FILE ---
         try (PrintWriter timeTableWriter = new PrintWriter(timeTableFile)) {
-            for (String line : fileContent) {
+            for (String line : updatedContent) {
                 timeTableWriter.println(line);
             }
         }
 
-        System.out.println("Timetable updated for " + fnc_AirlineCode);
+        System.out.println("All flight numbers initialized for all airlines.");
     }
 
-    public static boolean isNewDay() throws FileNotFoundException {
-        String datePath = "C:/Users/Joshua/Documents/NetBeansProjects/FlightManagementSystem/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Date.txt";
+    // --- UTILITY: Check if it's a new day ---
+    public boolean isNewDay() throws FileNotFoundException {
         File dateFile = new File(datePath);
         LocalDate today = LocalDate.now();
 
         if (!dateFile.exists()) {
-            try (PrintWriter dateWriter = new PrintWriter(dateFile)) {
-                dateWriter.write(today.toString());
-            }
+            updateDateFile(today);
             return true;
         }
-
 
         LocalDate lastRunDate = null;
         try (Scanner dateReader = new Scanner(dateFile)) {
@@ -120,24 +131,21 @@ public class flightNumebrCreator {
             }
         }
 
-
         if (lastRunDate != null && !today.equals(lastRunDate)) {
-
-            try (PrintWriter dateWriter = new PrintWriter(dateFile)) {
-                dateWriter.write(today.toString());
-            }
+            updateDateFile(today);
             return true;
         }
 
-
-
         return false;
     }
+
     private void updateDateFile(LocalDate today) throws FileNotFoundException {
-        File dateFile = new File("Database/Date.txt");
+        File dateFile = new File(datePath);
+        // Ensure parent directories exist
+        dateFile.getParentFile().mkdirs();
+        
         try (PrintWriter pw = new PrintWriter(dateFile)) {
             pw.write(today.toString());
         }
     }
-
 }

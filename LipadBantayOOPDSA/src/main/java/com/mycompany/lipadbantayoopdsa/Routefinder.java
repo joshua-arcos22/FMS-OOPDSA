@@ -20,7 +20,7 @@ public class Routefinder {
         System.out.println("Enter the day(ST-Saturday - SU-Sunday - M-Monday - TU-Tuesday - W-Wednesday - TH-Thrusday - F-Friday - E-Everyday): ");
         String day = userInput.nextLine();
 
-
+    
         flightCreator createBlock = new flightCreator(airlineCode, airportCode_Arrival, airportCode_Departure, day);
         createBlock.blockCreator();
         userInput.close();
