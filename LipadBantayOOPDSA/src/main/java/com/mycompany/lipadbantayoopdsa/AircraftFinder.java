@@ -11,7 +11,31 @@ public class AircraftFinder {
         this.aircraft_Type = aircraft_Type;
     }
 
+    public boolean runwayLengthVerfiier (int origin_Length, int arrival_length) throws FileNotFoundException{
+        String aircraftFopen = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
+        File file = new File(aircraftFopen);
+        Scanner aircraftMasterReader = new Scanner(file);
+        
+        
+         while (aircraftMasterReader.hasNextLine()) {
+                String reader = aircraftMasterReader.nextLine();
+                String aircraft_Details[] = reader.split("-");
 
+                if (aircraft_Details[0].equals(aircraft_Type)){
+                    if(Integer.parseInt(aircraft_Details[4]) > origin_Length){
+                        return false;
+                    } else if(Integer.parseInt(aircraft_Details[4]) > arrival_length){
+                        return false;
+
+                    }
+                } 
+            }
+        
+         return  true;
+        
+    }
+    
+    
     //Hello
     public void payloadGenerator() throws FileNotFoundException{
         String aircraftFopen = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";

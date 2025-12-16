@@ -14,6 +14,13 @@ public class distanceCalculator {
     private double latitude_2;
     private double longitude_2;
 
+    public distanceCalculator(String departure_airportCode, String arrival_airportCode){
+        //AirportFinder 
+        this.departure_airportCode = departure_airportCode.substring(0,4).toUpperCase();
+        this.arrival_airportCode = arrival_airportCode.substring(0,4).toUpperCase();
+    }
+
+    
     public distanceCalculator(String departure_airportCode, String arrival_airportCode, String aircraftType){
         // Extract first 4 characters for ICAO code
         this.departure_airportCode = departure_airportCode.substring(0,4).toUpperCase();
@@ -21,6 +28,69 @@ public class distanceCalculator {
         this.aircraftType = aircraftType;
     }
 
+    
+    
+    public String getRunwayLenght() throws FileNotFoundException{
+        String dc_airportMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt"; 
+        File aiportFile = new File(dc_airportMaster);
+        Scanner airportReader = new Scanner (aiportFile);
+        String aiportRunwayDetails = "";
+        
+        while(airportReader.hasNextLine()){
+            String lineReader = airportReader.nextLine();
+            String airportDetailsarray[] = lineReader.split("-");
+            if (airportDetailsarray[1].equalsIgnoreCase(departure_airportCode)) {
+                aiportRunwayDetails = airportDetailsarray[2] + "-";
+            }
+            
+        }
+        airportReader = new Scanner (aiportFile);
+        while(airportReader.hasNextLine()){
+            String lineReader = airportReader.nextLine();
+            String airportDetailsarray[] = lineReader.split("-");
+            if (airportDetailsarray[1].equalsIgnoreCase(arrival_airportCode)) {
+                aiportRunwayDetails = aiportRunwayDetails + airportDetailsarray[2];
+            }
+
+        }
+        
+        return aiportRunwayDetails;
+            
+    }
+    
+    
+    public String getAirportNames() throws FileNotFoundException{
+        String dc_airportMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt"; 
+        File aiportFile = new File(dc_airportMaster);
+        Scanner airportReader = new Scanner (aiportFile);
+        String aiportNameDetails = "";
+        
+        while(airportReader.hasNextLine()){
+            String lineReader = airportReader.nextLine();
+            String airportDetailsarray[] = lineReader.split("-");
+            if (airportDetailsarray[1].equalsIgnoreCase(departure_airportCode)) {
+                aiportNameDetails = airportDetailsarray[0] + "-";
+            }
+            
+        }
+        airportReader = new Scanner (aiportFile);
+        while(airportReader.hasNextLine()){
+            String lineReader = airportReader.nextLine();
+            String airportDetailsarray[] = lineReader.split("-");
+            if (airportDetailsarray[1].equalsIgnoreCase(arrival_airportCode)) {
+                aiportNameDetails = aiportNameDetails + airportDetailsarray[0];
+            }
+
+        }
+        
+        return aiportNameDetails;
+            
+        
+        
+    }
+    
+    
+    
     public int calculateFlightDurationMinutes() throws FileNotFoundException {
         // UPDATED: Relative paths starting from the Project Root
         String dc_airportMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt"; 
