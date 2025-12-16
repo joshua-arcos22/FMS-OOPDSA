@@ -278,7 +278,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         model.setRowCount(0);
 
         // 3. Define the file path
-        String filePath = "C:/Users/alken/OneDrive/Desktop/SCHOOL/BU Sophoromore IT/DSA Project/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
         File file = new File(filePath);
 
         try {
@@ -324,7 +324,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
     model.setRowCount(0);
 
     // 3. Define the file path
-    String filePath = "C:/Users/alken/OneDrive/Desktop/SCHOOL/BU Sophoromore IT/DSA Project/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+    String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
     File file = new File(filePath);
 
     try {
@@ -363,9 +363,9 @@ public class MainFlightDisplay extends javax.swing.JFrame {
     // Helper method
     private String getActiveTimetablePath() {
         // Departure file path
-        String departurePath = "C:/Users/alken/OneDrive/Desktop/SCHOOL/BU Sophoromore IT/DSA Project/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        String departurePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
         
-        String arrivalPath = "C:/Users/alken/OneDrive/Desktop/SCHOOL/BU Sophoromore IT/DSA Project/LipadBantayOOPDSA/src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+        String arrivalPath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
         
         // Assuming Departure is the default/active view if neither button has been clicked yet.
         if (Arrival.getBackground().equals(Color.WHITE)) {
