@@ -625,7 +625,7 @@ public class addFlightScreen extends javax.swing.JFrame {
         
         // --- VALIDATION CHECKS --
         // ------------AIRLINE-----------------------------------
-        String airlineName = airlineField.getText().trim().toUpperCase(); 
+        String airlineName = airlineField.getText().replaceAll("\\s+", "").toUpperCase(); 
         if (airlineName.isEmpty()) {
             errorAIRLINENAME.setText("Required"); 
             errorAIRLINENAME.setForeground(Color.red);
