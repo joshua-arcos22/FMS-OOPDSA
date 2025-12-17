@@ -310,7 +310,9 @@ public class RegistrationForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEmailActionPerformed
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-        
+        AirlineManagerReigstrationForm display = new AirlineManagerReigstrationForm();
+        display.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
 
     /**
