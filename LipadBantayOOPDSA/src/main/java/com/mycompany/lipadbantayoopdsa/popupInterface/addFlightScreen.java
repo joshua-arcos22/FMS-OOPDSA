@@ -6,7 +6,7 @@ package com.mycompany.lipadbantayoopdsa.popupInterface;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayAdmin;
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.distanceCalculator;
-
+import com.mycompany.lipadbantayoopdsa.AircraftFinder;
 
 import java.util.*;
 import java.io.*;
@@ -508,14 +508,87 @@ public class addFlightScreen extends javax.swing.JFrame {
         
         
         //conflicts with the comboBox
-        if (origin_drpdwn.getSelectedItem().toString().equalsIgnoreCase(destination_drpdwn.getSelectedItem().toString())) {
+        String originChoice = origin_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
+        String destChoice = destination_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
+        String acTypeChoice = ac_drpdwn.getSelectedItem().toString().trim();
+        if (originChoice.equalsIgnoreCase(destChoice)) {
             originRWYLn.setText("Same Airport As Dest");
             originRWYLn.setForeground(Color.red);
             destRWYLn.setText("Same Airport As Origin");
             destRWYLn.setForeground(Color.red);
         } else {
-            // do the runway length
-            // here :3 
+            originRWYLn.setText(" ");
+            destRWYLn.setText(" ");
+            String NF_choiceOrigin ="";
+            String NF_choiceDestination ="";
+            
+            try {
+                File aprtOpener = new File(AdminOperations.Database_Aiports_Path);
+                Scanner aprtReader = new Scanner(aprtOpener);
+                
+                boolean originFound = false;
+                boolean destFound = false;
+
+                while (aprtReader.hasNextLine() ) {
+                    String line = aprtReader.nextLine();
+                    String[] parts = line.split("-");
+
+                    
+                    if (!originFound && parts[1].equalsIgnoreCase(originChoice)) {
+                        originRWYLn.setForeground(Color.BLACK);
+                        originRWYLn.setText(parts[2] + "m");
+                        NF_choiceOrigin = parts[2];
+                        originFound = true;
+                    }
+
+                   
+                    if (!destFound && parts[1].equalsIgnoreCase(destChoice)) {
+                        destRWYLn.setForeground(Color.BLACK);
+                        destRWYLn.setText(parts[2] + "m");
+                        NF_choiceDestination = parts[2];
+                        destFound = true;
+                    }
+                    
+
+                   
+                    
+                    
+                    
+                }
+                
+                
+                
+            } catch (FileNotFoundException e) {
+                System.out.println("Database file not found.");
+            }
+        }
+        
+        
+//                    AircraftFinder acRwyValidator = new AircraftFinder(acTypeChoice);
+//                    boolean acRwyValid = acRwyValidator.runwayLengthVerfiier(Integer.parseInt(NF_choiceOrigin), Integer.parseInt(NF_choiceDestination));
+//                    if (acRwyValid) {
+//                        
+//                    }
+
+
+        //Ac RWY Length
+        String AcTypeRunway = ac_drpdwn.getSelectedItem().toString().trim();
+        
+        try {
+            File acOpener = new File(AdminOperations.Database_Aircarfts_Path);
+            Scanner acRWYReader = new Scanner(acOpener);
+            
+            while(acRWYReader.hasNextLine()){
+                String acRwyLineReader = acRWYReader.nextLine();
+                String acRwyLineReaderArray[] = acRwyLineReader.split("-");
+                if (AcTypeRunway.equalsIgnoreCase(acRwyLineReaderArray[0])) {
+                    
+                }
+                
+                
+            }
+            
+        } catch (FileNotFoundException e) {
         }
         
         
