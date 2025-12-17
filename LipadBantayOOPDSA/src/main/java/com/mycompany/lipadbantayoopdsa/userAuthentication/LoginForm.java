@@ -4,10 +4,11 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+import com.mycompany.lipadbantayoopdsa.MainFlightDisplayAdmin;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
-import com.mycompany.lipadbantayoopdsa.userAuthentication.AdminDashboard;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayGuest;
+import com.mycompany.lipadbantayoopdsa.MainFlightDisplayAdmin;
 import java.nio.file.Paths;
 import javax.swing.*;
 import java.io.*;
@@ -251,10 +252,10 @@ public class LoginForm extends javax.swing.JFrame {
             JFrame dashboard = null;
             switch (userRole) {
                 case "ADMIN":
-                    dashboard = new AdminDashboard();
+                    dashboard = new MainFlightDisplayAdmin();
                     break;
                 case "AIRLINE_MANAGER":
-                    dashboard = new AirlineManagerDashboard();
+                    dashboard = new AirlineManagerDashboard(username);
                     break;
                 case "USER":
                     dashboard = new UserDashboard(username);

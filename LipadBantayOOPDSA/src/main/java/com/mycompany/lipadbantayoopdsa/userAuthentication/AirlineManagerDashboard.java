@@ -1,5 +1,9 @@
 package com.mycompany.lipadbantayoopdsa.userAuthentication;
 
+import com.mycompany.lipadbantayoopdsa.MainFlightDisplayManagers;
+import java.io.*;
+import java.nio.file.Paths;
+import javax.swing.JOptionPane;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -13,11 +17,16 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AirlineManagerDashboard.class.getName());
 
+    
+    
     /**
      * Creates new form AirlineManagerDashboard
      */
     public AirlineManagerDashboard() {
         initComponents();
+        
+        
+        
     }
 
     /**
@@ -32,15 +41,15 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txtName = new javax.swing.JTextField();
-        txtAirline = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txtCode = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        title = new javax.swing.JLabel();
+        airlineNameText = new javax.swing.JLabel();
+        iataCodeText = new javax.swing.JLabel();
+        flPrefixText = new javax.swing.JLabel();
+        btnManageFlts = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
+        MANAGER = new javax.swing.JLabel();
+        AIRLINE = new javax.swing.JLabel();
+        FLPREFIX = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -59,33 +68,22 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 153, 204));
-        jLabel1.setText("Airline Manager Console");
+        title.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
+        title.setForeground(new java.awt.Color(0, 153, 204));
+        title.setText("Airline Manager Console");
 
-        jLabel2.setText("Airline Name:");
+        airlineNameText.setText("Manager Name");
 
-        txtName.setBackground(new java.awt.Color(204, 204, 204));
+        iataCodeText.setText("Airline Name:");
 
-        txtAirline.setBackground(new java.awt.Color(204, 204, 204));
+        flPrefixText.setText("FL PREFIX");
 
-        jLabel5.setText("Airline Name:");
-
-        jLabel4.setText("IATA Code:");
-
-        txtCode.setBackground(new java.awt.Color(204, 204, 204));
-        txtCode.addActionListener(new java.awt.event.ActionListener() {
+        btnManageFlts.setBackground(new java.awt.Color(0, 153, 204));
+        btnManageFlts.setForeground(new java.awt.Color(255, 255, 255));
+        btnManageFlts.setText("Manage Flights");
+        btnManageFlts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCodeActionPerformed(evt);
-            }
-        });
-
-        jButton1.setBackground(new java.awt.Color(0, 153, 204));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Manage Flights");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnManageFltsActionPerformed(evt);
             }
         });
 
@@ -96,6 +94,12 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
             }
         });
 
+        MANAGER.setText("jLabel3");
+
+        AIRLINE.setText("jLabel3");
+
+        FLPREFIX.setText("jLabel3");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -103,52 +107,55 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(218, 218, 218)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4))
-                                .addGap(28, 28, 28)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txtCode, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(28, 28, 28)
-                                .addComponent(txtAirline, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(271, 271, 271)
+                        .addGap(187, 187, 187)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addComponent(btnLogout))
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(234, Short.MAX_VALUE))
+                            .addComponent(airlineNameText)
+                            .addComponent(iataCodeText)
+                            .addComponent(flPrefixText))
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(FLPREFIX)
+                            .addComponent(AIRLINE)
+                            .addComponent(MANAGER)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(209, 209, 209)
+                        .addComponent(title))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(258, 258, 258)
+                        .addComponent(btnManageFlts, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(294, 294, 294)
+                        .addComponent(btnLogout)))
+                .addContainerGap(246, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(101, 101, 101)
-                .addComponent(jLabel1)
+                .addComponent(title)
                 .addGap(48, 48, 48)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtAirline, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(41, 41, 41)
-                .addComponent(jButton1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(MANAGER)
+                        .addGap(22, 22, 22)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addComponent(FLPREFIX))
+                            .addComponent(AIRLINE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(airlineNameText, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addComponent(flPrefixText))
+                            .addComponent(iataCodeText, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(43, 43, 43)
+                .addComponent(btnManageFlts)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnLogout)
-                .addContainerGap(119, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -163,6 +170,7 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -171,14 +179,89 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
         this.dispose(); // close current dashboard
     }//GEN-LAST:event_btnLogoutActionPerformed
 
-    private void txtCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCodeActionPerformed
+    private void btnManageFltsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageFltsActionPerformed
+        MainFlightDisplayManagers display = new MainFlightDisplayManagers(AIRLINE.getText().toString(), FLPREFIX.getText().toString());
+        display.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnManageFltsActionPerformed
+    
+    public AirlineManagerDashboard(String username) {
+        initComponents(); // This is usually auto-generated by NetBeans
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        ManagerData data = findManagerDetails(username);
 
+        if (data != null) {
+    
+            MANAGER.setText(data.name);   
+            AIRLINE.setText(data.airline);          
+            FLPREFIX.setText(data.prefix);      
+            }
+    }
+    
+    private class ManagerData {
+            String name;
+            String airline;
+            String username;
+            String prefix;
+
+            public ManagerData(String name, String airline, String username, String prefix) {
+                this.name = name;
+                this.airline = airline;
+                this.username = username;
+                this.prefix = prefix;
+        }
+    }
+    
+    
+    private ManagerData findManagerDetails(String targetUsername) {
+        String filePath = Paths.get(System.getProperty("user.dir"), 
+                                    "src", "main", "java", "com", "mycompany", 
+                                    "lipadbantayoopdsa", "userAuthentication", 
+                                    "user_credentials.txt").toString();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+
+            // Variables to hold data while we read each block
+            String tempManager = "";
+            String tempAirline = "";
+            String tempUsername = "";
+            String tempPrefix = "";
+
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+
+                if (line.startsWith("MANAGER:")) {
+                    tempManager = line.substring("MANAGER:".length()).trim();
+                } else if (line.startsWith("AIRLINE:")) {
+                    tempAirline = line.substring("AIRLINE:".length()).trim();
+                } else if (line.startsWith("USERNAME:")) {
+                    tempUsername = line.substring("USERNAME:".length()).trim();
+                } else if (line.startsWith("PREFIX:")) {
+                    tempPrefix = line.substring("PREFIX:".length()).trim();
+                } else if (line.startsWith("----------------------------")) {
+                    // We reached the separator. Check if the block we just read is the user we want.
+                    if (tempUsername.equals(targetUsername)) {
+                        // Match found! Return the object immediately.
+                        return new ManagerData(tempManager, tempAirline, tempUsername, tempPrefix);
+                    }
+
+                    // If not a match, clear variables for the next block
+                    tempManager = "";
+                    tempAirline = "";
+                    tempUsername = "";
+                    tempPrefix = "";
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage());
+        }
+
+        return null; // Return null if the manager was not found
+    }
+    
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -205,17 +288,17 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel AIRLINE;
+    private javax.swing.JLabel FLPREFIX;
+    private javax.swing.JLabel MANAGER;
+    private javax.swing.JLabel airlineNameText;
     private javax.swing.JButton btnLogout;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JButton btnManageFlts;
+    private javax.swing.JLabel flPrefixText;
+    private javax.swing.JLabel iataCodeText;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField txtAirline;
-    private javax.swing.JTextField txtCode;
-    private javax.swing.JTextField txtName;
+    private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
 }
