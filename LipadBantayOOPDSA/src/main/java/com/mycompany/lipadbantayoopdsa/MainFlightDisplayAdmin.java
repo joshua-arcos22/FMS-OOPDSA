@@ -4,6 +4,7 @@
  */
 package com.mycompany.lipadbantayoopdsa;
 
+import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
@@ -285,6 +286,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
   
     public void loadFlightsToTableDeparture() {
@@ -508,6 +510,9 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
     private void addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFlightActionPerformed
         // TODO add your handling code here:
+        addFlightScreen addPopUp = new addFlightScreen();
+        addPopUp.setVisible(true);
+        
     }//GEN-LAST:event_addFlightActionPerformed
 
     /**

@@ -14,17 +14,44 @@ import java.util.*;
  * @author Joshua
  */
 public class AdminOperations {
-    private String Database_Aircarfts_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";;
-    private String Database_Airlines_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt";;
-    private String Database_Aiports_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airports_Master.txt";;
+    public static String Database_Aircarfts_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
+    public static String Database_Airlines_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt";
+    public static String Database_Aiports_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt";
     //private String Database_Routes_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Routes/Aircraft_Master.txt";;
-    private String Database_TimeTable_Destination_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";;
-    private String Database_TimeTable_Arrivals_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";;
+    public static String Database_TimeTable_Destination_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
+    public static String Database_TimeTable_Arrivals_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
     private boolean runwayCapable;
     
-    AdminOperations(){
+    
+    
+    private String Airline_Name;
+    private String Ac_Type;
+    private String Origin_Airport;
+    private String Destination_Airport;
+    private String Frequency;
+    private String Time;
+    private String Flight_Number;
         
+        
+    AdminOperations(){
     }
+    
+    AdminOperations(    String Airline_Name,
+                        String Ac_Type,
+                        String Origin_Airport,
+                        String Destination_Airport,
+                        String Frequency,
+                        String Time,
+                        String Flight_Number){
+        this.Airline_Name = Airline_Name;
+        this.Ac_Type = Ac_Type;
+        this.Origin_Airport = Origin_Airport;
+        this.Destination_Airport = Destination_Airport;
+        this.Frequency = Frequency;
+        this.Time = Time;
+        this.Flight_Number = Flight_Number;
+    }
+
     
     // methods 
    public void Admin_AddFlight() throws IOException {
@@ -33,7 +60,7 @@ public class AdminOperations {
         try (FileWriter addFlight = new FileWriter(Database_TimeTable_Destination_Path, true);
              BufferedWriter addFlightEntry = new BufferedWriter(addFlight)) {
             
-            String flightEntry = addFlightFormat("CEB", "B777", "RPLK", "RPLL", "E", "1100", "5J6767");
+            String flightEntry = addFlightFormat(Airline_Name, Ac_Type, Origin_Airport, Destination_Airport, Frequency, Time, Flight_Number);
             
             if (!runwayCapable) {
                 System.out.println("Ac not runway capable");
@@ -80,11 +107,6 @@ public class AdminOperations {
             runwayCapable = ac_airport_validator.runwayLengthVerfiier(Integer.parseInt(airprotRunwayLenghtSeperator[0]), Integer.parseInt(airprotRunwayLenghtSeperator[1]));
             
             
-            
-            
-            
-            
-            
             // format for thereturn statement of the flight to be addedo n the master file 
                flightFormat =   Airline_Name + "-" +
                                 Ac_Type + "-" + 
@@ -100,12 +122,14 @@ public class AdminOperations {
                
                
         } catch (FileNotFoundException e) {
-            
+            System.out.println("The file does not exist");
         }
        
         return flightFormat;
         
     }
+    
+    
     
     
     

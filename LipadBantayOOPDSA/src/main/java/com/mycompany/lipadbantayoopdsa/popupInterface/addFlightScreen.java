@@ -88,11 +88,11 @@ public class addFlightScreen extends javax.swing.JFrame {
                 String aprtLineReader = aprtReader.nextLine();
                 String aprtLineReaderArray[] = aprtLineReader.split("-");
                 destination_drpdwn.addItem(aprtLineReaderArray[1] + "(" +aprtLineReaderArray[0] + ")" );
-                if(destination_drpdwn.getSelectedItem().toString().equalsIgnoreCase(aprtLineReaderArray[1])){
-                    destRWYLn.setText(aprtLineReaderArray[2] + "m");
-                }
+                
+                
 
             } 
+            
         } catch (FileNotFoundException e) {
             System.out.println("File not found ");
         }
@@ -513,7 +513,10 @@ public class addFlightScreen extends javax.swing.JFrame {
             originRWYLn.setForeground(Color.red);
             destRWYLn.setText("Same Airport As Origin");
             destRWYLn.setForeground(Color.red);
-        } 
+        } else {
+            // do the runway length
+            // here :3 
+        }
         
         
         
