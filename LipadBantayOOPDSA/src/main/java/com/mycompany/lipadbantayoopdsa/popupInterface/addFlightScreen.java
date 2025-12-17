@@ -126,6 +126,7 @@ public class addFlightScreen extends javax.swing.JFrame {
         
         
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -576,7 +577,7 @@ public class addFlightScreen extends javax.swing.JFrame {
         } else if (destShort) {
             acRWYLn.setForeground(Color.red);
             acRWYLn.setText("Dest. RWY Short");
-        }
+        } 
         
     }
     
@@ -624,7 +625,44 @@ public class addFlightScreen extends javax.swing.JFrame {
         }
         return Frequency;
     }
+    
+    private boolean isFlightNumberDuplicate(String flightNumToCheck) {
+        try {
+            // 1. Open the file
+            File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
 
+            // If file doesn't exist yet, there are no duplicates
+            if (!file.exists()) {
+                return false; 
+            }
+
+            Scanner scanner = new Scanner(file);
+
+            // 2. Loop through every line
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty()) continue;
+
+                String[] data = line.split("-");
+
+                // 3. Check specific index for Flight Number
+                // Based on your MainFlightDisplay code, FlightNo is at index 6
+                if (data.length >= 7) {
+                    String existingFlightNo = data[6].trim();
+
+                    // Compare (IgnoreCase handles "pr123" vs "PR123")
+                    if (existingFlightNo.equalsIgnoreCase(flightNumToCheck)) {
+                        scanner.close();
+                        return true; // Duplicate found!
+                    }
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            logger.log(java.util.logging.Level.SEVERE, "Error checking duplicates", e);
+        }
+        return false; // No duplicate found
+    }
     
     private void btn_addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFlightActionPerformed
         //variabel to feed to the class
@@ -678,7 +716,12 @@ public class addFlightScreen extends javax.swing.JFrame {
             errorFLTNO.setForeground(Color.red);
             Flt_No_Valid = false;
 
-        } else {
+        }   else if (isFlightNumberDuplicate(flightNum)) {
+            errorFLTNO.setText("Flight Exists");
+            errorFLTNO.setForeground(Color.red);
+            Flt_No_Valid = false;
+        }
+        else {
             errorFLTNO.setText(" ");
             flnField.setText(flightNum); 
             Flight_Number = flightNum;   
