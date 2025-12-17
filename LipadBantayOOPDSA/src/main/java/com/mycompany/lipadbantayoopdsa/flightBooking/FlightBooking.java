@@ -16,6 +16,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import java.util.logging.Logger;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.UserDashboard;
 
 /**
@@ -33,121 +36,9 @@ public class FlightBooking extends javax.swing.JFrame {
     public FlightBooking() {
         initComponents();
         
-        SearchField = new javax.swing.JTextField();
+        loadFlightsToTableDeparture();
     }
     
-    private static final String DEPARTURE_TIMETABLE = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
-    private static final String ARRIVAL_TIMETABLE = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
-    private static final String FLIGHTS_DB = "flights.txt";
-    private static final String BOOKINGS_DB = "bookings.txt";
-    private String currentTimetable = DEPARTURE_TIMETABLE;
-    private javax.swing.JTextField SearchField;
-    
-    private void loadFlightsToTable(String filePath) {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);  // Clear existing data
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(" - ");
-                if (data.length == 6) {
-                    model.addRow(new Object[]{data[0], data[1], data[2], data[3]});
-                }
-            }
-        } catch (IOException e) {
-            logger.severe("Error loading flight data: " + e.getMessage());
-        }
-    }
-    
-    private void loadFlightsFromTxt() {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-
-        // Set headers
-        model.setColumnIdentifiers(new String[] {"Flight ID", "Origin", "Destination", "Time"});
-
-        File file = new File(DEPARTURE_TIMETABLE); // Default to Departure timetable
-        if (!file.exists()) return;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(" - ");
-                if (data.length >= 1) {
-                    model.addRow(data);
-                }
-            }
-        } catch (IOException e) {
-            logger.severe("Error loading flights: " + e.getMessage());
-        }
-    }
-    
-    private void saveBookingToTxt(String flightDetails) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BOOKINGS_DB, true))) {
-            writer.write(flightDetails);
-            writer.newLine();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving booking: " + e.getMessage());
-        }
-    }
-    
-    private void removeBookingFromTxt(String flightDetails) {
-        File inputFile = new File(BOOKINGS_DB);
-        File tempFile = new File("temp_bookings.txt");
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().equals(flightDetails.trim())) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error updating database: " + e.getMessage());
-        }
-
-        if (inputFile.delete()) {
-            tempFile.renameTo(inputFile);
-        } else {
-            JOptionPane.showMessageDialog(this, "Note: Database update may require restart.");
-        }
-    }
-
-    
-    private void searchFlights() {
-        String searchTerm = SearchField.getText().trim().toLowerCase();
-        if (searchTerm.isEmpty() || searchTerm.equals("Search for a flight")) {
-            loadFlightsToTable(currentTimetable);  // Reload the current active timetable
-            return;
-        }
-
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0); // Clear existing rows
-
-        String filePath = currentTimetable;  // Load from the currently active timetable
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] rowData = line.split(" - ");
-                for (String data : rowData) {
-                    if (data.toLowerCase().contains(searchTerm)) {
-                        model.addRow(rowData);
-                        break;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            logger.severe("Error searching flights: " + e.getMessage());
-        }
-    }
-
-
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -238,12 +129,26 @@ public class FlightBooking extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -259,12 +164,27 @@ public class FlightBooking extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
         jScrollPane2.setViewportView(jTable2);
+        if (jTable2.getColumnModel().getColumnCount() > 0) {
+            jTable2.getColumnModel().getColumn(0).setResizable(false);
+            jTable2.getColumnModel().getColumn(1).setResizable(false);
+            jTable2.getColumnModel().getColumn(2).setResizable(false);
+            jTable2.getColumnModel().getColumn(3).setResizable(false);
+            jTable2.getColumnModel().getColumn(4).setResizable(false);
+            jTable2.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -336,6 +256,130 @@ public class FlightBooking extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    public void loadFlightsToTableDeparture() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        File file = new File(filePath);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            List<String[]> rows = new ArrayList<>();
+
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] rowData = line.split("-");
+                    // Add only the first 5 columns for Departure table
+                    if (rowData.length >= 5) {
+                        String[] row = { rowData[0], rowData[1], rowData[2], rowData[3], rowData[4] };
+                        rows.add(row);
+                    }
+                }
+            }
+            br.close();
+
+            // Sort rows by Day and Time
+            Collections.sort(rows, (row1, row2) -> {
+                int dayComparison = row1[1].compareTo(row2[1]);
+                if (dayComparison == 0) {
+                    return row1[2].compareTo(row2[2]);
+                }
+                return dayComparison;
+            });
+
+            // Add sorted data to the table
+            for (String[] row : rows) {
+                model.addRow(row);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadFlightsToTableArrival() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+        File file = new File(filePath);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            List<String[]> rows = new ArrayList<>();
+
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] rowData = line.split("-");
+                    // Add all 6 columns for Arrival table
+                    if (rowData.length >= 6) {
+                        String[] row = { rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5] };
+                        rows.add(row);
+                    }
+                }
+            }
+            br.close();
+
+            // Sort rows by Day and Time (you can adjust sorting criteria as needed)
+            Collections.sort(rows, (row1, row2) -> {
+                int dayComparison = row1[1].compareTo(row2[1]);
+                if (dayComparison == 0) {
+                    return row1[2].compareTo(row2[2]);
+                }
+                return dayComparison;
+            });
+
+            // Add sorted data to the table
+            for (String[] row : rows) {
+                model.addRow(row);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void saveBookingToTxt(String record) {
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Bookings.txt"; // Update the path if necessary
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(record);
+            writer.newLine(); // Add a new line after each record
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving booking to file.");
+            e.printStackTrace();
+        }
+    }
+    
+    private void removeBookingFromTxt(String record) {
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Bookings.txt"; // Update the path if necessary
+        File file = new File(filePath);
+        File tempFile = new File(file.getAbsolutePath() + ".temp");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().equals(record)) { // Skip the record to remove
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+
+            // Delete original file and rename the temp file
+            if (file.delete()) {
+                tempFile.renameTo(file);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error removing booking from file.");
+            e.printStackTrace();
+        }
+    }
+    
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
         DefaultTableModel sourceModel = (DefaultTableModel) jTable1.getModel();
         int selectedRow = jTable1.getSelectedRow();
@@ -432,13 +476,7 @@ public class FlightBooking extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FlightBooking.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FlightBooking().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new FlightBooking().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
