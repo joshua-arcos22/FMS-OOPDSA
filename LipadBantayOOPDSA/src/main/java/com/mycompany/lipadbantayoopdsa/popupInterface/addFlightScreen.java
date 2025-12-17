@@ -620,10 +620,17 @@ public class addFlightScreen extends javax.swing.JFrame {
         boolean time_Valid = true;
         boolean runway_Valid = true; // New flag for runway/airport checks
 
-        // --- VALIDATION CHECKS ---
-
-        // A. Validate Airline Name
-        if (airlineField.getText().matches(".*[0-9].*")) {
+        
+        
+        
+        // --- VALIDATION CHECKS --
+        // ------------AIRLINE-----------------------------------
+        String airlineName = airlineField.getText().trim().toUpperCase(); 
+        if (airlineName.isEmpty()) {
+            errorAIRLINENAME.setText("Required"); 
+            errorAIRLINENAME.setForeground(Color.red);
+            Flt_No_Valid = false;
+        } else if (airlineField.getText().matches(".*[0-9].*")) {
             errorAIRLINENAME.setText("Invalid Input");
             errorAIRLINENAME.setForeground(Color.red);
             airlineField_Valid = false;
@@ -631,43 +638,77 @@ public class addFlightScreen extends javax.swing.JFrame {
             errorAIRLINENAME.setText(" ");
             Airline_Name = airlineField.getText();
         }
+        // ---------------------------------------------------------
+        
+        
+        
+        // ------------FLIGHT NUMBER-----------------------------------
+        String flightNum = flnField.getText().trim().toUpperCase(); 
 
-        // B. Validate Flight Number
-        if (flnField.getText().length() != 6) {
-            errorFLTNO.setText("MinMax of 6");
+        if (flightNum.isEmpty()) {
+            errorFLTNO.setText("Required"); 
             errorFLTNO.setForeground(Color.red);
             Flt_No_Valid = false;
-        } else if(flnField.getText().substring(0, 2).matches(".*[0-9].*")) {
-            errorFLTNO.setText("Must Start w/ 2 Letter");
+        } else if (!flightNum.matches("[A-Z0-9]+")) {
+            errorFLTNO.setText("Alphanumeric Only");
             errorFLTNO.setForeground(Color.red);
             Flt_No_Valid = false;
+        } else if (flightNum.length() != 6 ) {
+            errorFLTNO.setText("Invalid Length");
+            errorFLTNO.setForeground(Color.red);
+            Flt_No_Valid = false;
+        } else if (flightNum.substring(0, 2).matches(".*[0-9].*")) { 
+            errorFLTNO.setText("Must Start w/ 2 Char");
+            errorFLTNO.setForeground(Color.red);
+            Flt_No_Valid = false;
+
         } else {
             errorFLTNO.setText(" ");
-            Flight_Number = flnField.getText();
+            flnField.setText(flightNum); 
+            Flight_Number = flightNum;   
+            Flt_No_Valid = true;
         }
-
+        // ---------------------------------------------------------
        
-        if (timeField.getText().isEmpty() || timeField.getText().length() > 4 || !timeField.getText().matches("\\d+")) {
-            errorTIME.setText("Time Format Error");
+        //// -------------------ttime-------------------------------------
+        String rawInput = timeField.getText().trim(); 
+
+      
+        if (rawInput.isEmpty() || rawInput.length() != 4 || !rawInput.matches("\\d+")) {
+            errorTIME.setText("Use HHMM format");
             errorTIME.setForeground(Color.red);
             time_Valid = false;
-        } else if (Integer.parseInt(timeField.getText().trim().substring(0, 4)) >= 2400) {
-            errorTIME.setText("Invalid Time");
-            errorTIME.setForeground(Color.red);
-            time_Valid = false;
+
         } else {
-            errorTIME.setText(" ");
-            Time = timeField.getText();
+            
+            int hours = Integer.parseInt(rawInput.substring(0, 2));   
+            int minutes = Integer.parseInt(rawInput.substring(2, 4)); 
+
+            
+            // This blocks "0660" because minutes (60) is > 59
+            if (hours > 23 || minutes > 59) {
+                errorTIME.setText("Invalid Time"); 
+                errorTIME.setForeground(Color.red);
+                time_Valid = false;
+            } else {
+                // 5. Valid Time
+                errorTIME.setText(" ");
+                Time = rawInput; 
+                time_Valid = true; 
+            }
         }
 
-
+      
+        
+        // --------------------RWY--------------------------------
         if (originRWYLn.getForeground() == Color.red || 
             destRWYLn.getForeground() == Color.red || 
             acRWYLn.getForeground() == Color.red) {
             runway_Valid = false;
         }
+        // ---------------------------------------------------------
 
-       
+       // ----------------------MASTER-------------------------------
         if (airlineField_Valid && Flt_No_Valid && time_Valid && runway_Valid) {
 
             Origin_Airport = origin_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
