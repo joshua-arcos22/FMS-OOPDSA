@@ -3,7 +3,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
+import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
 import java.io.*;
 import java.nio.file.Paths;
 import javax.swing.*;
@@ -81,7 +81,6 @@ public class UserDashboard extends javax.swing.JFrame {
         txtName = new javax.swing.JLabel();
         txtEmail = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -119,9 +118,6 @@ public class UserDashboard extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(255, 153, 102));
-        jButton1.setText("VIEW BOOKINGS");
-
         btnLogout.setForeground(new java.awt.Color(255, 255, 255));
         btnLogout.setText("Logout");
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
@@ -151,10 +147,8 @@ public class UserDashboard extends javax.swing.JFrame {
                         .addGap(281, 281, 281)
                         .addComponent(btnLogout))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(239, 239, 239)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -169,9 +163,7 @@ public class UserDashboard extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(txtEmail)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(41, 41, 41)
                 .addComponent(btnLogout)
                 .addContainerGap(43, Short.MAX_VALUE))
@@ -200,13 +192,16 @@ public class UserDashboard extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        FlightBooking flightBook = new FlightBooking(this.loggedInUsername);
+        flightBook.setVisible(true);
+        flightBook.setLocationRelativeTo(null);
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogout;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
