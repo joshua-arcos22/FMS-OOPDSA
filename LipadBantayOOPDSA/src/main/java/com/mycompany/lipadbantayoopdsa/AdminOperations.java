@@ -129,20 +129,22 @@ public class AdminOperations {
         
     }
     
-    public void Admin_EditFlight() throws IOException {
+    
+    public void Admin_EditFlight(String originalFlightNum) throws IOException {
         File inputFile = new File(Database_TimeTable_Destination_Path);
         File tempFile = new File("temp_timetable.txt");
 
         try (Scanner reader = new Scanner(inputFile);
              BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
 
+            // Use the NEW data (stored in class variables) to format the new string
             String updatedFlight = addFlightFormat(Airline_Name, Ac_Type, Origin_Airport,
                                                    Destination_Airport, Frequency, Time, Flight_Number);
 
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
-                // If the line contains the flight number we want to edit, replace it
-                if (line.contains(Flight_Number)) {
+
+                if (line.contains(originalFlightNum)) {
                     writer.write(updatedFlight);
                 } else {
                     writer.write(line);
@@ -154,12 +156,15 @@ public class AdminOperations {
         // Replace original file with temp file
         if (!inputFile.delete()) {
             System.out.println("Could not delete original file.");
+            
+            System.gc();
+            inputFile.delete();
         }
         if (!tempFile.renameTo(inputFile)) {
             System.out.println("Could not rename temp file.");
         }
 
-        System.out.println("Flight edited successfully.");
+        
     }
     
     

@@ -5,12 +5,14 @@
 package com.mycompany.lipadbantayoopdsa;
 
 import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen;
-import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen;
+import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_1;
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.table.DefaultTableModel;
 import java.util.logging.Level;
@@ -170,6 +172,11 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         });
 
         deleteFlight.setText("DELETE");
+        deleteFlight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteFlightActionPerformed(evt);
+            }
+        });
 
         editFlight.setText("EDIT");
         editFlight.addActionListener(new java.awt.event.ActionListener() {
@@ -517,8 +524,21 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchButtonActionPerformed
 
     private void addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFlightActionPerformed
-        // TODO add your handling code here:
         addFlightScreen addPopUp = new addFlightScreen();
+    
+        // ADD THIS LISTENER: It waits for the popup to close
+        addPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                // When the window closes, check which tab is open and refresh it
+                if (Arrival.getBackground().equals(Color.WHITE)) {
+                    loadFlightsToTableArrival();
+                } else {
+                    loadFlightsToTableDeparture();
+                }
+            }
+        });
+
         addPopUp.setVisible(true);
         
     }//GEN-LAST:event_addFlightActionPerformed
@@ -545,11 +565,113 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         String time = FlightTable.getValueAt(selectedRow, 5).toString();
         String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
 
-        editFlightScreen editPopUp = new editFlightScreen(
+        editFlightScreen_1 editPopUp = new editFlightScreen_1(
             airline, aircraft, origin, destination, frequency, time, flightNumber
         );
+        
+        
+        editPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                // When the window closes, check which tab is open and refresh it
+                if (Arrival.getBackground().equals(Color.WHITE)) {
+                    loadFlightsToTableArrival();
+                } else {
+                    loadFlightsToTableDeparture();
+                }
+            }
+        });
         editPopUp.setVisible(true);
     }//GEN-LAST:event_editFlightActionPerformed
+
+    private void deleteFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFlightActionPerformed
+        // Get the selected row
+        selectedRow = FlightTable.getSelectedRow();
+
+        // Check if a row is selected
+        if (selectedRow == -1) {
+            // Show a warning if no row is selected
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Please select a flight to delete.",
+                "No Selection",
+                javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // Show a confirmation dialog before deleting the selected flight
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(
+            this, 
+            "Are you sure you want to delete this flight?", 
+            "Confirm Deletion", 
+            javax.swing.JOptionPane.YES_NO_OPTION
+        );
+
+        // If the user confirms the deletion (YES)
+        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+            DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
+
+            // Get the flight details from the selected row
+            String airline = FlightTable.getValueAt(selectedRow, 0).toString();
+            String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
+            String origin = FlightTable.getValueAt(selectedRow, 2).toString();
+            String destination = FlightTable.getValueAt(selectedRow, 3).toString();
+            String frequency = FlightTable.getValueAt(selectedRow, 4).toString();
+            String time = FlightTable.getValueAt(selectedRow, 5).toString();
+            String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
+
+            // Remove the row from the table
+            model.removeRow(selectedRow);
+
+            // Optionally update the file after the table change
+            updateTimetableFile(airline, aircraft, origin, destination, frequency, time, flightNumber);
+        }
+    }
+
+    // Method to update the timetable file by removing the deleted flight entry
+    private void updateTimetableFile(String airline, String aircraft, String origin, String destination, String frequency, String time, String flightNumber) {
+        // Determine the correct file path based on the active tab (Departure or Arrival)
+        String filePath = getActiveTimetablePath();
+        File file = new File(filePath);
+
+        try {
+            // Read the entire file into a list of strings
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            StringBuilder fileContent = new StringBuilder();
+            String line;
+
+            // Read all lines and store them in fileContent
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    // Split each line to match the row data format
+                    String[] rowData = line.split("-");
+
+                    // Check if this line matches the deleted flight details
+                    if (rowData.length == 7) {
+                        // Compare all the values (if they match, don't add this line back)
+                        if (rowData[0].equals(airline) && rowData[1].equals(aircraft) && rowData[2].equals(origin)
+                            && rowData[3].equals(destination) && rowData[4].equals(frequency) && rowData[5].equals(time)
+                            && rowData[6].equals(flightNumber)) {
+                            continue; // Skip adding this line to the updated file
+                        }
+                    }
+                    // Add the line to the updated file content if it doesn't match the deleted row
+                    fileContent.append(line).append(System.lineSeparator());
+                }
+            }
+
+            reader.close();
+
+            // Now write the updated content back to the file
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(fileContent.toString());
+            writer.close();
+
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error updating flight file after deletion.", e);
+        }
+    }//GEN-LAST:event_deleteFlightActionPerformed
 
     /**
      * @param args the command line arguments

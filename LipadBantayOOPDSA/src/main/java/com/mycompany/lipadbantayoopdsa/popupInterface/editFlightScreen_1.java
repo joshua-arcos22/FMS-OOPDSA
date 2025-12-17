@@ -20,9 +20,9 @@ import javax.swing.border.*;
  *
  * @author Joshua
  */
-public class editFlightScreen extends javax.swing.JFrame {
+public class editFlightScreen_1 extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(editFlightScreen.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(editFlightScreen_1.class.getName());
     
         private String Airline_Name;
         private String Ac_Type;
@@ -31,8 +31,9 @@ public class editFlightScreen extends javax.swing.JFrame {
         private String Frequency = "";
         private String Time;
         private String Flight_Number;
-
-        public editFlightScreen(
+        private String Original_Flight_Number_Ref;
+                
+        public editFlightScreen_1(
             String airline,
             String aircraft,
             String origin,
@@ -43,16 +44,114 @@ public class editFlightScreen extends javax.swing.JFrame {
         ) {
             initComponents();
 
+            this.Original_Flight_Number_Ref = flightNumber;
             airlineField.setText(airline);
             flnField.setText(flightNumber);
             timeField.setText(time);
-
-            ac_drpdwn.setSelectedItem(aircraft);
-            origin_drpdwn.setSelectedItem(origin);
-            destination_drpdwn.setSelectedItem(destination);
+            
+             //initializes value
+            errorAIRLINENAME.setText(" ");
+            errorFLTNO.setText(" ");
+            errorTIME.setText(" ");
+            originRWYLn.setText(" ");
+            destRWYLn.setText(" ");
+            acRWYLn.setText(" ");
+            
+            
+            
 
             // handle frequency checkboxes
             setFrequencyChecks(frequency);
+            
+            ac_drpdwn.removeAllItems();
+            
+            try {
+                File acOpenMasyer = new File(AdminOperations.Database_Aircarfts_Path);
+                Scanner acReader = new Scanner(acOpenMasyer);
+                while(acReader.hasNextLine()){
+                    String acLineReader = acReader.nextLine();
+                    String acLineReaderArray[] = acLineReader.split("-");
+                    ac_drpdwn.addItem(acLineReaderArray[0]);
+                      
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found ");
+            }
+            ac_drpdwn.setSelectedItem(aircraft);
+            
+            
+
+            
+            //initialize origin airport dropdown
+            origin_drpdwn.removeAllItems();
+            try {
+                File acOpenMasyer = new File(AdminOperations.Database_Aiports_Path);
+                Scanner aprtReader = new Scanner(acOpenMasyer);
+                while(aprtReader.hasNextLine()){
+                    String aprtLineReader = aprtReader.nextLine();
+                    String aprtLineReaderArray[] = aprtLineReader.split("-");
+                    origin_drpdwn.addItem(aprtLineReaderArray[1] + "(" +aprtLineReaderArray[0] + ")" );
+                    
+                }
+                aprtReader.close();
+             } catch (FileNotFoundException e) {
+                System.out.println("File not found ");
+            }
+            int i;
+            for (i = 0; i < origin_drpdwn.getItemCount(); i++) {
+                String orgndrpAp = origin_drpdwn.getItemAt(i).toString().substring(0, 4);
+                if (orgndrpAp.equals(origin.substring(0,4))) {
+                    break;
+                }
+            }
+            origin_drpdwn.setSelectedIndex(i);
+            
+            
+            
+
+
+
+            //initializes desitantion aiport drop down
+            destination_drpdwn.removeAllItems();
+            try {
+                File acOpenMasyer = new File(AdminOperations.Database_Aiports_Path);
+                Scanner aprtReader = new Scanner(acOpenMasyer);
+                while(aprtReader.hasNextLine()){
+                    String aprtLineReader = aprtReader.nextLine();
+                    String aprtLineReaderArray[] = aprtLineReader.split("-");
+                    destination_drpdwn.addItem(aprtLineReaderArray[1] + "(" +aprtLineReaderArray[0] + ")" );
+                    
+                } 
+                aprtReader.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found ");
+            }
+            int y;
+            for (y = 0; y < destination_drpdwn.getItemCount(); y++) {
+                String destdrpAp = destination_drpdwn.getItemAt(y).toString().substring(0, 4);
+                if (destdrpAp.equals(destination.substring(0,4))) {
+                    break;
+                }
+            }
+            destination_drpdwn.setSelectedIndex(y);
+            
+            
+//            System.out.println(origin);
+//            System.out.println(destination);
+
+            //updates the field if there are changes 
+            java.awt.event.ActionListener updateAction = new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    updateRunwayStatus();
+                }
+            };
+
+            origin_drpdwn.addActionListener(updateAction);
+            destination_drpdwn.addActionListener(updateAction);
+            ac_drpdwn.addActionListener(updateAction);
+
+            // Run it once initially to set the correct labels for default selections
+            updateRunwayStatus();
             
         }
         
@@ -671,7 +770,16 @@ public class editFlightScreen extends javax.swing.JFrame {
             Ac_Type = ac_drpdwn.getSelectedItem().toString().trim();
             Frequency = getFrequencyString();
 
+           
+//            System.out.println(Airline_Name + " | " + 
+//                               Ac_Type + " | " +
+//                               Origin_Airport + " | " +
+//                               Destination_Airport + " | " +
+//                               Frequency + " | " +
+//                               Time + " | " +
+//                               Flight_Number);
 
+            
             AdminOperations finalEditFlight = new AdminOperations(
                 Airline_Name, 
                 Ac_Type, 
@@ -682,8 +790,9 @@ public class editFlightScreen extends javax.swing.JFrame {
                 Flight_Number
             );
             try {
-                finalEditFlight.Admin_EditFlight();
+                finalEditFlight.Admin_EditFlight(Original_Flight_Number_Ref);
             } catch (IOException e) {
+                System.out.println("Error Saving Flight");
             }
             
 
@@ -701,10 +810,6 @@ public class editFlightScreen extends javax.swing.JFrame {
     
     }//GEN-LAST:event_btn_addFlightActionPerformed
 
-    
-    
-        
-    
     
     private void E_checkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_E_checkMouseClicked
         boolean isChecked = E_check.isSelected();
@@ -739,11 +844,11 @@ public class editFlightScreen extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new editFlightScreen(
+        java.awt.EventQueue.invokeLater(() -> new editFlightScreen_1(
         "AIRLINE1",  // airline
         "B737",      // aircraft
-        "MNL",       // origin
-        "CEB",       // destination
+        "MNLA",       // origin
+        "CEBU",       // destination
         "M/TU/W",    // frequency
         "0930",      // time
         "AB1234"     // flight number 
