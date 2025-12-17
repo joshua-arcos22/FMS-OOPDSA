@@ -31,39 +31,47 @@ public class LoginForm extends javax.swing.JFrame {
  * Authenticates the provided username and password against the file data.
  * Returns the role string (ADMIN/AIRLINE_MANAGER/USER) or null if authentication fails.
  */
-private String authenticateUser(String username, String password) {
-    String filePath = "user_credentials.txt"; 
-    
-    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-        String line;
-        
-        while ((line = reader.readLine()) != null) {
-            if (line.trim().isEmpty()) continue;
-            
-            String[] parts = line.split(",");
-            
-            if (parts.length == 3) {
-                String fileUsername = parts[0].trim(); // Trim for comparison
-                String filePassword = parts[1].trim(); 
-                String fileRole = parts[2].trim();
-                
-                if (fileUsername.equals(username) && filePassword.equals(password)) {
-                    return fileRole; 
+    private String authenticateUser(String username, String password) {
+        String filePath = "user_credentials.txt";
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            String fileUsername = null;
+            String filePassword = null;
+            String fileRole = null;
+
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                if (line.startsWith("USERNAME:")) {
+                    fileUsername = line.substring("USERNAME:".length()).trim();
+                } else if (line.startsWith("PASSWORD:")) {
+                    filePassword = line.substring("PASSWORD:".length()).trim();
+                } else if (line.startsWith("ROLE:")) {
+                    fileRole = line.substring("ROLE:".length()).trim();
+                } else if (line.startsWith("----------------------------")) {
+                    // End of a user record; check credentials
+                    if (fileUsername != null && filePassword != null && fileRole != null) {
+                        if (fileUsername.equals(username) && filePassword.equals(password)) {
+                            return fileRole;
+                        }
+                    }
+                    // Reset for next user record
+                    fileUsername = null;
+                    filePassword = null;
+                    fileRole = null;
                 }
             }
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Error: user_credentials.txt not found. Place it in the main project folder.", "File Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading user database: " + e.getMessage(), "File Read Error", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (java.io.FileNotFoundException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Error: user_credentials.txt not found. Place it in the main project folder.", 
-            "File Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-    } catch (IOException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Error reading user database: " + e.getMessage(), 
-            "File Read Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+
+        return null; // Not found
     }
-    
-    return null;
-}
+
     
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginForm.class.getName());
@@ -208,21 +216,16 @@ private String authenticateUser(String username, String password) {
     private void btnSignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignInActionPerformed
         // TODO add your handling code here:
         String username = txtUsn.getText().trim();
-       
         String password = String.valueOf(pwPW.getPassword());
-        String userRole = authenticateUser(username, password); 
 
-    
-    if (username.isEmpty() || password.isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please enter both username and password.", "Login Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter both username and password.", "Login Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    if (password.equals("password")) { 
-        userRole = USER_ROLES.get(username);
+        String userRole = authenticateUser(username, password); // read from user_credentials.txt
 
         if (userRole != null) {
-          
             JFrame dashboard = null;
             switch (userRole) {
                 case "ADMIN":
@@ -234,17 +237,16 @@ private String authenticateUser(String username, String password) {
                 case "USER":
                     dashboard = new UserDashboard(username);
                     break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Unknown user role.", "Login Error", JOptionPane.ERROR_MESSAGE);
+                    return;
             }
 
             dashboard.setVisible(true);
-            this.dispose(); 
-
+            this.dispose(); // close login form
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Invalid Username or Password.", "Login Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Invalid Username or Password.", "Login Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
     }//GEN-LAST:event_btnSignInActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
