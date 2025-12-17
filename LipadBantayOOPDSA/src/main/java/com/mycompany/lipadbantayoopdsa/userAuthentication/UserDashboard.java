@@ -5,6 +5,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  */
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
 import java.io.*;
+import java.nio.file.Paths;
 import javax.swing.*;
 /**
  *
@@ -29,7 +30,11 @@ public class UserDashboard extends javax.swing.JFrame {
     }
     // class loader not working
     private void loadUserProfile(String username) {
-    String filePath = "user_profiles.txt";
+    String filePath = Paths.get(System.getProperty("user.dir"), 
+                                           "src", "main", "java", "com", "mycompany", 
+                                           "lipadbantayoopdsa", "userAuthentication", 
+                                           "user_profiles.txt").toString();
+    
     try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
         String line;
         while ((line = reader.readLine()) != null) {

@@ -6,6 +6,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  */
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
+import java.nio.file.Paths;
 import javax.swing.JOptionPane;
 import java.io.*;
 import java.util.*;
@@ -228,8 +229,15 @@ public class RegistrationForm extends javax.swing.JFrame {
         }
 
         // Absolute paths for the files
-        String credFilePath = "C:\\Users\\alken\\OneDrive\\Desktop\\SCHOOL\\BU Sophoromore IT\\DSA Project\\FlightManagementSystem\\LipadBantayOOPDSA\\src\\main\\java\\com\\mycompany\\lipadbantayoopdsa\\userAuthentication\\user_credentials.txt";
-        String profileFilePath = "C:\\Users\\alken\\OneDrive\\Desktop\\SCHOOL\\BU Sophoromore IT\\DSA Project\\FlightManagementSystem\\LipadBantayOOPDSA\\src\\main\\java\\com\\mycompany\\lipadbantayoopdsa\\userAuthentication\\user_profiles.txt";
+        String credFilePath = Paths.get(System.getProperty("user.dir"), 
+                                        "src", "main", "java", "com", "mycompany", 
+                                        "lipadbantayoopdsa", "userAuthentication", 
+                                        "user_credentials.txt").toString();
+
+        String profileFilePath = Paths.get(System.getProperty("user.dir"), 
+                                           "src", "main", "java", "com", "mycompany", 
+                                           "lipadbantayoopdsa", "userAuthentication", 
+                                           "user_profiles.txt").toString();
 
         try (
             PrintWriter credWriter = new PrintWriter(new FileWriter(credFilePath, true));  // append mode
@@ -237,11 +245,11 @@ public class RegistrationForm extends javax.swing.JFrame {
         ) {
             // Write credentials with full info
             String credRecord = 
-                    "FULLNAME = " + fullName + System.lineSeparator() +
-                    "EMAIL = " + email + System.lineSeparator() +
-                    "USERNAME = " + username + System.lineSeparator() +
-                    "PASSWORD = " + password + System.lineSeparator() +
-                    "ROLE = " + role + System.lineSeparator() +
+                    "FULLNAME: " + fullName + System.lineSeparator() +
+                    "EMAIL: " + email + System.lineSeparator() +
+                    "USERNAME: " + username + System.lineSeparator() +
+                    "PASSWORD: " + password + System.lineSeparator() +
+                    "ROLE: " + role + System.lineSeparator() +
                     "----------------------------";
             credWriter.println(credRecord);
 

@@ -7,6 +7,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AdminDashboard;
+import java.nio.file.Paths;
 import javax.swing.*;
 import java.io.*;
 /**
@@ -32,7 +33,10 @@ public class LoginForm extends javax.swing.JFrame {
  * Returns the role string (ADMIN/AIRLINE_MANAGER/USER) or null if authentication fails.
  */
     private String authenticateUser(String username, String password) {
-        String filePath = "user_credentials.txt";
+        String filePath = Paths.get(System.getProperty("user.dir"), 
+                                        "src", "main", "java", "com", "mycompany", 
+                                        "lipadbantayoopdsa", "userAuthentication", 
+                                        "user_credentials.txt").toString();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -51,18 +55,24 @@ public class LoginForm extends javax.swing.JFrame {
                 } else if (line.startsWith("ROLE:")) {
                     fileRole = line.substring("ROLE:".length()).trim();
                 } else if (line.startsWith("----------------------------")) {
-                    // End of a user record; check credentials
                     if (fileUsername != null && filePassword != null && fileRole != null) {
                         if (fileUsername.equals(username) && filePassword.equals(password)) {
                             return fileRole;
                         }
                     }
-                    // Reset for next user record
                     fileUsername = null;
                     filePassword = null;
                     fileRole = null;
                 }
             }
+
+            // Check last user record in case file doesn't end with separator
+            if (fileUsername != null && filePassword != null && fileRole != null) {
+                if (fileUsername.equals(username) && filePassword.equals(password)) {
+                    return fileRole;
+                }
+            }
+
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(this, "Error: user_credentials.txt not found. Place it in the main project folder.", "File Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
