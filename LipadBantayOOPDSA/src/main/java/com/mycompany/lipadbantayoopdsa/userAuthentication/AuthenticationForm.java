@@ -4,7 +4,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
+import com.mycompany.lipadbantayoopdsa.userAuthentication.RegistrationForm;
 /**
  *
  * @author justine
@@ -129,6 +129,9 @@ public class AuthenticationForm extends javax.swing.JFrame {
 
     private void btnRegister1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegister1ActionPerformed
         // TODO add your handling code here:
+        RegistrationForm register = new RegistrationForm();
+        register.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnRegister1ActionPerformed
 
     /**
