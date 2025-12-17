@@ -31,9 +31,12 @@ public class FlightBooking extends javax.swing.JFrame {
      * Creates new form FlightBooking
      */
     
+    private String username;
+    
     private static final Logger logger = Logger.getLogger(FlightBooking.class.getName());
     
-    public FlightBooking() {
+    public FlightBooking(String username) {
+        this.username = username;
         initComponents();
         
         loadFlightsToTableDeparture();
@@ -328,7 +331,7 @@ public class FlightBooking extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
-                    // Add all 6 columns for Arrival table
+ 
                     if (rowData.length >= 6) {
                         String[] row = { rowData[0], rowData[4], rowData[5], rowData[2], rowData[3] };
                         rows.add(row);
@@ -337,7 +340,7 @@ public class FlightBooking extends javax.swing.JFrame {
             }
             br.close();
 
-            // Sort rows by Day and Time (you can adjust sorting criteria as needed)
+            // Sort rows by Day and Time
             Collections.sort(rows, (row1, row2) -> {
                 int dayComparison = row1[1].compareTo(row2[1]);
                 if (dayComparison == 0) {
@@ -360,7 +363,7 @@ public class FlightBooking extends javax.swing.JFrame {
         String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt"; 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(record);
-            writer.newLine(); // Add a new line after each record
+            writer.newLine(); 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error saving booking to file.");
             e.printStackTrace();
@@ -372,15 +375,13 @@ public class FlightBooking extends javax.swing.JFrame {
         File file = new File(filePath);
         File tempFile = new File(file.getAbsolutePath() + ".temp");
 
-        // Phase 1: Read and Write to Temp
         try {
-            // The try-with-resources block ensures these close immediately after the '}'
             try (BufferedReader reader = new BufferedReader(new FileReader(file));
                  BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Use .trim() on both sides to avoid invisible space errors
+
                     if (!line.trim().equals(record.trim())) {
                         writer.write(line);
                         writer.newLine();
@@ -394,7 +395,7 @@ public class FlightBooking extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Could not rename temp file.");
                     }
                 } else {
-                    // If this triggers, another part of your code still has the file open
+
                     JOptionPane.showMessageDialog(this, "Error: Original file is locked and cannot be deleted.");
                 }
             }
@@ -404,9 +405,8 @@ public class FlightBooking extends javax.swing.JFrame {
     }
     
     private void searchFlights() {
-        String searchQuery = SearchField.getText().toLowerCase(); // Get the search query and convert it to lowercase for case-insensitive search
+        String searchQuery = SearchField.getText().toLowerCase(); 
 
-        // First, clear the tables
         DefaultTableModel availableModel = (DefaultTableModel) jTable1.getModel();
         DefaultTableModel bookedModel = (DefaultTableModel) jTable2.getModel();
         availableModel.setRowCount(0);
@@ -493,7 +493,6 @@ public class FlightBooking extends javax.swing.JFrame {
             }
             br.close();
 
-            // Sort rows by Day and Time (you can adjust sorting criteria as needed)
             Collections.sort(rows, (row1, row2) -> {
                 int dayComparison = row1[1].compareTo(row2[1]);
                 if (dayComparison == 0) {
@@ -587,15 +586,9 @@ public class FlightBooking extends javax.swing.JFrame {
     }//GEN-LAST:event_button2ActionPerformed
 
     private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed
-        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        if (topFrame != null) {
-            topFrame.dispose();
-        }
-        try {
-            new UserDashboard("UserPlaceholder").setVisible(true);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Could not open UserDashboard. Check file name.");
-        }
+        this.dispose(); 
+
+        new UserDashboard(this.username).setVisible(true);
     }//GEN-LAST:event_button3ActionPerformed
 
     private void SearchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusGained
@@ -650,7 +643,6 @@ public class FlightBooking extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FlightBooking.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        java.awt.EventQueue.invokeLater(() -> new FlightBooking().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
