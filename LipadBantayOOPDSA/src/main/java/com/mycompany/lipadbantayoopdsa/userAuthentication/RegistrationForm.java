@@ -61,13 +61,31 @@ public class RegistrationForm extends javax.swing.JFrame {
 
         lblUsn.setText("Username:");
 
+        txtRegUsn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRegUsnActionPerformed(evt);
+            }
+        });
+
         lblPW.setText("Password:");
+
+        pwdReg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pwdRegActionPerformed(evt);
+            }
+        });
 
         lblFN.setText("Full Name:");
 
         lblEmail.setText("Email:");
 
         lblRole.setText("Role:");
+
+        txtFN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFNActionPerformed(evt);
+            }
+        });
 
         txtEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -167,55 +185,120 @@ public class RegistrationForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void autoSave() {
+        String username = txtRegUsn.getText().trim();
+        String password = String.valueOf(pwdReg.getPassword()).trim();
+        String fullName = txtFN.getText().trim();
+        String email = txtEmail.getText().trim();
+        String role = (String) cmbRole.getSelectedItem();
+
+        // Only save if all fields are filled
+        if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || email.isEmpty()) {
+            return;
+        }
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter("user_credentials.txt", true))) {
+            writer.println(username + "," + password + "," + role);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Auto-save failed: " + e.getMessage());
+        }
+    }
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         new AuthenticationForm().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnBackActionPerformed
 
-    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmailActionPerformed
-
     private void cmbRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbRoleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbRoleActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+    // Read user input
         String username = txtRegUsn.getText().trim();
         String password = String.valueOf(pwdReg.getPassword());
         String fullName = txtFN.getText().trim();
         String email = txtEmail.getText().trim();
         String role = (String) cmbRole.getSelectedItem();
 
-    if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || email.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    String credFilePath =  "user_credentials.txt";
-    String profileFilePath = "user_profiles.txt";
-    try (PrintWriter credWriter = new PrintWriter(new FileWriter(credFilePath, true)); // 'true' for append mode
-         PrintWriter profileWriter = new PrintWriter(new FileWriter(profileFilePath, true))) {
+        if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-            // save to credentials txt file
-        String credRecord = String.format("%s,%s,%s", username, password, role);
-        credWriter.println(credRecord);  
+        // Absolute paths for the files
+        String credFilePath = "C:\\Users\\alken\\OneDrive\\Desktop\\SCHOOL\\BU Sophoromore IT\\DSA Project\\FlightManagementSystem\\LipadBantayOOPDSA\\src\\main\\java\\com\\mycompany\\lipadbantayoopdsa\\userAuthentication\\user_credentials.txt";
+        String profileFilePath = "C:\\Users\\alken\\OneDrive\\Desktop\\SCHOOL\\BU Sophoromore IT\\DSA Project\\FlightManagementSystem\\LipadBantayOOPDSA\\src\\main\\java\\com\\mycompany\\lipadbantayoopdsa\\userAuthentication\\user_profiles.txt";
 
-        // Save to Profile File: username, full_name, email, other_info (using placeholder for other_info)
-        String profileRecord = String.format("%s,%s,%s,%s", username, fullName, email, "New Account");
-        profileWriter.println(profileRecord);
+        try (
+            PrintWriter credWriter = new PrintWriter(new FileWriter(credFilePath, true));  // append mode
+            PrintWriter profileWriter = new PrintWriter(new FileWriter(profileFilePath, true))
+        ) {
+            // Write credentials with full info
+            String credRecord = 
+                    "FULLNAME = " + fullName + System.lineSeparator() +
+                    "EMAIL = " + email + System.lineSeparator() +
+                    "USERNAME = " + username + System.lineSeparator() +
+                    "PASSWORD = " + password + System.lineSeparator() +
+                    "ROLE = " + role + System.lineSeparator() +
+                    "----------------------------";
+            credWriter.println(credRecord);
 
-        // success registration
-        JOptionPane.showMessageDialog(this, "Registration successful! You can now sign in.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Write profile info in CSV format: username, full name, email, default info
+            String profileRecord = String.format("%s,%s,%s,%s", username, fullName, email, "User");
+            profileWriter.println(profileRecord);
 
-        // Navigate back to the Login Form
-        new LoginForm().setVisible(true);
-        this.dispose();
+            JOptionPane.showMessageDialog(this, "Registration successful! You can now sign in.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error saving registration data: " + e.getMessage(), "File Write Error", JOptionPane.ERROR_MESSAGE);
+            // Go back to login form
+            new LoginForm().setVisible(true);
+            this.dispose();
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving registration data: " + e.getMessage(), "File Write Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
+    
+    private boolean checkExistingUsername(String username) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("user_credentials.txt"))) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if(data.length > 0 && data[0].equals(username)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            // File may not exist yet, ignore
+        }
+        return false;
+    }
+
+    
+    private void txtFNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFNActionPerformed
+        // TODO add your handling code here:
+        
+        autoSave();
+    }//GEN-LAST:event_txtFNActionPerformed
+
+    private void txtRegUsnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRegUsnActionPerformed
+        // TODO add your handling code here:
+        
+        autoSave();
+    }//GEN-LAST:event_txtRegUsnActionPerformed
+
+    private void pwdRegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwdRegActionPerformed
+        // TODO add your handling code here:
+        
+        autoSave();
+    }//GEN-LAST:event_pwdRegActionPerformed
+
+    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
+        // TODO add your handling code here:
+        
+        autoSave();
+    }//GEN-LAST:event_txtEmailActionPerformed
 
     /**
      * @param args the command line arguments

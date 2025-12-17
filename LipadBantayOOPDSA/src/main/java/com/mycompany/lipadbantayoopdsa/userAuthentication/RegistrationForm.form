@@ -141,6 +141,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtRegUsn">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtRegUsnActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblPW">
       <Properties>
@@ -148,6 +151,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="pwdReg">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pwdRegActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblFN">
       <Properties>
@@ -165,6 +171,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtFN">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtFNActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="txtEmail">
       <Events>

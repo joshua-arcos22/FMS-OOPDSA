@@ -1,7 +1,0 @@
-admin,System Administrator,admin@lipadbantay.com,Full system privileges.
-manager,Juan Dela Cruz,juan.delacruz@aircorp.com,Manages Philippine Airlines.
-user,Maria Santos,maria.santos@email.com,Standard passenger account.
-jed,Jed Her,jed@email.com,New Account
-justine,Justine Tanguin,justine@email.com,New Account
-al,Al Valenciano,al@email.com,New Account
-guest,Guest Gerona,guest@email.com,New Account
