@@ -7,6 +7,8 @@ package com.mycompany.lipadbantayoopdsa;
 import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen;
 import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_1;
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
+import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunction;
+import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunctionA;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import java.awt.Color;
@@ -349,6 +351,11 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     //------------------DEPARTURE TABLE------------------------------
     public void loadFlightsToTableDeparture() {
         
+        SortingFunction.sortFile();
+        SortingFunctionA.sortFile();
+        FlightTable.revalidate();
+        FlightTable.repaint();
+        
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         //INTIALIZE TABLE
         model.setRowCount(0);
@@ -435,6 +442,11 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     //------------------ARRIVAL TABLE------------------------------
     public void loadFlightsToTableArrival() {
   
+        SortingFunction.sortFile();
+        SortingFunctionA.sortFile();
+        FlightTable.revalidate();
+        FlightTable.repaint();
+        
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         //INTIALIZE TABLE
         model.setRowCount(0);

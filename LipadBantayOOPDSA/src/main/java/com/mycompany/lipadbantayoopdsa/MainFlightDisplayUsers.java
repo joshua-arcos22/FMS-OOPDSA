@@ -162,7 +162,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
         });
 
         jToggleButton1.setBackground(new java.awt.Color(255, 153, 102));
-        jToggleButton1.setText("VIEW A FLIGHT BOOKING");
+        jToggleButton1.setText("VIEW BOOKED LFIGHTS");
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton1ActionPerformed(evt);

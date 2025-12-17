@@ -7,6 +7,9 @@ package com.mycompany.lipadbantayoopdsa;
 import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen;
 import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_1;
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
+import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunction;
+import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunctionA;
+import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import java.awt.Color;
 import java.io.*;
 import java.util.*;
@@ -62,15 +65,15 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        Container.setBackground(new java.awt.Color(255, 255, 255));
+        Container.setBackground(new java.awt.Color(102, 102, 102));
 
-        TopContainer.setBackground(new java.awt.Color(51, 153, 255));
+        TopContainer.setBackground(new java.awt.Color(51, 51, 51));
 
         Title.setFont(new java.awt.Font("Santana-Black", 0, 48)); // NOI18N
         Title.setForeground(new java.awt.Color(255, 255, 255));
         Title.setText("LIPAD BANTAY(ADMIN)");
 
-        SearchContainer.setBackground(new java.awt.Color(255, 255, 255));
+        SearchContainer.setBackground(new java.awt.Color(102, 102, 102));
 
         SearchField.setText("Search for a flight");
         SearchField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -87,7 +90,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             }
         });
 
-        SearchButton.setBackground(new java.awt.Color(0, 102, 255));
+        SearchButton.setBackground(new java.awt.Color(102, 102, 102));
         SearchButton.setText("Search");
         SearchButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         SearchButton.addActionListener(new java.awt.event.ActionListener() {
@@ -140,14 +143,15 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
         addFlight.setBackground(new java.awt.Color(204, 255, 204));
         addFlight.setText("ADD");
-        addFlight.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        addFlight.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        addFlight.setBorderPainted(false);
         addFlight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addFlightActionPerformed(evt);
             }
         });
 
-        Arrival.setBackground(new java.awt.Color(0, 153, 255));
+        Arrival.setBackground(new java.awt.Color(102, 102, 102));
         Arrival.setText("Arrival");
         Arrival.setBorder(null);
         Arrival.setMaximumSize(new java.awt.Dimension(120, 35));
@@ -159,7 +163,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             }
         });
 
-        Departures.setBackground(new java.awt.Color(0, 153, 255));
+        Departures.setBackground(new java.awt.Color(102, 102, 102));
         Departures.setText("Departure");
         Departures.setBorder(null);
         Departures.setMaximumSize(new java.awt.Dimension(120, 35));
@@ -173,7 +177,8 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
         deleteFlight.setBackground(new java.awt.Color(255, 102, 102));
         deleteFlight.setText("DELETE");
-        deleteFlight.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        deleteFlight.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        deleteFlight.setBorderPainted(false);
         deleteFlight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteFlightActionPerformed(evt);
@@ -182,7 +187,8 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
         editFlight.setBackground(new java.awt.Color(255, 153, 102));
         editFlight.setText("EDIT");
-        editFlight.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        editFlight.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        editFlight.setBorderPainted(false);
         editFlight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editFlightActionPerformed(evt);
@@ -190,6 +196,11 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         });
 
         jToggleButton1.setText("BACK");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout BottomContainerLayout = new javax.swing.GroupLayout(BottomContainer);
         BottomContainer.setLayout(BottomContainerLayout);
@@ -219,10 +230,11 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         BottomContainerLayout.setVerticalGroup(
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BottomContainerLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
                 .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(deleteFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -232,7 +244,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         );
 
         FlightTable.setBackground(new java.awt.Color(255, 255, 255));
-        FlightTable.setForeground(new java.awt.Color(0, 102, 204));
+        FlightTable.setForeground(new java.awt.Color(102, 102, 102));
         FlightTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
@@ -259,6 +271,8 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        FlightTable.setGridColor(new java.awt.Color(255, 255, 255));
+        FlightTable.setShowGrid(true);
         jScrollPane2.setViewportView(FlightTable);
         if (FlightTable.getColumnModel().getColumnCount() > 0) {
             FlightTable.getColumnModel().getColumn(0).setResizable(false);
@@ -288,10 +302,9 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             .addGroup(ContainerLayout.createSequentialGroup()
                 .addComponent(TopContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(BottomContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BottomContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -323,6 +336,11 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
     
     //------------------DEPARTURE TABLE------------------------------
     public void loadFlightsToTableDeparture() {
+        
+        SortingFunction.sortFile();
+        SortingFunctionA.sortFile();
+        FlightTable.revalidate();
+        FlightTable.repaint();
         
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         //INTIALIZE TABLE
@@ -394,6 +412,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             }
             br.close();
 
+            SortingFunction.sortFile();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error loading departures", e);
         }
@@ -403,10 +422,16 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
     //------------------ARRIVAL TABLE------------------------------
     public void loadFlightsToTableArrival() {
   
+        
+        SortingFunction.sortFile();
+        SortingFunctionA.sortFile();
+        FlightTable.revalidate();
+        FlightTable.repaint();
+        
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         //INTIALIZE TABLE
         model.setRowCount(0);
-
+     
         File file = new File(AdminOperations.Database_TimeTable_Arrivals_Path);
 
         //reads from file and then displays to Arrival table
@@ -449,7 +474,8 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                 }
             }
             br.close();
-
+            
+            SortingFunction.sortFile();
         } catch (IOException e) {
 
         }
@@ -539,6 +565,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                     }
                 }
             }
+            SortingFunction.sortFile();
         } catch (IOException e) {
             // Log the error instead of silently swallowing it
             logger.log(Level.SEVERE, "Error reading flight file for search.", e);
@@ -609,9 +636,10 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                 } else {
                     loadFlightsToTableDeparture();
                 }
+                
             }
         });
-
+  
         addPopUp.setVisible(true);
         
     }//GEN-LAST:event_addFlightActionPerformed
@@ -652,8 +680,15 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                 } else {
                     loadFlightsToTableDeparture();
                 }
+                DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
+                SortingFunction.sortFile();
+
+                // 4. Force the table to visually update
+                FlightTable.revalidate();
+                FlightTable.repaint();
             }
         });
+ 
         editPopUp.setVisible(true);
     }//GEN-LAST:event_editFlightActionPerformed
 
@@ -793,6 +828,12 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             logger.log(Level.SEVERE, "Error updating flight file after deletion.", e);
         }
     }//GEN-LAST:event_deleteFlightActionPerformed
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        LoginForm display = new LoginForm();
+        display.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     /**
      * @param args the command line arguments
