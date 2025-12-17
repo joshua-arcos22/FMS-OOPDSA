@@ -522,21 +522,22 @@ public class FlightBooking extends javax.swing.JFrame {
             return;
         }
 
-        // 1. Get ALL 5 columns from jTable1
-        Object airline = sourceModel.getValueAt(selectedRow, 0);
-        Object day     = sourceModel.getValueAt(selectedRow, 1);
-        Object time    = sourceModel.getValueAt(selectedRow, 2);
-        Object origin  = sourceModel.getValueAt(selectedRow, 3);
-        Object dest    = sourceModel.getValueAt(selectedRow, 4);
+        // Convert objects to Strings immediately
+        String airline = sourceModel.getValueAt(selectedRow, 0).toString();
+        String day     = sourceModel.getValueAt(selectedRow, 1).toString();
+        String time    = sourceModel.getValueAt(selectedRow, 2).toString();
+        String origin  = sourceModel.getValueAt(selectedRow, 3).toString();
+        String dest    = sourceModel.getValueAt(selectedRow, 4).toString();
+        String flightNum = "N/A"; 
 
-        // 2. Since jTable1 doesn't show Flight Number, we use a placeholder 
-        // or you'd need to fetch it from your rowData logic.
-        Object flightNum = "N/A"; 
-
-        // 3. Add all 6 columns to jTable2
+        // Add to Your Flights table
         destModel.addRow(new Object[]{airline, day, time, origin, dest, flightNum});
 
-        // 4. Remove from left table
+        // SAVE TO FILE (Crucial: This format must match the cancellation format)
+        String record = airline + " - " + origin + " - " + dest + " - " + time;
+        saveBookingToTxt(record);
+
+        // Remove from available table
         sourceModel.removeRow(selectedRow);
 
         JOptionPane.showMessageDialog(this, "Flight Booked Successfully!");
@@ -552,21 +553,25 @@ public class FlightBooking extends javax.swing.JFrame {
             return;
         }
 
-        // Get data
-        String id = yourFlightsModel.getValueAt(selectedRow, 0).toString();
-        String origin = yourFlightsModel.getValueAt(selectedRow, 1).toString();
-        String dest = yourFlightsModel.getValueAt(selectedRow, 2).toString();
-        String time = yourFlightsModel.getValueAt(selectedRow, 3).toString();
+        // Get data as Strings
+        String airline = yourFlightsModel.getValueAt(selectedRow, 0).toString();
+        String day     = yourFlightsModel.getValueAt(selectedRow, 1).toString();
+        String time    = yourFlightsModel.getValueAt(selectedRow, 2).toString();
+        String origin  = yourFlightsModel.getValueAt(selectedRow, 3).toString();
+        String dest    = yourFlightsModel.getValueAt(selectedRow, 4).toString();
 
-        // Move back to Available
-        availableModel.addRow(new Object[]{id, origin, dest, time});
-
-        // Remove from Your Flights
-        yourFlightsModel.removeRow(selectedRow);
+        // Create the record string to search for in the TXT file
+        // MUST MATCH: airline + " - " + origin + " - " + dest + " - " + time
+        String record = airline + " - " + origin + " - " + dest + " - " + time;
 
         // Remove from Database
-        String record = id + " - " + origin + " - " + dest + " - " + time;
         removeBookingFromTxt(record);
+
+        // Move back to Available Table (5 columns)
+        availableModel.addRow(new Object[]{airline, day, time, origin, dest});
+
+        // Remove from UI
+        yourFlightsModel.removeRow(selectedRow);
 
         JOptionPane.showMessageDialog(this, "Flight Cancelled.");
     }//GEN-LAST:event_button2ActionPerformed
