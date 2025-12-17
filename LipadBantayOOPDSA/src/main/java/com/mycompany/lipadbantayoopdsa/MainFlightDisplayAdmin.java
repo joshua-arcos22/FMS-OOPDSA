@@ -5,6 +5,7 @@
 package com.mycompany.lipadbantayoopdsa;
 
 import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen;
+import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,6 +24,8 @@ import java.util.logging.Logger;
 public class MainFlightDisplayAdmin extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFlightDisplayAdmin.class.getName());
+    
+    private int selectedRow = -1;
 
     /**
      * Creates new form MainFlightDisplay
@@ -169,6 +172,11 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         deleteFlight.setText("DELETE");
 
         editFlight.setText("EDIT");
+        editFlight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editFlightActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout BottomContainerLayout = new javax.swing.GroupLayout(BottomContainer);
         BottomContainer.setLayout(BottomContainerLayout);
@@ -288,7 +296,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-  
+        
     public void loadFlightsToTableDeparture() {
         // 1. Get the model from your JTable
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
@@ -514,6 +522,34 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         addPopUp.setVisible(true);
         
     }//GEN-LAST:event_addFlightActionPerformed
+
+    private void editFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFlightActionPerformed
+        // TODO add your handling code here:
+        selectedRow = FlightTable.getSelectedRow();
+
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Please select a flight to edit.",
+                "No Selection",
+                javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        String airline = FlightTable.getValueAt(selectedRow, 0).toString();
+        String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
+        String origin = FlightTable.getValueAt(selectedRow, 2).toString();
+        String destination = FlightTable.getValueAt(selectedRow, 3).toString();
+        String frequency = FlightTable.getValueAt(selectedRow, 4).toString();
+        String time = FlightTable.getValueAt(selectedRow, 5).toString();
+        String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
+
+        editFlightScreen editPopUp = new editFlightScreen(
+            airline, aircraft, origin, destination, frequency, time, flightNumber
+        );
+        editPopUp.setVisible(true);
+    }//GEN-LAST:event_editFlightActionPerformed
 
     /**
      * @param args the command line arguments
