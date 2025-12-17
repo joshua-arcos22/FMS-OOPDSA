@@ -4,6 +4,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
+import com.mycompany.lipadbantayoopdsa.flightBooking.BookFlight;
 import java.io.*;
 import java.nio.file.Paths;
 import javax.swing.*;
@@ -80,7 +81,7 @@ public class UserDashboard extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtName = new javax.swing.JLabel();
         txtEmail = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        btnBookAFlight = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
@@ -112,16 +113,21 @@ public class UserDashboard extends javax.swing.JFrame {
 
         txtEmail.setText("Email:");
 
-        jButton2.setBackground(new java.awt.Color(153, 255, 153));
-        jButton2.setText("BOOK A FLIGHT");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnBookAFlight.setBackground(new java.awt.Color(153, 255, 153));
+        btnBookAFlight.setText("BOOK A FLIGHT");
+        btnBookAFlight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnBookAFlightActionPerformed(evt);
             }
         });
 
         jButton1.setBackground(new java.awt.Color(255, 153, 102));
         jButton1.setText("VIEW BOOKINGS");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton3.setBackground(new java.awt.Color(255, 102, 102));
         jButton3.setText("UNBOOK A FLIGHT");
@@ -151,7 +157,7 @@ public class UserDashboard extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnBookAFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -175,7 +181,7 @@ public class UserDashboard extends javax.swing.JFrame {
                 .addComponent(txtEmail)
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBookAFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36)
@@ -204,16 +210,26 @@ public class UserDashboard extends javax.swing.JFrame {
         this.dispose(); // close current dashboard
     }//GEN-LAST:event_btnLogoutActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnBookAFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBookAFlightActionPerformed
+        javax.swing.JFrame frame = new javax.swing.JFrame("Book A Flight");
+        frame.add(new BookFlight());
+        frame.setSize(850, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.setVisible(true);
+        this.dispose(); 
+    }//GEN-LAST:event_btnBookAFlightActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButton1ActionPerformed
 
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBookAFlight;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
