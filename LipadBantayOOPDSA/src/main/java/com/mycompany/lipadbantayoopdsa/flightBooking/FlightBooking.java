@@ -357,7 +357,7 @@ public class FlightBooking extends javax.swing.JFrame {
     }
     
     private void saveBookingToTxt(String record) {
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Bookings.txt"; // Update the path if necessary
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt"; 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(record);
             writer.newLine(); // Add a new line after each record
@@ -368,28 +368,38 @@ public class FlightBooking extends javax.swing.JFrame {
     }
     
     private void removeBookingFromTxt(String record) {
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Bookings.txt"; // Update the path if necessary
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
         File file = new File(filePath);
         File tempFile = new File(file.getAbsolutePath() + ".temp");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+        // Phase 1: Read and Write to Temp
+        try {
+            // The try-with-resources block ensures these close immediately after the '}'
+            try (BufferedReader reader = new BufferedReader(new FileReader(file));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().equals(record)) { // Skip the record to remove
-                    writer.write(line);
-                    writer.newLine();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Use .trim() on both sides to avoid invisible space errors
+                    if (!line.trim().equals(record.trim())) {
+                        writer.write(line);
+                        writer.newLine();
+                    }
+                }
+            } 
+
+            if (file.exists()) {
+                if (file.delete()) {
+                    if (!tempFile.renameTo(file)) {
+                        JOptionPane.showMessageDialog(this, "Could not rename temp file.");
+                    }
+                } else {
+                    // If this triggers, another part of your code still has the file open
+                    JOptionPane.showMessageDialog(this, "Error: Original file is locked and cannot be deleted.");
                 }
             }
-
-            // Delete original file and rename the temp file
-            if (file.delete()) {
-                tempFile.renameTo(file);
-            }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error removing booking from file.");
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error updating file: " + e.getMessage());
         }
     }
     
