@@ -40,7 +40,10 @@ public class FlightBooking extends javax.swing.JFrame {
         initComponents();
         
         loadFlightsToTableDeparture();
+        
         ((DefaultTableModel) jTable2.getModel()).setRowCount(0);
+        
+        loadUserBookings();
     }
     
     /**
@@ -360,47 +363,140 @@ public class FlightBooking extends javax.swing.JFrame {
     }
     
     private void saveBookingToTxt(String record) {
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt"; 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            writer.write(record);
-            writer.newLine(); 
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
+        File file = new File(filePath);
+        List<String> allLines = new ArrayList<>();
+        String userHeader = "(" + this.username + ")";
+        boolean sectionFound = false;
+
+        try {
+            if (file.exists()) {
+                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        allLines.add(line);
+                    }
+                }
+            }
+
+            // Search for the (Username)
+            for (int i = 0; i < allLines.size(); i++) {
+                if (allLines.get(i).trim().equals(userHeader)) {
+                    allLines.add(i + 1, record); // Insert detail right after the header
+                    sectionFound = true;
+                    break;
+                }
+            }
+
+            // If user has no section yet, create it
+            if (!sectionFound) {
+                allLines.add(userHeader);
+                allLines.add(record);
+            }
+
+            // Save back to file
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                for (String line : allLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving booking to file.");
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error saving to database.");
         }
     }
     
     private void removeBookingFromTxt(String record) {
         String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
         File file = new File(filePath);
-        File tempFile = new File(file.getAbsolutePath() + ".temp");
+        List<String> allLines = new ArrayList<>();
+        String userHeader = "(" + this.username + ")";
 
         try {
-            try (BufferedReader reader = new BufferedReader(new FileReader(file));
-                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-
+            // Read everything first
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line;
-                while ((line = reader.readLine()) != null) {
+                boolean inMySection = false;
+                boolean alreadyRemoved = false;
 
-                    if (!line.trim().equals(record.trim())) {
-                        writer.write(line);
-                        writer.newLine();
+                while ((line = br.readLine()) != null) {
+                    String trimmed = line.trim();
+
+                    // Track if we are inside the correct user's section
+                    if (trimmed.equals(userHeader)) {
+                        inMySection = true;
+                        allLines.add(line);
+                        continue;
+                    } else if (trimmed.startsWith("(") && !trimmed.equals(userHeader)) {
+                        inMySection = false;
                     }
+
+                    // If this is the line to delete, skip adding it to the list
+                    if (inMySection && trimmed.equals(record.trim()) && !alreadyRemoved) {
+                        alreadyRemoved = true; 
+                        continue; // Skip this line (deletes it)
+                    }
+
+                    allLines.add(line);
                 }
-            } 
+            }
 
-            if (file.exists()) {
-                if (file.delete()) {
-                    if (!tempFile.renameTo(file)) {
-                        JOptionPane.showMessageDialog(this, "Could not rename temp file.");
-                    }
-                } else {
-
-                    JOptionPane.showMessageDialog(this, "Error: Original file is locked and cannot be deleted.");
+            // Overwrite the file with the remaining lines
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                for (String l : allLines) {
+                    bw.write(l);
+                    bw.newLine();
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error updating file: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error updating file during cancellation.");
+        }
+    }
+    
+    private void loadUserBookings() {
+        DefaultTableModel destModel = (DefaultTableModel) jTable2.getModel();
+        destModel.setRowCount(0);
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
+        String userHeader = "(" + this.username + ")";
+
+        File file = new File(filePath);
+        if (!file.exists()) return;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            boolean insideMySection = false;
+
+            while ((line = br.readLine()) != null) {
+                String trimmed = line.trim();
+                if (trimmed.isEmpty()) continue;
+
+                // Detect if we entered a different user's section
+                if (trimmed.startsWith("(") && !trimmed.equals(userHeader)) {
+                    insideMySection = false;
+                }
+
+                // If we found the user's header
+                if (trimmed.equals(userHeader)) {
+                    insideMySection = true;
+                    continue; // Move to the next line which contains flight data
+                }
+
+                if (insideMySection) {
+                    String[] parts = trimmed.split(" - ");
+                    if (parts.length >= 5) { // Updated to 5 to include FlightNum
+                        destModel.addRow(new Object[]{
+                            parts[0], // Airline
+                            "N/A",    // Day (Not saved in your record currently)
+                            parts[3], // Time
+                            parts[1], // Origin
+                            parts[2], // Destination
+                            parts[4]  // Flight Number
+                        });
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     
@@ -531,25 +627,30 @@ public class FlightBooking extends javax.swing.JFrame {
             return;
         }
 
-        // Convert objects to Strings immediately
         String airline = sourceModel.getValueAt(selectedRow, 0).toString();
         String day     = sourceModel.getValueAt(selectedRow, 1).toString();
         String time    = sourceModel.getValueAt(selectedRow, 2).toString();
         String origin  = sourceModel.getValueAt(selectedRow, 3).toString();
         String dest    = sourceModel.getValueAt(selectedRow, 4).toString();
-        String flightNum = "N/A"; 
 
-        // Add to Your Flights table
-        destModel.addRow(new Object[]{airline, day, time, origin, dest, flightNum});
+        // GENERATE FLIGHT NUMBER (e.g., CEB123 or PR456)
+        String prefix = airline.length() >= 3 ? airline.substring(0, 3).toUpperCase() : "FL";
+        int randomNum = (int)(Math.random() * 900) + 100; // 100 to 999
+        String flightNum = prefix + randomNum;
 
-        // SAVE TO FILE (Crucial: This format must match the cancellation format)
-        String record = airline + " - " + origin + " - " + dest + " - " + time;
+        // The Record format: Airline - Origin - Destination - Time - FlightNum
+        String record = airline + " - " + origin + " - " + dest + " - " + time + " - " + flightNum;
+
+        // 1. Save to TXT
         saveBookingToTxt(record);
 
-        // Remove from available table
+        // 2. Update UI (Your Flights table)
+        destModel.addRow(new Object[]{airline, day, time, origin, dest, flightNum});
+
+        // 3. Remove from Available table
         sourceModel.removeRow(selectedRow);
 
-        JOptionPane.showMessageDialog(this, "Flight Booked Successfully!");
+        JOptionPane.showMessageDialog(this, "Flight Booked: " + flightNum);
     }//GEN-LAST:event_button1ActionPerformed
 
     private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
@@ -562,27 +663,28 @@ public class FlightBooking extends javax.swing.JFrame {
             return;
         }
 
-        // Get data as Strings
+        // Get data from the table
         String airline = yourFlightsModel.getValueAt(selectedRow, 0).toString();
         String day     = yourFlightsModel.getValueAt(selectedRow, 1).toString();
         String time    = yourFlightsModel.getValueAt(selectedRow, 2).toString();
         String origin  = yourFlightsModel.getValueAt(selectedRow, 3).toString();
         String dest    = yourFlightsModel.getValueAt(selectedRow, 4).toString();
+        String flightNum = yourFlightsModel.getValueAt(selectedRow, 5).toString(); // Get the flight number!
 
-        // Create the record string to search for in the TXT file
-        // MUST MATCH: airline + " - " + origin + " - " + dest + " - " + time
-        String record = airline + " - " + origin + " - " + dest + " - " + time;
+        // IMPORTANT: This must match the format in saveBookingToTxt EXACTLY
+        // Format: Airline - Origin - Destination - Time - FlightNum
+        String record = airline + " - " + origin + " - " + dest + " - " + time + " - " + flightNum;
 
-        // Remove from Database
+        // 1. Remove from the TXT file
         removeBookingFromTxt(record);
 
-        // Move back to Available Table (5 columns)
+        // 2. Move back to Available Table (UI)
         availableModel.addRow(new Object[]{airline, day, time, origin, dest});
 
-        // Remove from UI
+        // 3. Remove from Your Flights (UI)
         yourFlightsModel.removeRow(selectedRow);
 
-        JOptionPane.showMessageDialog(this, "Flight Cancelled.");
+        JOptionPane.showMessageDialog(this, "Flight " + flightNum + " Cancelled.");
     }//GEN-LAST:event_button2ActionPerformed
 
     private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed
