@@ -5,19 +5,17 @@ import java.util.Scanner;
 
 public class ArrivalTimetableGenerator {
 
-    // UPDATED: Relative paths starting from the Project Root
-    // This looks inside: LipadBantayOOPDSA -> src -> main -> java -> ...
-    private static final String INPUT_PATH = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+    
+    private static final String INPUT_PATH = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
     private static final String OUTPUT_PATH = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
 
     public static void generate() {
         System.out.println("--- Starting Arrival Timetable Generation ---");
         try {
-            // Check if input file exists using the relative path
+           
             File checkFile = new File(INPUT_PATH);
             
-            // (Removed the specific "C:/Users/Joshua..." fallback here so it works for everyone)
-            
+  
             if (!checkFile.exists()) {
                 // Helpful error message telling the user exactly where it looked
                 System.err.println("Error: Departure Timetable file not found at: " + checkFile.getAbsolutePath());

@@ -19,16 +19,16 @@ import java.util.logging.Logger;
  *
  * @author Joshua
  */
-public class MainFlightDisplayAdmin extends javax.swing.JFrame {
+public class MainFlightDisplayUsers extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFlightDisplayAdmin.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFlightDisplayUsers.class.getName());
     
     private int selectedRow = -1;
 
     /**
      * Creates new form MainFlightDisplay
      */
-    public MainFlightDisplayAdmin() {
+    public MainFlightDisplayUsers() {
         initComponents();
         loadFlightsToTableDeparture();
         ArrivalTimetableGenerator.generate();
@@ -51,12 +51,11 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         SearchField = new javax.swing.JTextField();
         SearchButton = new javax.swing.JButton();
         BottomContainer = new javax.swing.JPanel();
-        addFlight = new javax.swing.JToggleButton();
         Arrival = new javax.swing.JToggleButton();
         Departures = new javax.swing.JToggleButton();
-        deleteFlight = new javax.swing.JToggleButton();
-        editFlight = new javax.swing.JToggleButton();
         jToggleButton1 = new javax.swing.JToggleButton();
+        jToggleButton2 = new javax.swing.JToggleButton();
+        jToggleButton3 = new javax.swing.JToggleButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         FlightTable = new javax.swing.JTable();
 
@@ -68,7 +67,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
         Title.setFont(new java.awt.Font("Santana-Black", 0, 48)); // NOI18N
         Title.setForeground(new java.awt.Color(255, 255, 255));
-        Title.setText("LIPAD BANTAY(ADMIN)");
+        Title.setText("LIPAD BANTAY");
 
         SearchContainer.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -138,15 +137,6 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
         BottomContainer.setBackground(new java.awt.Color(255, 255, 255));
 
-        addFlight.setBackground(new java.awt.Color(204, 255, 204));
-        addFlight.setText("ADD");
-        addFlight.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        addFlight.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addFlightActionPerformed(evt);
-            }
-        });
-
         Arrival.setBackground(new java.awt.Color(0, 153, 255));
         Arrival.setText("Arrival");
         Arrival.setBorder(null);
@@ -171,25 +161,23 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             }
         });
 
-        deleteFlight.setBackground(new java.awt.Color(255, 102, 102));
-        deleteFlight.setText("DELETE");
-        deleteFlight.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        deleteFlight.addActionListener(new java.awt.event.ActionListener() {
+        jToggleButton1.setBackground(new java.awt.Color(255, 153, 102));
+        jToggleButton1.setText("VIEW A FLIGHT BOOKING");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteFlightActionPerformed(evt);
+                jToggleButton1ActionPerformed(evt);
             }
         });
 
-        editFlight.setBackground(new java.awt.Color(255, 153, 102));
-        editFlight.setText("EDIT");
-        editFlight.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        editFlight.addActionListener(new java.awt.event.ActionListener() {
+        jToggleButton2.setText("BACK");
+
+        jToggleButton3.setBackground(new java.awt.Color(153, 255, 153));
+        jToggleButton3.setText("BOOK A FLIGHT");
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editFlightActionPerformed(evt);
+                jToggleButton3ActionPerformed(evt);
             }
         });
-
-        jToggleButton1.setText("BACK");
 
         javax.swing.GroupLayout BottomContainerLayout = new javax.swing.GroupLayout(BottomContainer);
         BottomContainer.setLayout(BottomContainerLayout);
@@ -197,21 +185,17 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BottomContainerLayout.createSequentialGroup()
                 .addGap(61, 61, 61)
-                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(BottomContainerLayout.createSequentialGroup()
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(addFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(editFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(deleteFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(232, 232, 232))
-                    .addGroup(BottomContainerLayout.createSequentialGroup()
-                        .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53))))
+                        .addComponent(jToggleButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(Departures, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(53, 53, 53))
         );
 
         BottomContainerLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {Arrival, Departures});
@@ -222,13 +206,12 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                 .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(deleteFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38))
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36))
         );
 
         FlightTable.setBackground(new java.awt.Color(255, 255, 255));
@@ -598,201 +581,13 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
       searchFlights();
     }//GEN-LAST:event_SearchButtonActionPerformed
 
-    private void addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFlightActionPerformed
-        addFlightScreen addPopUp = new addFlightScreen();
-    
-        addPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                if (Arrival.getBackground().equals(Color.WHITE)) {
-                    loadFlightsToTableArrival();
-                } else {
-                    loadFlightsToTableDeparture();
-                }
-            }
-        });
-
-        addPopUp.setVisible(true);
-        
-    }//GEN-LAST:event_addFlightActionPerformed
-
-    private void editFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFlightActionPerformed
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         // TODO add your handling code here:
-        selectedRow = FlightTable.getSelectedRow();
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
-        if (selectedRow == -1) {
-            javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Please select a flight to edit.",
-                "No Selection",
-                javax.swing.JOptionPane.WARNING_MESSAGE
-            );
-            return;
-        }
-
-        String airline = FlightTable.getValueAt(selectedRow, 0).toString();
-        String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
-        String origin = FlightTable.getValueAt(selectedRow, 2).toString();
-        String destination = FlightTable.getValueAt(selectedRow, 3).toString();
-        String frequency = FlightTable.getValueAt(selectedRow, 4).toString();
-        String time = FlightTable.getValueAt(selectedRow, 5).toString();
-        String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
-
-        editFlightScreen_1 editPopUp = new editFlightScreen_1(
-            airline, aircraft, origin, destination, frequency, time, flightNumber
-        );
-        
-        
-        editPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                // When the window closes, check which tab is open and refresh it
-                if (Arrival.getBackground().equals(Color.WHITE)) {
-                    loadFlightsToTableArrival();
-                } else {
-                    loadFlightsToTableDeparture();
-                }
-            }
-        });
-        editPopUp.setVisible(true);
-    }//GEN-LAST:event_editFlightActionPerformed
-
-    private void deleteFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFlightActionPerformed
-        // Get the selected row
-        int selectedRow = FlightTable.getSelectedRow();
-
-        // Check if a row is selected
-        if (selectedRow == -1) {
-            javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Please select a flight to delete.",
-                "No Selection",
-                javax.swing.JOptionPane.WARNING_MESSAGE
-            );
-            return;
-        }
-
-        // Show a confirmation dialog
-        int confirm = javax.swing.JOptionPane.showConfirmDialog(
-            this, 
-            "Are you sure you want to delete this flight from BOTH Departures and Arrivals?", 
-            "Confirm Deletion", 
-            javax.swing.JOptionPane.YES_NO_OPTION
-        );
-
-        // If the user confirms the deletion (YES)
-        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-            DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-
-            // We only really need the Flight Number (ID) to find the line in the file
-            // Assuming Flight Number is at index 6 (based on your code)
-            String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
-
-            // 1. Remove the row from the GUI Table immediately
-            model.removeRow(selectedRow);
-
-            // 2. Perform Backend Deletion
-            try {
-                // Delete from Main Timetable (Departures)
-                deleteLineFromFile(AdminOperations.Database_TimeTable_Departure_Path, flightNumber);
-
-                // Delete from Arrivals Timetable
-                // NOTE: Make sure Database_Arrivals_Path matches your actual variable name in AdminOperations
-                deleteLineFromFile(AdminOperations.Database_TimeTable_Arrivals_Path, flightNumber);
-
-                javax.swing.JOptionPane.showMessageDialog(this, "Flight deleted successfully from database.");
-
-            } catch (IOException e) {
-                System.out.println("Error deleting flight from file: " + e.getMessage());
-                javax.swing.JOptionPane.showMessageDialog(this, "Error updating database file.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    
-    private void deleteLineFromFile(String filePath, String flightNumberToRemove) throws IOException {
-        File inputFile = new File(filePath);
-        File tempFile = new File(inputFile.getParent(), "temp_deletion_" + inputFile.getName());
-
-        // Check if file exists before trying to read
-        if (!inputFile.exists()) {
-            System.out.println("File not found: " + filePath);
-            return;
-        }
-
-        try (Scanner reader = new Scanner(inputFile);
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-
-            while (reader.hasNextLine()) {
-                String line = reader.nextLine();
-
-                // Logic: Write the line ONLY if it DOES NOT contain the flight number.
-                // This effectively "deletes" the matching line.
-                if (!line.contains(flightNumberToRemove)) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-        }
-
-        // Delete original file and rename temp file
-        if (!inputFile.delete()) {
-            // Garbage collection sometimes fixes file lock issues on Windows
-            System.gc();
-            if (!inputFile.delete()) {
-                System.out.println("Could not delete original file: " + filePath);
-                return;
-            }
-        }
-
-        if (!tempFile.renameTo(inputFile)) {
-            System.out.println("Could not rename temp file to: " + filePath);
-        }
-    }
-    
-    // Method to update the timetable file by removing the deleted flight entry
-    private void updateTimetableFile(String airline, String aircraft, String origin, String destination, String frequency, String time, String flightNumber) {
-        // Determine the correct file path based on the active tab (Departure or Arrival)
-        String filePath = getActiveTimetablePath();
-        File file = new File(filePath);
-
-        try {
-            // Read the entire file into a list of strings
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder fileContent = new StringBuilder();
-            String line;
-
-            // Read all lines and store them in fileContent
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    // Split each line to match the row data format
-                    String[] rowData = line.split("-");
-
-                    // Check if this line matches the deleted flight details
-                    if (rowData.length == 7) {
-                        // Compare all the values (if they match, don't add this line back)
-                        if (rowData[0].equals(airline) && rowData[1].equals(aircraft) && rowData[2].equals(origin)
-                            && rowData[3].equals(destination) && rowData[4].equals(frequency) && rowData[5].equals(time)
-                            && rowData[6].equals(flightNumber)) {
-                            continue; // Skip adding this line to the updated file
-                        }
-                    }
-                    // Add the line to the updated file content if it doesn't match the deleted row
-                    fileContent.append(line).append(System.lineSeparator());
-                }
-            }
-
-            reader.close();
-
-            // Now write the updated content back to the file
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write(fileContent.toString());
-            writer.close();
-
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error updating flight file after deletion.", e);
-        }
-    }//GEN-LAST:event_deleteFlightActionPerformed
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -816,7 +611,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new MainFlightDisplayAdmin().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new MainFlightDisplayUsers().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -830,11 +625,10 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
     private javax.swing.JTextField SearchField;
     private javax.swing.JLabel Title;
     private javax.swing.JPanel TopContainer;
-    private javax.swing.JToggleButton addFlight;
-    private javax.swing.JToggleButton deleteFlight;
-    private javax.swing.JToggleButton editFlight;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JToggleButton jToggleButton3;
     // End of variables declaration//GEN-END:variables
 }

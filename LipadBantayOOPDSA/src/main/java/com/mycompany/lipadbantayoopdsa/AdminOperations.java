@@ -18,7 +18,7 @@ public class AdminOperations {
     public static String Database_Airlines_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt";
     public static String Database_Aiports_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt";
     //private String Database_Routes_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Routes/Aircraft_Master.txt";;
-    public static String Database_TimeTable_Destination_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
+    public static String Database_TimeTable_Departure_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
     public static String Database_TimeTable_Arrivals_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
     private boolean runwayCapable;
     
@@ -57,7 +57,7 @@ public class AdminOperations {
    public void Admin_AddFlight() throws IOException {
         
         
-        try (FileWriter addFlight = new FileWriter(Database_TimeTable_Destination_Path, true);
+        try (FileWriter addFlight = new FileWriter(Database_TimeTable_Departure_Path, true);
              BufferedWriter addFlightEntry = new BufferedWriter(addFlight)) {
             
             String flightEntry = addFlightFormat(Airline_Name, Ac_Type, Origin_Airport, Destination_Airport, Frequency, Time, Flight_Number);
@@ -90,7 +90,7 @@ public class AdminOperations {
         String flightFormat = "";
         
         //method constructor
-        distanceCalculator findAirportName = new distanceCalculator(Origin_Airport, Destination_Airport);
+        distanceCalculator findAirportName = new distanceCalculator(Origin_Airport, Destination_Airport, Ac_Type);
         
         
         try {
@@ -131,7 +131,7 @@ public class AdminOperations {
     
     
     public void Admin_EditFlight(String originalFlightNum) throws IOException {
-        File inputFile = new File(Database_TimeTable_Destination_Path);
+        File inputFile = new File(Database_TimeTable_Departure_Path);
         File tempFile = new File("temp_timetable.txt");
 
         try (Scanner reader = new Scanner(inputFile);
