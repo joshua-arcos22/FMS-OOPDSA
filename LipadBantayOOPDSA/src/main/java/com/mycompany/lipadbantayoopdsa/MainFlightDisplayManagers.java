@@ -10,7 +10,9 @@ import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunction;
 import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunctionA;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
+import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen_M;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
+import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_M;
 import java.awt.Color;
 import java.io.*;
 import java.util.*;
@@ -40,6 +42,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         ArrivalTimetableGenerator.generate();
     }
     
+   
     
      public MainFlightDisplayManagers(String Airlinename, String Prefix) {
         initComponents();
@@ -656,7 +659,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchButtonActionPerformed
 
     private void addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFlightActionPerformed
-        addFlightScreen addPopUp = new addFlightScreen();
+        addFlightScreen_M addPopUp = new addFlightScreen_M(currentAirlineName, currentAirlinePrefix);
     
         addPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -695,8 +698,8 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         String time = FlightTable.getValueAt(selectedRow, 5).toString();
         String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
 
-        editFlightScreen_1 editPopUp = new editFlightScreen_1(
-            airline, aircraft, origin, destination, frequency, time, flightNumber
+        editFlightScreen_M editPopUp = new editFlightScreen_M(
+            currentAirlineName, aircraft, origin, destination, frequency, time, flightNumber, currentAirlinePrefix
         );
         
         
