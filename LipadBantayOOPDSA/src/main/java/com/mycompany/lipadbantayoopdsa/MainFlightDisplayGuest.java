@@ -71,7 +71,7 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
         SearchContainer.setBackground(new java.awt.Color(204, 204, 204));
 
         SearchField.setBackground(new java.awt.Color(204, 204, 204));
-        SearchField.setForeground(new java.awt.Color(255, 255, 255));
+        SearchField.setForeground(new java.awt.Color(0, 0, 0));
         SearchField.setText("Search for a flight");
         SearchField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {

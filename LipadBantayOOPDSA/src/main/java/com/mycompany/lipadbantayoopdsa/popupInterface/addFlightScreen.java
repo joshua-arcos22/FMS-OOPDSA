@@ -218,6 +218,7 @@ public class addFlightScreen extends javax.swing.JFrame {
         AIRCRAFT.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         AIRCRAFT.setText("AIRCRAFT");
 
+        btn_addFlight.setBackground(new java.awt.Color(0, 153, 204));
         btn_addFlight.setText("ADD FLIGHT");
         btn_addFlight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

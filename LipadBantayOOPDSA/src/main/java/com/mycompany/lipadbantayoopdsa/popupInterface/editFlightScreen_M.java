@@ -259,7 +259,8 @@ public class editFlightScreen_M extends javax.swing.JFrame {
         AIRCRAFT.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         AIRCRAFT.setText("AIRCRAFT");
 
-        btn_addFlight.setBackground(new java.awt.Color(0, 102, 204));
+        btn_addFlight.setBackground(new java.awt.Color(0, 153, 204));
+        btn_addFlight.setForeground(new java.awt.Color(255, 255, 255));
         btn_addFlight.setText("EDIT FLIGHT");
         btn_addFlight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -342,7 +343,6 @@ public class editFlightScreen_M extends javax.swing.JFrame {
         flnField.setText("6767");
         flnField.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        btn_back.setBackground(new java.awt.Color(0, 153, 204));
         btn_back.setText("BACK");
         btn_back.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
