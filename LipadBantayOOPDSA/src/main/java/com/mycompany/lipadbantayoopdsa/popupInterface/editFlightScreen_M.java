@@ -558,8 +558,6 @@ public class editFlightScreen_M extends javax.swing.JFrame {
             destRWYLn.setText("Same Airport As Origin");
             destRWYLn.setForeground(Color.red);  
         } else {
-            originRWYLn.setText("Checking...");
-            destRWYLn.setText("Checking...");
 
             try {
                 File aprtOpener = new File(AdminOperations.Database_Aiports_Path);
@@ -708,29 +706,21 @@ public class editFlightScreen_M extends javax.swing.JFrame {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            logger.log(java.util.logging.Level.SEVERE, "Error checking duplicates", e);
+            System.out.println("Error checking duplicates");
         }
         return false; 
     }
     
     
     private void btn_addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFlightActionPerformed
-        //variabel to feed to the class
-        
-        
-        // 1. Reset Validation Flags
+       
         boolean airlineField_Valid = true;
         boolean Flt_No_Valid = true;
         boolean time_Valid = true;
-        boolean runway_Valid = true; // New flag for runway/airport checks
-
-        
+        boolean runway_Valid = true; 
         
         
         // --- VALIDATION CHECKS --
-       
-        
-        
         
         // ------------FLIGHT NUMBER-----------------------------------
         String flightNum = flnField.getText().trim().toUpperCase(); 

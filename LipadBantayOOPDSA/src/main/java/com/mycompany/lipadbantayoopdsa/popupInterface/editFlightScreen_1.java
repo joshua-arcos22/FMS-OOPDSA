@@ -691,14 +691,11 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
 
     
     private void btn_addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFlightActionPerformed
-        //variabel to feed to the class
         
-        
-        // 1. Reset Validation Flags
         boolean airlineField_Valid = true;
         boolean Flt_No_Valid = true;
         boolean time_Valid = true;
-        boolean runway_Valid = true; // New flag for runway/airport checks
+        boolean runway_Valid = true; 
 
         
         

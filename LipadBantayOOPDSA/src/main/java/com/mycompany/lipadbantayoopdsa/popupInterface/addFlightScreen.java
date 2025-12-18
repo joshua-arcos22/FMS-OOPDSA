@@ -30,7 +30,7 @@ public class addFlightScreen extends javax.swing.JFrame {
      * Creates new form addFlightScreen
      */
     
-    
+    // intiial Values
     public String Airline_Name;
     public String Ac_Type;
     public String Origin_Airport;
@@ -45,7 +45,7 @@ public class addFlightScreen extends javax.swing.JFrame {
         initComponents();
         
         
-        //initializes value
+        //initializes value of the error labels
         errorAIRLINENAME.setText(" ");
         errorFLTNO.setText(" ");
         errorTIME.setText(" ");
@@ -60,6 +60,7 @@ public class addFlightScreen extends javax.swing.JFrame {
         try {
             File acOpenMasyer = new File(AdminOperations.Database_Aircarfts_Path);
             Scanner acReader = new Scanner(acOpenMasyer);
+            // adds options for the combobox, reads from the ac database
             while(acReader.hasNextLine()){
                 String acLineReader = acReader.nextLine();
                 String acLineReaderArray[] = acLineReader.split("-");
@@ -80,7 +81,10 @@ public class addFlightScreen extends javax.swing.JFrame {
             while(aprtReader.hasNextLine()){
                 String aprtLineReader = aprtReader.nextLine();
                 String aprtLineReaderArray[] = aprtLineReader.split("-");
+                //same as the ac operatio nabove but for the origin airport 
                 origin_drpdwn.addItem(aprtLineReaderArray[1] + "(" +aprtLineReaderArray[0] + ")" );
+                
+                //set tetx of the corresponding lenght of the aiport
                 if(origin_drpdwn.getSelectedItem().toString().equalsIgnoreCase(aprtLineReaderArray[1])){
                     originRWYLn.setText(aprtLineReaderArray[2] + "m");
                 }
@@ -101,6 +105,7 @@ public class addFlightScreen extends javax.swing.JFrame {
             while(aprtReader.hasNextLine()){
                 String aprtLineReader = aprtReader.nextLine();
                 String aprtLineReaderArray[] = aprtLineReader.split("-");
+                // same function but for the destiantion airport
                 destination_drpdwn.addItem(aprtLineReaderArray[1] + "(" +aprtLineReaderArray[0] + ")" );
             } 
             
@@ -113,10 +118,11 @@ public class addFlightScreen extends javax.swing.JFrame {
         //updates the field if there are changes 
         java.awt.event.ActionListener updateAction = new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateRunwayStatus();
+                updateRunwayStatus(); // calls the status for the runways and ac
             }
         };
-
+        
+        // 
         origin_drpdwn.addActionListener(updateAction);
         destination_drpdwn.addActionListener(updateAction);
         ac_drpdwn.addActionListener(updateAction);
@@ -493,7 +499,7 @@ public class addFlightScreen extends javax.swing.JFrame {
     
     private void updateRunwayStatus() {
         
-
+        // getst the icao code of the airport
         String originChoice = origin_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
         String destChoice = destination_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
         String acTypeChoice = ac_drpdwn.getSelectedItem().toString().trim();
@@ -503,26 +509,21 @@ public class addFlightScreen extends javax.swing.JFrame {
         int NF_acType_Choice = 0;
 
        
-        if (originChoice.equalsIgnoreCase(destChoice)) {
+        if (originChoice.equalsIgnoreCase(destChoice)) { // if the same airport
             originRWYLn.setText("Same Airport As Dest");
             originRWYLn.setForeground(Color.red);
             destRWYLn.setText("Same Airport As Origin");
             destRWYLn.setForeground(Color.red);  
         } else {
-            originRWYLn.setText("Checking...");
-            destRWYLn.setText("Checking...");
-
             try {
                 File aprtOpener = new File(AdminOperations.Database_Aiports_Path);
                 Scanner aprtReader = new Scanner(aprtOpener);
-
-               
-
+ 
                 while (aprtReader.hasNextLine()) {
                     String line = aprtReader.nextLine();
                     String[] parts = line.split("-");
 
-                    // Find Origin Data
+                    // Find Origin aprt Data
                     if (parts[1].equalsIgnoreCase(originChoice)) {
                         originRWYLn.setForeground(Color.BLACK);
                         originRWYLn.setText(parts[2] + "m");
@@ -530,7 +531,7 @@ public class addFlightScreen extends javax.swing.JFrame {
  
                     }
 
-                    // Find Destination Data
+                    // Find Destination aprt Data
                     if (parts[1].equalsIgnoreCase(destChoice)) {
                         destRWYLn.setForeground(Color.BLACK);
                         destRWYLn.setText(parts[2] + "m");
@@ -564,8 +565,8 @@ public class addFlightScreen extends javax.swing.JFrame {
             System.out.println("Aircraft DB not found");
         }
 
-        
-        boolean originShort = (NF_choiceOrigin < NF_acType_Choice);
+        // bool statements for the ac landing and takeoff capability 
+        boolean originShort = (NF_choiceOrigin < NF_acType_Choice); 
         boolean destShort = (NF_choiceDestination < NF_acType_Choice);
 
         if (originShort && destShort) {
@@ -581,7 +582,7 @@ public class addFlightScreen extends javax.swing.JFrame {
         
     }
     
-    
+    // creates the frequency format
     private String getFrequencyString() {
         Frequency = "";
         // SATURDAY
@@ -626,58 +627,56 @@ public class addFlightScreen extends javax.swing.JFrame {
         return Frequency;
     }
     
+    
+    // determines if there is already an existing flight with the same flight number 
+    // does not permits the admin/manager to create the flight and display an error instead 
     private boolean isFlightNumberDuplicate(String flightNumToCheck) {
         try {
-            // 1. Open the file
+            
             File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
 
-            // If file doesn't exist yet, there are no duplicates
+            
             if (!file.exists()) {
                 return false; 
             }
 
             Scanner scanner = new Scanner(file);
 
-            // 2. Loop through every line
+          
+            // checks the data of the time table and the and extracts the flight number 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if (line.trim().isEmpty()) continue;
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
 
                 String[] data = line.split("-");
 
-                // 3. Check specific index for Flight Number
-                // Based on your MainFlightDisplay code, FlightNo is at index 6
+               
                 if (data.length >= 7) {
                     String existingFlightNo = data[6].trim();
 
-                    // Compare (IgnoreCase handles "pr123" vs "PR123")
                     if (existingFlightNo.equalsIgnoreCase(flightNumToCheck)) {
                         scanner.close();
-                        return true; // Duplicate found!
+                        return true; 
                     }
                 }
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            logger.log(java.util.logging.Level.SEVERE, "Error checking duplicates", e);
+            System.out.println("Error checking duplicates");
         }
-        return false; // No duplicate found
+        return false;
     }
     
     private void btn_addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFlightActionPerformed
-        //variabel to feed to the class
-        
-        
-        // 1. Reset Validation Flags
+       
         boolean airlineField_Valid = true;
         boolean Flt_No_Valid = true;
         boolean time_Valid = true;
-        boolean runway_Valid = true; // New flag for runway/airport checks
+        boolean runway_Valid = true; 
 
-        
-        
-        
-        // --- VALIDATION CHECKS --
+        // --- VALIDATION CHECKS -----------------------------------------
         // ------------AIRLINE-----------------------------------
         String airlineName = airlineField.getText().replaceAll("\\s+", "").toUpperCase(); 
         if (airlineName.isEmpty()) {
@@ -729,10 +728,12 @@ public class addFlightScreen extends javax.swing.JFrame {
         }
         // ---------------------------------------------------------
        
-        //// -------------------ttime-------------------------------------
+        //// -------------------Time-------------------------------------
         String rawInput = timeField.getText().trim(); 
 
-      
+      // seperates the the time into 2 the hours and the minutes 
+      // if the hours go beyond 23 then its invalid 
+      // if the minites go beyond 59 then its invalid as well
         if (rawInput.isEmpty() || rawInput.length() != 4 || !rawInput.matches("\\d+")) {
             errorTIME.setText("Use HHMM format");
             errorTIME.setForeground(Color.red);
@@ -743,14 +744,11 @@ public class addFlightScreen extends javax.swing.JFrame {
             int hours = Integer.parseInt(rawInput.substring(0, 2));   
             int minutes = Integer.parseInt(rawInput.substring(2, 4)); 
 
-            
-            // This blocks "0660" because minutes (60) is > 59
             if (hours > 23 || minutes > 59) {
                 errorTIME.setText("Invalid Time"); 
                 errorTIME.setForeground(Color.red);
                 time_Valid = false;
             } else {
-                // 5. Valid Time
                 errorTIME.setText(" ");
                 Time = rawInput; 
                 time_Valid = true; 
@@ -797,7 +795,6 @@ public class addFlightScreen extends javax.swing.JFrame {
             dispose();
 
         } else {
-           
             javax.swing.JOptionPane.showMessageDialog(this, "Please fix the errors in red before adding.", "Validation Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     
@@ -812,7 +809,7 @@ public class addFlightScreen extends javax.swing.JFrame {
     
     
     private void E_checkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_E_checkMouseClicked
-        boolean isChecked = E_check.isSelected();
+        boolean isChecked = E_check.isSelected(); // selects all of the checkboxes since itformats E 
         M_check.setSelected(isChecked);   // Monday
         TU_check.setSelected(isChecked);  // Tuesday
         W_check.setSelected(isChecked);   // Wednesday

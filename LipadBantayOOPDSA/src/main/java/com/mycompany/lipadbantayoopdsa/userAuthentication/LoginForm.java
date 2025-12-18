@@ -68,7 +68,7 @@ public class LoginForm extends javax.swing.JFrame {
                 }
             }
 
-            // Check last user record in case file doesn't end with separator
+            
             if (fileUsername != null && filePassword != null && fileRole != null) {
                 if (fileUsername.equals(username) && filePassword.equals(password)) {
                     return fileRole;

@@ -254,7 +254,7 @@ public class RegistrationForm extends javax.swing.JFrame {
                     "----------------------------";
             credWriter.println(credRecord);
 
-            // Write profile info in CSV format: username, full name, email, default info
+            
             String profileRecord = String.format("%s,%s,%s,%s", username, fullName, email, "User");
             profileWriter.println(profileRecord);
 

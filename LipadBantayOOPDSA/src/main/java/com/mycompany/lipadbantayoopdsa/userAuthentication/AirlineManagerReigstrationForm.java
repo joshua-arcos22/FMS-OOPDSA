@@ -246,7 +246,7 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-    // Read user input
+    
         String username = flnoName.getText().trim();
         String password = String.valueOf(this.password.getPassword());
         String fullName = managerName.getText().trim();
@@ -259,7 +259,7 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
             return;
         }
 
-        // Absolute paths for the files
+        
         String credFilePath = Paths.get(System.getProperty("user.dir"), 
                                         "src", "main", "java", "com", "mycompany", 
                                         "lipadbantayoopdsa", "userAuthentication", 
@@ -274,7 +274,7 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
             PrintWriter credWriter = new PrintWriter(new FileWriter(credFilePath, true));  // append mode
             PrintWriter profileWriter = new PrintWriter(new FileWriter(profileFilePath, true))
         ) {
-            // Write credentials with full info
+            
             String credRecord = 
                     "MANAGER: " + fullName + System.lineSeparator() +
                     "AIRLINE: " + airLineName + System.lineSeparator() +
@@ -285,7 +285,7 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
                     "----------------------------";
             credWriter.println(credRecord);
 
-            // Write profile info in CSV format: username, full name, email, default info
+            
             String profileRecord = String.format("%s,%s,%s,%s", username, fullName, airLineName, "Manager");
             profileWriter.println(profileRecord);
 
@@ -310,7 +310,7 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            // File may not exist yet, ignore
+            System.out.println("File Does Not exist");
         }
         return false;
     }

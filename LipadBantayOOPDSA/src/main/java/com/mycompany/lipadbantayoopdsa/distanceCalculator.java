@@ -9,28 +9,28 @@ public class distanceCalculator {
     private String arrival_airportCode;
     private String aircraftType;
 
-    // Data extracted from file (Cached in fields)
     private double latitude_1 = 0;
     private double longitude_1 = 0;
     private double latitude_2 = 0;
     private double longitude_2 = 0;
     
-    // RESTORED FIELDS FOR YOUR CODE
+  
+    //DEFUALT STRING VALUES IF VALEUS ARE NOT FOUND 
     private String originName = "Unknown";
     private String destName = "Unknown";
     private String originRunway = "0";
     private String destRunway = "0";
     
-    // Constants
+
     private final String AIRPORT_DB_PATH = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt";
     private final String AIRCRAFT_DB_PATH = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
 
-    // Constructor 1: Used by your addFlight logic (Origin, Dest)
+   
     public distanceCalculator(String departure_airportCode, String arrival_airportCode) {
         this(departure_airportCode, arrival_airportCode, "");
     }
 
-    // Constructor 2: Used by MainFlightDisplay (Origin, Dest, Aircraft)
+    
     public distanceCalculator(String departure_airportCode, String arrival_airportCode, String aircraftType) {
         if (departure_airportCode != null && departure_airportCode.length() >= 4)
             this.departure_airportCode = departure_airportCode.substring(0, 4).toUpperCase();
@@ -44,11 +44,11 @@ public class distanceCalculator {
 
         this.aircraftType = aircraftType;
 
-        // Load all data (Coords, Names, Runway) in one go
+       
         loadAirportData();
     }
 
-    // --- 1. OPTIMIZED FILE READER ---
+    
     private void loadAirportData() {
         File file = new File(AIRPORT_DB_PATH);
         if (!file.exists()) return;
@@ -59,9 +59,9 @@ public class distanceCalculator {
             boolean foundDest = false;
 
             while ((line = br.readLine()) != null) {
-                if (foundOrigin && foundDest) break; // Stop if we found both
+                if (foundOrigin && foundDest) break; 
 
-                // Fast skip
+               
                 if (!line.contains(this.departure_airportCode) && !line.contains(this.arrival_airportCode)) {
                     continue;
                 }
@@ -69,10 +69,7 @@ public class distanceCalculator {
                 String[] parts = line.split("-");
                 if (parts.length < 5) continue;
 
-                // FILE FORMAT: NAME-CODE-RUNWAY-LAT-LON
-                // Index:       0    1    2      3   4
 
-                // Capture Origin Data
                 if (!foundOrigin && parts[1].equalsIgnoreCase(this.departure_airportCode)) {
                     this.originName = parts[0];
                     this.originRunway = parts[2];
@@ -90,23 +87,24 @@ public class distanceCalculator {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading airports: " + e.getMessage());
+            System.out.println("Error reading airports");
         }
     }
 
-    // --- 2. RESTORED GETTERS (For your AddFlight Logic) ---
+    
     
     public String getAirportNames() {
-        // Returns "Ninoy Aquino-Mactan Cebu"
+     
         return this.originName + "-" + this.destName;
     }
 
     public String getRunwayLenght() {
-        // Returns "3737-3300"
+
         return this.originRunway + "-" + this.destRunway;
     }
 
-    // --- 3. CALCULATE DISTANCE ---
+
+    //HAVERSINE FORMULA
     public double calculateDistanceKm() {
         if (latitude_1 == 0 || latitude_2 == 0) return 0.0;
 
@@ -122,7 +120,6 @@ public class distanceCalculator {
         return 6371 * c; 
     }
 
-    // --- 4. CALCULATE DURATION ---
     public int calculateFlightDurationMinutes() {
         double distance = calculateDistanceKm();
         if (distance == 0) return 0;

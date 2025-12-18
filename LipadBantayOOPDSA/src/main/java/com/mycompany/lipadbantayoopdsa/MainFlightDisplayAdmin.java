@@ -152,6 +152,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         });
 
         Arrival.setBackground(new java.awt.Color(102, 102, 102));
+        Arrival.setForeground(new java.awt.Color(255, 255, 255));
         Arrival.setText("Arrival");
         Arrival.setBorder(null);
         Arrival.setMaximumSize(new java.awt.Dimension(120, 35));
@@ -164,6 +165,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         });
 
         Departures.setBackground(new java.awt.Color(102, 102, 102));
+        Departures.setForeground(new java.awt.Color(255, 255, 255));
         Departures.setText("Departure");
         Departures.setBorder(null);
         Departures.setMaximumSize(new java.awt.Dimension(120, 35));
@@ -337,8 +339,10 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
     //------------------DEPARTURE TABLE------------------------------
     public void loadFlightsToTableDeparture() {
         
+        // when the table is loaded do the sort function 
         SortingFunction.sortFile();
         SortingFunctionA.sortFile();
+        // refreshes the table 
         FlightTable.revalidate();
         FlightTable.repaint();
         
@@ -354,74 +358,65 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             String line;    
 
              
-
+            
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
                    
-                    // Create an instance of your calculator (assuming it's not static)
-                    distanceCalculator distCalc = new distanceCalculator(rowData[2], rowData[3], rowData[1]);
-                    
-                    // --- NEW CODE START ---
+                   
+                    // 
                     String airline = rowData[0];
                     String aircraft = rowData[1];
                     String origin = rowData[2];
                     String destination = rowData[3];
                     String freq = rowData[4];
                     String time = rowData[5];
-                    String flightNo = (rowData.length == 7) ? rowData[6] : "";
-
+                    String flightNo = rowData[6];
+                    
+                    
+                    //assings to n/a if there is a problem with the calculation then it will just print n/a
                     String distanceStr = "N/A";
                     String durationStr = "N/A";
 
                     try {
-                        // Instantiate your calculator with the specific row data
+                        // calcualtes the distance and the duration of the flighti in order to be displayed on the program
                         distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
 
-                        // 1. Get Distance
+                        // assigns the distance of the 2 points
                         double distVal = calc.calculateDistanceKm();
-                        distanceStr = String.format("%.0f km", distVal);
+                        // assigns only the the whol numebr
+                        distanceStr = String.format("%.0f km", distVal); // !!BRO USE THIS just like on c
 
-                        // 2. Get Duration
+                        // gets the duration fo the flight
                         int totalMinutes = calc.calculateFlightDurationMinutes();
                         int hrs = totalMinutes / 60;
                         int mins = totalMinutes % 60;
-                        durationStr = hrs + "h " + mins + "m";
+                        durationStr = hrs + "h " + mins + "m"; // formats the flight duration
 
                     } catch (Exception e) {
-                        // If file not found or calc error, keep as N/A
-                        System.out.println("Calc Error: " + e.getMessage());
-                    }
-                    // --- NEW CODE END ---
+                        System.out.println("Error in calculating the time: ");
+                    } 
 
-                    // Add to Table (Notice indices 7 and 8 for Duration and Distance)
-                    if (rowData.length == 6) {                   
-                        String[] adjustedRow = {
-                            airline, aircraft, origin, destination, freq, time, "", 
-                            durationStr, distanceStr 
-                        };
-                        model.addRow(adjustedRow);
-                    } else {
-                        String[] adjustedRow = {
-                            airline, aircraft, origin, destination, freq, time, flightNo, 
-                            durationStr, distanceStr 
-                        };
-                        model.addRow(adjustedRow);
-                    }
+                    // ADD THE LINES TO THE TABLE
+                    String[] adjustedRow = {
+                        airline, aircraft, origin, destination, freq, time, flightNo, 
+                        durationStr, distanceStr 
+                    };
+                    model.addRow(adjustedRow);
+                    
                 }
             }
+            
             br.close();
-
-            SortingFunction.sortFile();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error loading departures", e);
+            System.out.println("Error loading departures");
         }
     }
     //-----------------------------------------------------------------------
 
     //------------------ARRIVAL TABLE------------------------------
     public void loadFlightsToTableArrival() {
-  
+        // SAME PROCESS FROM THE DEPARTURE TABLE ABOVE BUT FOR THE ARRIVAL BUTTON INSTEAD
         
         SortingFunction.sortFile();
         SortingFunctionA.sortFile();
@@ -443,19 +438,18 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                     String[] rowData = line.split("-");
                     
                     distanceCalculator distCalc = new distanceCalculator(rowData[2], rowData[3], rowData[1]);
-                    // Extract Data
                     String airline = rowData[0];
                     String aircraft = rowData[1];
                     String origin = rowData[2];
                     String destination = rowData[3];
                     String freq = rowData[4];
                     String time = rowData[5];
-                    String flightNo = (rowData.length == 7) ? rowData[6] : "";
+                    String flightNo = rowData[6];
 
                     String distanceStr = "N/A";
                     String durationStr = "N/A";
 
-                    // Calculate
+
                     try {
                         distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
                         double distVal = calc.calculateDistanceKm();
@@ -463,9 +457,12 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
                         int totalMinutes = calc.calculateFlightDurationMinutes();
                         durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
-                    } catch (Exception e) {}
+                        
+                    } catch (Exception e) {
+                        System.out.println("Error in calculating the time");
+                    }
 
-                    // Add Row
+
                     String[] adjustedRow = { 
                         airline, aircraft, origin, destination, freq, time, flightNo, 
                         durationStr, distanceStr 
@@ -477,14 +474,14 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             
             SortingFunction.sortFile();
         } catch (IOException e) {
-
+            System.out.println("Error loading Arrivals ");
         }
     }
     //-----------------------------------------------------------------------
     
     //------------------DEFAULT TABLE VIEW------------------------------
     private String getActiveTimetablePath() {
-        // DEPATURE AS DEFAULT VIEW.
+        // DETERMINES IF WHICH TABLE IS CURRENTLY ACTIVE FOR SEARCH FUNCTION TO WORK PROPERY
         if (Arrival.getBackground().equals(Color.WHITE)) {
             return AdminOperations.Database_TimeTable_Arrivals_Path;
         } else {       
@@ -493,20 +490,20 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
     }
      //-----------------------------------------------------------------------
     
+    // UNIVERSAL SEARCH?
     public void searchFlights() {
-        // 1. Get the current active file path
+        
         String filePath = getActiveTimetablePath();
         File file = new File(filePath);
 
-        // 2. Get the search term and normalize it for comparison
+        // Gets the user input on the field 
         String searchTerm = SearchField.getText().trim().toLowerCase();
-
-        // Check if the current text is the placeholder text
+        
         String placeholderText = "search for a flight".toLowerCase();
 
-        // A simple check: if the text is the placeholder, treat it as an empty search.
+       // checks if the current text on the field is a placeholdder text then just refresh the table
         if (searchTerm.equals(placeholderText) || searchTerm.isEmpty()) {
-            // Reload all flights based on the active tab (Arrival or Departure)
+            // refreshed depending on which table is active
             if (Arrival.getBackground().equals(Color.WHITE)) {
                 loadFlightsToTableArrival();
             } else {
@@ -515,8 +512,10 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             return;
         }
 
+        
+        //table constructor 
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-        model.setRowCount(0); // Clear existing data
+        model.setRowCount(0);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -524,22 +523,23 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
-
-                    // 3. Check if any column in the row contains the search term
+                    
+                    // reads the table and splits it into an array
+                    
                     boolean match = false;
                     for (String data : rowData) {
                         if (data.trim().toLowerCase().contains(searchTerm)) {
-                            match = true;
+                            match = true; // if there is a match with the user's input to the set of data from the array return true
                             break;
                         }
                     }
 
-                    // 4. If there is a match, add the row to the table
+                    
                     if (match) {
                         String distanceStr = "N/A";
                         String durationStr = "N/A";
 
-                        // Calculate logic
+                        // Displays again the contents of the searched flights of the user 
                         try {
                             distanceCalculator calc = new distanceCalculator(rowData[2], rowData[3], rowData[1]);
                             double distVal = calc.calculateDistanceKm();
@@ -547,96 +547,99 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                             int totalMinutes = calc.calculateFlightDurationMinutes();
                             durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
                         } catch (Exception e) {
+                            System.out.println("Error on Calculating Time");
                         }
-
-                        if (rowData.length == 6) {
-                            String[] adjustedRow = {
-                                rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "",
-                                durationStr, distanceStr
-                            };
-                            model.addRow(adjustedRow);
-                        } else {
-                            String[] adjustedRow = {
-                                rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], rowData[6],
-                                durationStr, distanceStr
-                            };
-                            model.addRow(adjustedRow);
-                        }
+                        String[] adjustedRow = {
+                            rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], rowData[6],
+                            durationStr, distanceStr
+                        };
+                        model.addRow(adjustedRow);
+                        
                     }
                 }
             }
-            SortingFunction.sortFile();
+            SortingFunction.sortFile(); // Sort the searched data
+            
         } catch (IOException e) {
-            // Log the error instead of silently swallowing it
-            logger.log(Level.SEVERE, "Error reading flight file for search.", e);
+            System.out.println("Error in reading the File");
         }
     }
     
+    // reset the placeholder
     private void resetSearchField() {
         SearchField.setText("Search for a flight");
         SearchField.setForeground(Color.LIGHT_GRAY);
     }
     
+
     private void ArrivalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArrivalActionPerformed
+        // if clicked then just chaneg the color of the button adn the button of the departure to determine whihc button is currently active 
         Arrival.setBackground(Color.WHITE);
         Arrival.setForeground(Color.BLACK);
-        Departures.setBackground(Color.getHSBColor(0.5833f, 0.8f, 1.0f));
+        Departures.setBackground(Color.GRAY);
         Departures.setForeground(Color.WHITE);
         
+        // displyas ETA for the arrival button is pressed 
         FlightTable.getColumnModel().getColumn(5).setHeaderValue("ETA");
         FlightTable.getTableHeader().repaint();
         
+        // loads teh arrival table 
         loadFlightsToTableArrival();
-        
+        // resets the search field 
         resetSearchField();
     }//GEN-LAST:event_ArrivalActionPerformed
 
     private void DeparturesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeparturesActionPerformed
+        // sme process with the arrival button but now for the departure
         Departures.setBackground(Color.WHITE);
         Departures.setForeground(Color.BLACK);
-        Arrival.setBackground(Color.getHSBColor(0.5833f, 0.8f, 1.0f));
+        Arrival.setBackground(Color.GRAY);
         Arrival.setForeground(Color.WHITE);
         
+        // departure displays ETD
         FlightTable.getColumnModel().getColumn(5).setHeaderValue("ETD");
         FlightTable.getTableHeader().repaint();
-        
         loadFlightsToTableDeparture();
         
         resetSearchField();
     }//GEN-LAST:event_DeparturesActionPerformed
 
     private void SearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFieldActionPerformed
+        // if enter is pressed then search function
         searchFlights();
     }//GEN-LAST:event_SearchFieldActionPerformed
 
     private void SearchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusGained
+        // if search text field is clicked then remove the palceholder text
         SearchField.setText("");
         SearchField.setForeground(Color.BLACK);
     }//GEN-LAST:event_SearchFieldFocusGained
 
     private void SearchFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusLost
         if (SearchField.getText().trim().isEmpty()) {
-            SearchField.setText("Search for a flight");
-            SearchField.setForeground(Color.LIGHT_GRAY);
+            resetSearchField();
         }   
     }//GEN-LAST:event_SearchFieldFocusLost
 
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
-      searchFlights();
+      // same procces for the textfield but in a button form
+        searchFlights();
     }//GEN-LAST:event_SearchButtonActionPerformed
 
     private void addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFlightActionPerformed
         addFlightScreen addPopUp = new addFlightScreen();
-    
+        // calls the addFlight screen pop up
+        
+
+        // found a way to update the whole table after adding the flight instead of pressing a button after
         addPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                if (Arrival.getBackground().equals(Color.WHITE)) {
+                if (Arrival.getBackground().equals(Color.WHITE)) { // determines if which on is active 
                     loadFlightsToTableArrival();
                 } else {
                     loadFlightsToTableDeparture();
                 }
-                
             }
         });
   
@@ -644,8 +647,11 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         
     }//GEN-LAST:event_addFlightActionPerformed
 
+    
+    
     private void editFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFlightActionPerformed
-        // TODO add your handling code here:
+        
+        //selects a content of the table 
         selectedRow = FlightTable.getSelectedRow();
 
         if (selectedRow == -1) {
@@ -665,27 +671,22 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
         String frequency = FlightTable.getValueAt(selectedRow, 4).toString();
         String time = FlightTable.getValueAt(selectedRow, 5).toString();
         String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
-
+        
+        // calls the edit constructor based from the contents of the table
         editFlightScreen_1 editPopUp = new editFlightScreen_1(
             airline, aircraft, origin, destination, frequency, time, flightNumber
         );
         
-        
+        // same fucntion from the add popup updatest eh table if the windwos is closed
         editPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                // When the window closes, check which tab is open and refresh it
+                
                 if (Arrival.getBackground().equals(Color.WHITE)) {
                     loadFlightsToTableArrival();
                 } else {
                     loadFlightsToTableDeparture();
                 }
-                DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-                SortingFunction.sortFile();
-
-                // 4. Force the table to visually update
-                FlightTable.revalidate();
-                FlightTable.repaint();
             }
         });
  
@@ -693,10 +694,9 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_editFlightActionPerformed
 
     private void deleteFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFlightActionPerformed
-        // Get the selected row
+        // Same function as the eduit flight one but it does a delet function insetad 
         int selectedRow = FlightTable.getSelectedRow();
 
-        // Check if a row is selected
         if (selectedRow == -1) {
             javax.swing.JOptionPane.showMessageDialog(
                 this,
@@ -707,7 +707,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             return;
         }
 
-        // Show a confirmation dialog
+        // Show a confirmation dialog if wanting to delete
         int confirm = javax.swing.JOptionPane.showConfirmDialog(
             this, 
             "Are you sure you want to delete this flight from BOTH Departures and Arrivals?", 
@@ -715,38 +715,32 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             javax.swing.JOptionPane.YES_NO_OPTION
         );
 
-        // If the user confirms the deletion (YES)
+        //if yes dialog then do the following 
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
             DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-
-            // We only really need the Flight Number (ID) to find the line in the file
-            // Assuming Flight Number is at index 6 (based on your code)
+            //stores the flight number 
             String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
-
-            // 1. Remove the row from the GUI Table immediately
+            
             model.removeRow(selectedRow);
 
-            // 2. Perform Backend Deletion
             try {
-                // Delete from Main Timetable (Departures)
+                // Delete line from the database 
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Departure_Path, flightNumber);
-
-                // Delete from Arrivals Timetable
-                // NOTE: Make sure Database_Arrivals_Path matches your actual variable name in AdminOperations
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Arrivals_Path, flightNumber);
-
+                
+                //displays confrimation message
                 javax.swing.JOptionPane.showMessageDialog(this, "Flight deleted successfully from database.");
 
             } catch (IOException e) {
-                System.out.println("Error deleting flight from file: " + e.getMessage());
-                javax.swing.JOptionPane.showMessageDialog(this, "Error updating database file.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
+                System.out.println("Error deleting flight from file");
+               }
         }
     }
 
-    
+    // method for deleting the line from the file depending on the flight number as key
     private void deleteLineFromFile(String filePath, String flightNumberToRemove) throws IOException {
         File inputFile = new File(filePath);
+        // makes a temp file outside of the database
         File tempFile = new File(inputFile.getParent(), "temp_deletion_" + inputFile.getName());
 
         // Check if file exists before trying to read
@@ -760,9 +754,7 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
-
-                // Logic: Write the line ONLY if it DOES NOT contain the flight number.
-                // This effectively "deletes" the matching line.
+                // just writes the line if it does not contain the to deleteline
                 if (!line.contains(flightNumberToRemove)) {
                     writer.write(line);
                     writer.newLine();
@@ -772,8 +764,6 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
 
         // Delete original file and rename temp file
         if (!inputFile.delete()) {
-            // Garbage collection sometimes fixes file lock issues on Windows
-            System.gc();
             if (!inputFile.delete()) {
                 System.out.println("Could not delete original file: " + filePath);
                 return;
@@ -787,7 +777,8 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
     
     // Method to update the timetable file by removing the deleted flight entry
     private void updateTimetableFile(String airline, String aircraft, String origin, String destination, String frequency, String time, String flightNumber) {
-        // Determine the correct file path based on the active tab (Departure or Arrival)
+       
+        
         String filePath = getActiveTimetablePath();
         File file = new File(filePath);
 
@@ -800,12 +791,11 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             // Read all lines and store them in fileContent
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
-                    // Split each line to match the row data format
+                   
                     String[] rowData = line.split("-");
 
-                    // Check if this line matches the deleted flight details
                     if (rowData.length == 7) {
-                        // Compare all the values (if they match, don't add this line back)
+                        // Compare all the values if they match, don't add this line back
                         if (rowData[0].equals(airline) && rowData[1].equals(aircraft) && rowData[2].equals(origin)
                             && rowData[3].equals(destination) && rowData[4].equals(frequency) && rowData[5].equals(time)
                             && rowData[6].equals(flightNumber)) {
@@ -818,14 +808,13 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
             }
 
             reader.close();
-
-            // Now write the updated content back to the file
+            
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write(fileContent.toString());
             writer.close();
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error updating flight file after deletion.", e);
+            System.out.println("Error updating flight file after deletion");
         }
     }//GEN-LAST:event_deleteFlightActionPerformed
 

@@ -1,4 +1,5 @@
 (alknchn)
 CEBUPAC - RPLL(Manila) - RPMO(Ozamiz) - 0430 - CEB152
 (josh)
-AIRASIA - RPLL(Manila) - RPMY(Cagayan de Oro) - 0350 - AIR547
+PAL - RPLK(Legazpi) - RPLL(Manila) - 1432 - PAL362
+CEBUPAC - RPLK(Legazpi) - RPLL(Manila) - 1432 - CEB534

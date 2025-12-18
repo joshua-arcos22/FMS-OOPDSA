@@ -60,16 +60,18 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        Container.setBackground(new java.awt.Color(255, 255, 255));
+        Container.setBackground(new java.awt.Color(204, 204, 204));
 
-        TopContainer.setBackground(new java.awt.Color(51, 153, 255));
+        TopContainer.setBackground(new java.awt.Color(102, 102, 102));
 
         Title.setFont(new java.awt.Font("Santana-Black", 0, 48)); // NOI18N
         Title.setForeground(new java.awt.Color(255, 255, 255));
         Title.setText("LIPAD BANTAY");
 
-        SearchContainer.setBackground(new java.awt.Color(255, 255, 255));
+        SearchContainer.setBackground(new java.awt.Color(204, 204, 204));
 
+        SearchField.setBackground(new java.awt.Color(204, 204, 204));
+        SearchField.setForeground(new java.awt.Color(255, 255, 255));
         SearchField.setText("Search for a flight");
         SearchField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -85,7 +87,7 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
             }
         });
 
-        SearchButton.setBackground(new java.awt.Color(0, 102, 255));
+        SearchButton.setBackground(new java.awt.Color(102, 102, 102));
         SearchButton.setText("Search");
         SearchButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         SearchButton.addActionListener(new java.awt.event.ActionListener() {
@@ -136,7 +138,8 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
 
         BottomContainer.setBackground(new java.awt.Color(255, 255, 255));
 
-        Arrival.setBackground(new java.awt.Color(0, 153, 255));
+        Arrival.setBackground(new java.awt.Color(102, 102, 102));
+        Arrival.setForeground(new java.awt.Color(255, 255, 255));
         Arrival.setText("Arrival");
         Arrival.setBorder(null);
         Arrival.setMaximumSize(new java.awt.Dimension(120, 35));
@@ -148,7 +151,8 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
             }
         });
 
-        Departures.setBackground(new java.awt.Color(0, 153, 255));
+        Departures.setBackground(new java.awt.Color(102, 102, 102));
+        Departures.setForeground(new java.awt.Color(255, 255, 255));
         Departures.setText("Departure");
         Departures.setBorder(null);
         Departures.setMaximumSize(new java.awt.Dimension(120, 35));
@@ -186,16 +190,17 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
         BottomContainerLayout.setVerticalGroup(
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BottomContainerLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
                 .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36))
         );
 
         FlightTable.setBackground(new java.awt.Color(255, 255, 255));
-        FlightTable.setForeground(new java.awt.Color(0, 102, 204));
+        FlightTable.setForeground(new java.awt.Color(102, 102, 102));
         FlightTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
@@ -251,10 +256,9 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
             .addGroup(ContainerLayout.createSequentialGroup()
                 .addComponent(TopContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(BottomContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BottomContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -303,62 +307,51 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
-                   
-                    // Create an instance of your calculator (assuming it's not static)
+
                     distanceCalculator distCalc = new distanceCalculator(rowData[2], rowData[3], rowData[1]);
                     
-                    // --- NEW CODE START ---
                     String airline = rowData[0];
                     String aircraft = rowData[1];
                     String origin = rowData[2];
                     String destination = rowData[3];
                     String freq = rowData[4];
                     String time = rowData[5];
-                    String flightNo = (rowData.length == 7) ? rowData[6] : "";
+                    String flightNo = rowData[6];
 
                     String distanceStr = "N/A";
                     String durationStr = "N/A";
 
                     try {
-                        // Instantiate your calculator with the specific row data
+                 
                         distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
 
-                        // 1. Get Distance
+                       
                         double distVal = calc.calculateDistanceKm();
                         distanceStr = String.format("%.0f km", distVal);
 
-                        // 2. Get Duration
+                       
                         int totalMinutes = calc.calculateFlightDurationMinutes();
                         int hrs = totalMinutes / 60;
                         int mins = totalMinutes % 60;
                         durationStr = hrs + "h " + mins + "m";
 
                     } catch (Exception e) {
-                        // If file not found or calc error, keep as N/A
-                        System.out.println("Calc Error: " + e.getMessage());
+                        System.out.println("Calc Error: ");
                     }
-                    // --- NEW CODE END ---
-
-                    // Add to Table (Notice indices 7 and 8 for Duration and Distance)
-                    if (rowData.length == 6) {                   
-                        String[] adjustedRow = {
-                            airline, aircraft, origin, destination, freq, time, "", 
-                            durationStr, distanceStr 
-                        };
-                        model.addRow(adjustedRow);
-                    } else {
-                        String[] adjustedRow = {
-                            airline, aircraft, origin, destination, freq, time, flightNo, 
-                            durationStr, distanceStr 
-                        };
-                        model.addRow(adjustedRow);
-                    }
+                   
+                    
+                    String[] adjustedRow = {
+                        airline, aircraft, origin, destination, freq, time, flightNo, 
+                        durationStr, distanceStr 
+                    };
+                    model.addRow(adjustedRow);
+                    
                 }
             }
             br.close();
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error loading departures", e);
+            System.out.println("Error loading departures");
         }
     }
     //-----------------------------------------------------------------------
@@ -381,7 +374,6 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
                     String[] rowData = line.split("-");
                     
                     distanceCalculator distCalc = new distanceCalculator(rowData[2], rowData[3], rowData[1]);
-                    // Extract Data
                     String airline = rowData[0];
                     String aircraft = rowData[1];
                     String origin = rowData[2];
@@ -393,7 +385,7 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
                     String distanceStr = "N/A";
                     String durationStr = "N/A";
 
-                    // Calculate
+
                     try {
                         distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
                         double distVal = calc.calculateDistanceKm();
@@ -403,7 +395,6 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
                         durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
                     } catch (Exception e) {}
 
-                    // Add Row
                     String[] adjustedRow = { 
                         airline, aircraft, origin, destination, freq, time, flightNo, 
                         durationStr, distanceStr 
@@ -414,14 +405,13 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
             br.close();
 
         } catch (IOException e) {
-
+            System.out.println("Error loading departures");
         }
     }
     //-----------------------------------------------------------------------
     
     //------------------DEFAULT TABLE VIEW------------------------------
     private String getActiveTimetablePath() {
-        // DEPATURE AS DEFAULT VIEW.
         if (Arrival.getBackground().equals(Color.WHITE)) {
             return AdminOperations.Database_TimeTable_Arrivals_Path;
         } else {       
@@ -431,19 +421,19 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
      //-----------------------------------------------------------------------
     
     public void searchFlights() {
-        // 1. Get the current active file path
+        
         String filePath = getActiveTimetablePath();
         File file = new File(filePath);
 
-        // 2. Get the search term and normalize it for comparison
+        
         String searchTerm = SearchField.getText().trim().toLowerCase();
 
-        // Check if the current text is the placeholder text
+        
         String placeholderText = "search for a flight".toLowerCase();
 
-        // A simple check: if the text is the placeholder, treat it as an empty search.
+      
         if (searchTerm.equals(placeholderText) || searchTerm.isEmpty()) {
-            // Reload all flights based on the active tab (Arrival or Departure)
+            // Reload all flights based on what is active 
             if (Arrival.getBackground().equals(Color.WHITE)) {
                 loadFlightsToTableArrival();
             } else {
@@ -453,7 +443,7 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
         }
 
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-        model.setRowCount(0); // Clear existing data
+        model.setRowCount(0); 
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -462,7 +452,7 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
 
-                    // 3. Check if any column in the row contains the search term
+                    
                     boolean match = false;
                     for (String data : rowData) {
                         if (data.trim().toLowerCase().contains(searchTerm)) {
@@ -471,12 +461,12 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
                         }
                     }
 
-                    // 4. If there is a match, add the row to the table
+                    
                     if (match) {
                         String distanceStr = "N/A";
                         String durationStr = "N/A";
 
-                        // Calculate logic
+                        
                         try {
                             distanceCalculator calc = new distanceCalculator(rowData[2], rowData[3], rowData[1]);
                             double distVal = calc.calculateDistanceKm();
@@ -484,27 +474,20 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
                             int totalMinutes = calc.calculateFlightDurationMinutes();
                             durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
                         } catch (Exception e) {
+                            System.out.println("Error in Calculating Time");
                         }
-
-                        if (rowData.length == 6) {
-                            String[] adjustedRow = {
-                                rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "",
-                                durationStr, distanceStr
-                            };
-                            model.addRow(adjustedRow);
-                        } else {
-                            String[] adjustedRow = {
-                                rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], rowData[6],
-                                durationStr, distanceStr
-                            };
-                            model.addRow(adjustedRow);
-                        }
+                        
+                        String[] adjustedRow = {
+                            rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], rowData[6],
+                            durationStr, distanceStr
+                        };
+                        model.addRow(adjustedRow);
+                        
                     }
                 }
             }
         } catch (IOException e) {
-            // Log the error instead of silently swallowing it
-            logger.log(Level.SEVERE, "Error reading flight file for search.", e);
+            System.out.println("Error reading flight file for search");
         }
     }
     
@@ -516,7 +499,7 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
     private void ArrivalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArrivalActionPerformed
         Arrival.setBackground(Color.WHITE);
         Arrival.setForeground(Color.BLACK);
-        Departures.setBackground(Color.getHSBColor(0.5833f, 0.8f, 1.0f));
+        Departures.setBackground(Color.GRAY);
         Departures.setForeground(Color.WHITE);
         
         FlightTable.getColumnModel().getColumn(5).setHeaderValue("ETA");
@@ -530,7 +513,7 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
     private void DeparturesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeparturesActionPerformed
         Departures.setBackground(Color.WHITE);
         Departures.setForeground(Color.BLACK);
-        Arrival.setBackground(Color.getHSBColor(0.5833f, 0.8f, 1.0f));
+        Arrival.setBackground(Color.GRAY);
         Arrival.setForeground(Color.WHITE);
         
         FlightTable.getColumnModel().getColumn(5).setHeaderValue("ETD");
