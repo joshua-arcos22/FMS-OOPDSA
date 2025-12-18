@@ -34,9 +34,10 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
     
     public MainFlightDisplayUsers(String username){
         initComponents();
-        this.username = username;
+       
         loadFlightsToTableDeparture();
         ArrivalTimetableGenerator.generate();
+         this.username = username;
 
     }
     public MainFlightDisplayUsers() {
@@ -573,7 +574,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchButtonActionPerformed
 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        UserDashboard display = new UserDashboard(username);
+        UserDashboard display = new UserDashboard(this.username);
         display.setVisible(true);
         dispose();
     }//GEN-LAST:event_jToggleButton2ActionPerformed
