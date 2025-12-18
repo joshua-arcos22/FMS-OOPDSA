@@ -273,7 +273,7 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
     
-        String username = flnoName.getText().trim();
+        String username = txtRegUsn1.getText().trim();
         String password = String.valueOf(this.password.getPassword());
         String fullName = managerName.getText().trim();
         String airLineName = airlineName.getText().trim();

@@ -51,6 +51,7 @@ public class editFlightScreen_M extends javax.swing.JFrame {
             initComponents();
 
             this.Original_Flight_Number_Ref = flightNumber;
+            this.Airline_Name = airline;
             flnField.setText(flightNumber);
             timeField.setText(time);
             FLNO_Prefix = FL_Prefix;
@@ -742,7 +743,7 @@ public class editFlightScreen_M extends javax.swing.JFrame {
             errorFLTNO.setForeground(Color.red);
             Flt_No_Valid = false;
 
-        } else if (isFlightNumberDuplicate(flightNum)) {
+        } else if (!flightNum.equalsIgnoreCase(Original_Flight_Number_Ref) && isFlightNumberDuplicate(flightNum)) {
             errorFLTNO.setText("Flight Exists");
             errorFLTNO.setForeground(Color.red);
             Flt_No_Valid = false;

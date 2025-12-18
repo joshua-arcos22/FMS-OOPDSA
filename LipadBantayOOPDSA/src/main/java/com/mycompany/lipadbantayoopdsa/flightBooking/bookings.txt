@@ -3,3 +3,5 @@ AIRASIA - RPLL(Manila) - RPVM(Mactan) - 0025 - Z29496 - E
 
 (josh)
 AIRASIA - RPVM(Mactan) - RPLL(Manila) - 0005 - Z28921 - E
+(joshua123)
+AIRASIA - RPLL(Manila) - RPSP(Panglao) - 1130 - Z21738 - E

@@ -5,3 +5,8 @@ alknchn,Al Kenchen O. Valenciano,alkenchenv@gmail.com,User
 josh,joshua,jos@gmail.com,User
 SL,Joshua Arcos,SIXSEVEN,Manager
 joshua_123,Joshua Oliver C. Arcos,joshuacarcos@gmail.com,User
+joshua123,Joshua Arcos,joshuaCArcos@gmail.com,User
+IT,Joshua Arcos,ITAirlines,Manager
+TS,joshua,Test,Manager
+joshua,joshua,Test,Manager
+it_joshua,Joshua Arcos,ITAIrlines,Manager

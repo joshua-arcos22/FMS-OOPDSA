@@ -532,58 +532,53 @@ public class FlightBooking extends javax.swing.JFrame {
     }
     
     private void searchFlights() {
-        String searchQuery = SearchField.getText().toLowerCase(); 
+        String searchQuery = SearchField.getText().toLowerCase().trim();
 
-        DefaultTableModel availableModel = (DefaultTableModel) jTable1.getModel();
-        DefaultTableModel bookedModel = (DefaultTableModel) jTable2.getModel();
-        availableModel.setRowCount(0);
-        bookedModel.setRowCount(0);
+        // If search is empty or has the placeholder, reset to show all flights
+        if (searchQuery.isEmpty() || searchQuery.equals("search for a flight")) {
+            loadFlightsToTableDeparture();
+            return;
+        }
 
-        // Re-load and filter the available flights for departure
+        // Call the filter method
         loadAndFilterFlightsToTableDeparture(searchQuery);
-
-        // Re-load and filter the booked flights for arrival
-        loadAndFilterFlightsToTableArrival(searchQuery);
     }
 
     private void loadAndFilterFlightsToTableDeparture(String searchQuery) {
-        // 1. Target jTable2 specifically
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); 
+ 
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
 
-        // 2. This clears those blank rows you saw in the screenshot
-        model.setRowCount(0); 
-
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+        // Point to the Departure Master (matching your loadFlightsToTableDeparture method)
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
         File file = new File(filePath);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            List<String[]> rows = new ArrayList<>();
-
             while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] rowData = line.split("-");
+                String trimmedLine = line.trim();
+                if (trimmedLine.isEmpty()) {
+                    continue;
+                }
 
-                    // Ensure we have 7 parts: Airline(0), Model(1), Origin(2), Dest(3), Day(4), Time(5), FlightNum(6)
-                    if (rowData.length >= 7) {
-                        String[] row = {
-                            rowData[0], // Airline
-                            rowData[4], // Day
-                            rowData[5], // Time
-                            rowData[2], // Origin
-                            rowData[3], // Destination
-                            rowData[6] // Flight Number (The 7th element is index 6)
-                        };
-                        rows.add(row);
+                String[] rowData = trimmedLine.split("-");
+
+                if (rowData.length >= 6) {
+                    String flightNum = (rowData.length > 6) ? rowData[6] : "ID-ERR";
+                    String[] row = {
+                        rowData[0], // Airline
+                        rowData[4], // Day
+                        rowData[5], // Time
+                        rowData[2], // Origin
+                        rowData[3], // Destination
+                        flightNum // Flight Number
+                    };
+
+                    if (matchesSearchQuery(row, searchQuery)) {
+                        model.addRow(row);
                     }
                 }
             }
-            
-            // Add to table
-            for (String[] row : rows) {
-                model.addRow(row);
-            }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

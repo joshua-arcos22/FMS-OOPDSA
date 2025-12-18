@@ -657,16 +657,19 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         selectedRow = FlightTable.getSelectedRow();
 
         if (selectedRow == -1) {
-            javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Please select a flight to edit.",
-                "No Selection",
-                javax.swing.JOptionPane.WARNING_MESSAGE
-            );
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a flight to edit.");
             return;
         }
 
-        String airline = FlightTable.getValueAt(selectedRow, 0).toString();
+        // 1. Extract data from the table
+        Object airlineValue = FlightTable.getValueAt(selectedRow, 0);
+        String airline = (airlineValue != null) ? airlineValue.toString() : "";
+
+        // Fallback logic
+        if (airline.equalsIgnoreCase("null") || airline.isEmpty()) {
+            airline = this.currentAirlineName;
+        }
+
         String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
         String origin = FlightTable.getValueAt(selectedRow, 2).toString();
         String destination = FlightTable.getValueAt(selectedRow, 3).toString();
@@ -674,22 +677,25 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         String time = FlightTable.getValueAt(selectedRow, 5).toString();
         String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
 
+        // 2. Initialize the popup 
+        // FIX: Make sure the last parameter is currentAirlinePrefix, not airline again
         editFlightScreen_M editPopUp = new editFlightScreen_M(
-            currentAirlineName, aircraft, origin, destination, frequency, time, flightNumber, currentAirlinePrefix
+                airline, aircraft, origin, destination, frequency, time, flightNumber, currentAirlinePrefix
         );
-        
-        
+
+        // 3. Add the Listener so the table refreshes when you finish editing
         editPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                // When the window closes, check which tab is open and refresh it
-                if (Arrival.getBackground().equals(Color.WHITE)) {
+                if (Arrival.getBackground().equals(java.awt.Color.WHITE)) {
                     loadFlightsToTableArrival();
                 } else {
                     loadFlightsToTableDeparture();
                 }
             }
         });
+
+        // 4. CRITICAL: Show the window!
         editPopUp.setVisible(true);
     }//GEN-LAST:event_editFlightActionPerformed
 
