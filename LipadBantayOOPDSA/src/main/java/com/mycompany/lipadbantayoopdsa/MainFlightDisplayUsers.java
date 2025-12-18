@@ -7,6 +7,9 @@ package com.mycompany.lipadbantayoopdsa;
 import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen;
 import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_1;
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
+import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
+import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
+import com.mycompany.lipadbantayoopdsa.userAuthentication.UserDashboard;
 import java.awt.Color;
 import java.io.*;
 import java.util.*;
@@ -24,10 +27,18 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFlightDisplayUsers.class.getName());
     
     private int selectedRow = -1;
-
+    private String username; 
     /**
      * Creates new form MainFlightDisplay
      */
+    
+    public MainFlightDisplayUsers(String username){
+        initComponents();
+        this.username = username;
+        loadFlightsToTableDeparture();
+        ArrivalTimetableGenerator.generate();
+
+    }
     public MainFlightDisplayUsers() {
         initComponents();
         loadFlightsToTableDeparture();
@@ -53,9 +64,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
         BottomContainer = new javax.swing.JPanel();
         Arrival = new javax.swing.JToggleButton();
         Departures = new javax.swing.JToggleButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
         jToggleButton2 = new javax.swing.JToggleButton();
-        jToggleButton3 = new javax.swing.JToggleButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         FlightTable = new javax.swing.JTable();
 
@@ -136,6 +145,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
         );
 
         BottomContainer.setBackground(new java.awt.Color(255, 255, 255));
+        BottomContainer.setForeground(new java.awt.Color(51, 51, 51));
 
         Arrival.setBackground(new java.awt.Color(0, 153, 255));
         Arrival.setText("Arrival");
@@ -161,21 +171,10 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
             }
         });
 
-        jToggleButton1.setBackground(new java.awt.Color(255, 153, 102));
-        jToggleButton1.setText("VIEW BOOKED LFIGHTS");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
-            }
-        });
-
         jToggleButton2.setText("BACK");
-
-        jToggleButton3.setBackground(new java.awt.Color(153, 255, 153));
-        jToggleButton3.setText("BOOK A FLIGHT");
-        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton3ActionPerformed(evt);
+                jToggleButton2ActionPerformed(evt);
             }
         });
 
@@ -185,16 +184,11 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BottomContainerLayout.createSequentialGroup()
                 .addGap(61, 61, 61)
-                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(BottomContainerLayout.createSequentialGroup()
-                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jToggleButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Departures, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(Departures, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
                 .addGap(53, 53, 53))
         );
 
@@ -207,10 +201,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                     .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36))
         );
 
@@ -581,13 +572,11 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
       searchFlights();
     }//GEN-LAST:event_SearchButtonActionPerformed
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
-
-    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton3ActionPerformed
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        UserDashboard display = new UserDashboard(username);
+        display.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -627,8 +616,6 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
     private javax.swing.JPanel TopContainer;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JToggleButton jToggleButton3;
     // End of variables declaration//GEN-END:variables
 }

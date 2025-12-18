@@ -158,20 +158,20 @@ public class FlightBooking extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Airline", "Day", "Time", "Origin", "Destination"
+                "Airline", "Day", "Time", "Origin", "Destination", "Flight Number"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -190,6 +190,7 @@ public class FlightBooking extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(2).setResizable(false);
             jTable1.getColumnModel().getColumn(3).setResizable(false);
             jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
         }
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
@@ -202,9 +203,25 @@ public class FlightBooking extends javax.swing.JFrame {
             new String [] {
                 "Airline", "Day", "Time", "Origin", "Destination", "Flight Number"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable2.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jTable2);
+        if (jTable2.getColumnModel().getColumnCount() > 0) {
+            jTable2.getColumnModel().getColumn(0).setResizable(false);
+            jTable2.getColumnModel().getColumn(1).setResizable(false);
+            jTable2.getColumnModel().getColumn(2).setResizable(false);
+            jTable2.getColumnModel().getColumn(3).setResizable(false);
+            jTable2.getColumnModel().getColumn(4).setResizable(false);
+            jTable2.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -274,48 +291,58 @@ public class FlightBooking extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     public void loadFlightsToTableDeparture() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
 
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
+        // Ensure this path is 100% correct
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
         File file = new File(filePath);
 
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             List<String[]> rows = new ArrayList<>();
 
             while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] rowData = line.split("-");
-                    // Add only the first 5 columns for Departure table
-                    if (rowData.length >= 5) {
-                        String[] row = { rowData[0], rowData[4], rowData[5], rowData[2], rowData[3] };
-                        rows.add(row);
-                    }
+                String trimmedLine = line.trim();
+                if (trimmedLine.isEmpty()) {
+                    continue;
+                }
+
+                String[] rowData = trimmedLine.split("-");
+
+                // Your DB format: AIRASIA(0)-A320(1)-RPLL(2)-RPSP(3)-E(4)-1350(5)-Z26928(6)
+                // We check for at least 6 parts to be safe, then pull index 6 if it exists
+                if (rowData.length >= 6) {
+                    String flightNum = (rowData.length > 6) ? rowData[6] : "ID-ERR";
+
+                    String[] row = {
+                        rowData[0], // Airline
+                        rowData[4], // Day
+                        rowData[5], // Time
+                        rowData[2], // Origin
+                        rowData[3], // Destination
+                        flightNum // Flight Number (Index 6 from file, Index 5 in Table)
+                    };
+                    rows.add(row);
                 }
             }
-            br.close();
 
-            // Sort rows by Day and Time
-            Collections.sort(rows, (row1, row2) -> {
-                int dayComparison = row1[1].compareTo(row2[1]);
-                if (dayComparison == 0) {
-                    return row1[2].compareTo(row2[2]);
-                }
-                return dayComparison;
+            // Sort by Day (index 1) and Time (index 2)
+            Collections.sort(rows, (r1, r2) -> {
+                int dayComp = r1[1].compareTo(r2[1]);
+                return (dayComp != 0) ? dayComp : r1[2].compareTo(r2[2]);
             });
 
-            // Add sorted data to the table
             for (String[] row : rows) {
                 model.addRow(row);
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Master Database not found at: " + filePath);
         }
     }
 
@@ -323,42 +350,47 @@ public class FlightBooking extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
 
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+        // Ensure this path is 100% correct
+        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
         File file = new File(filePath);
 
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             List<String[]> rows = new ArrayList<>();
 
             while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] rowData = line.split("-");
- 
-                    if (rowData.length >= 6) {
-                        String[] row = { rowData[0], rowData[4], rowData[5], rowData[2], rowData[3] };
-                        rows.add(row);
-                    }
+                String trimmedLine = line.trim();
+                if (trimmedLine.isEmpty()) continue;
+
+                String[] rowData = trimmedLine.split("-");
+
+                // Your DB format: AIRASIA(0)-A320(1)-RPLL(2)-RPSP(3)-E(4)-1350(5)-Z26928(6)
+                // We check for at least 6 parts to be safe, then pull index 6 if it exists
+                if (rowData.length >= 6) {
+                    String flightNum = (rowData.length > 6) ? rowData[6] : "ID-ERR";
+
+                    String[] row = { 
+                        rowData[0], // Airline
+                        rowData[4], // Day
+                        rowData[5], // Time
+                        rowData[2], // Origin
+                        rowData[3], // Destination
+                        flightNum   // Flight Number (Index 6 from file, Index 5 in Table)
+                    };
+                    rows.add(row);
                 }
             }
-            br.close();
 
-            // Sort rows by Day and Time
-            Collections.sort(rows, (row1, row2) -> {
-                int dayComparison = row1[1].compareTo(row2[1]);
-                if (dayComparison == 0) {
-                    return row1[2].compareTo(row2[2]);
-                }
-                return dayComparison;
+            // Sort by Day (index 1) and Time (index 2)
+            Collections.sort(rows, (r1, r2) -> {
+                int dayComp = r1[1].compareTo(r2[1]);
+                return (dayComp != 0) ? dayComp : r1[2].compareTo(r2[2]);
             });
 
-            // Add sorted data to the table
-            for (String[] row : rows) {
-                model.addRow(row);
-            }
+            for (String[] row : rows) model.addRow(row);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Master Database not found at: " + filePath);
         }
     }
     
@@ -470,23 +502,22 @@ public class FlightBooking extends javax.swing.JFrame {
                 String trimmed = line.trim();
                 if (trimmed.isEmpty()) continue;
 
-                // Detect if we entered a different user's section
                 if (trimmed.startsWith("(") && !trimmed.equals(userHeader)) {
                     insideMySection = false;
                 }
 
-                // If we found the user's header
                 if (trimmed.equals(userHeader)) {
                     insideMySection = true;
-                    continue; // Move to the next line which contains flight data
+                    continue; 
                 }
 
                 if (insideMySection) {
                     String[] parts = trimmed.split(" - ");
-                    if (parts.length >= 5) { // Updated to 5 to include FlightNum
+                    // FIX: Changed from 7 to 6 because your save format has 6 parts
+                    if (parts.length >= 6) { 
                         destModel.addRow(new Object[]{
                             parts[0], // Airline
-                            "N/A",    // Day (Not saved in your record currently)
+                            parts[5], // Day (This is index 5, the 6th part)
                             parts[3], // Time
                             parts[1], // Origin
                             parts[2], // Destination
@@ -533,25 +564,21 @@ public class FlightBooking extends javax.swing.JFrame {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
 
-                    // 3. Ensure we have enough data (6 columns)
-                    if (rowData.length >= 6) {
-                        // This MUST have 6 items to fill all 6 columns in your UI
-                        String[] row = { 
-                            rowData[0], // Airline (Col 1)
-                            rowData[4], // Day (Col 2)
-                            rowData[5], // Time (Col 3)
-                            rowData[2], // Origin (Col 4)
-                            rowData[3], // Destination (Col 5)
-                            rowData[1]  // Flight Number (Col 6)
+                    // Ensure we have 7 parts: Airline(0), Model(1), Origin(2), Dest(3), Day(4), Time(5), FlightNum(6)
+                    if (rowData.length >= 7) {
+                        String[] row = {
+                            rowData[0], // Airline
+                            rowData[4], // Day
+                            rowData[5], // Time
+                            rowData[2], // Origin
+                            rowData[3], // Destination
+                            rowData[6] // Flight Number (The 7th element is index 6)
                         };
-
-                        if (matchesSearchQuery(row, searchQuery)) {
-                            rows.add(row);
-                        }
+                        rows.add(row);
                     }
                 }
             }
-
+            
             // Add to table
             for (String[] row : rows) {
                 model.addRow(row);
@@ -577,16 +604,21 @@ public class FlightBooking extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
-                    // Add all 6 columns for Arrival table
-                    if (rowData.length >= 6) {
-                        String[] row = { rowData[0], rowData[4], rowData[5], rowData[2], rowData[3], rowData[6] };
-                        // Filter the row based on the search query
-                        if (matchesSearchQuery(row, searchQuery)) {
-                            rows.add(row);
-                        }
+
+                    if (rowData.length >= 7) {
+                        String[] row = {
+                            rowData[0], // Airline
+                            rowData[4], // Day
+                            rowData[5], // Time
+                            rowData[2], // Origin
+                            rowData[3], // Destination
+                            rowData[6] // Flight Number (The 7th element is index 6)
+                        };
+                        rows.add(row);
                     }
                 }
             }
+            
             br.close();
 
             Collections.sort(rows, (row1, row2) -> {
@@ -627,29 +659,23 @@ public class FlightBooking extends javax.swing.JFrame {
             return;
         }
 
+        // Get data from all 6 columns (Indices 0 to 5)
         String airline = sourceModel.getValueAt(selectedRow, 0).toString();
         String day     = sourceModel.getValueAt(selectedRow, 1).toString();
         String time    = sourceModel.getValueAt(selectedRow, 2).toString();
         String origin  = sourceModel.getValueAt(selectedRow, 3).toString();
         String dest    = sourceModel.getValueAt(selectedRow, 4).toString();
+        String flightNum = sourceModel.getValueAt(selectedRow, 5).toString(); 
 
-        // GENERATE FLIGHT NUMBER (e.g., CEB123 or PR456)
-        String prefix = airline.length() >= 3 ? airline.substring(0, 3).toUpperCase() : "FL";
-        int randomNum = (int)(Math.random() * 900) + 100; // 100 to 999
-        String flightNum = prefix + randomNum;
+       
+        String record = airline + " - " + origin + " - " + dest + " - " + time + " - " + flightNum + " - " + day;
 
-        // The Record format: Airline - Origin - Destination - Time - FlightNum
-        String record = airline + " - " + origin + " - " + dest + " - " + time + " - " + flightNum;
-
-        // 1. Save to TXT
         saveBookingToTxt(record);
 
-        // 2. Update UI (Your Flights table)
+      
         destModel.addRow(new Object[]{airline, day, time, origin, dest, flightNum});
 
-        // 3. Remove from Available table
         sourceModel.removeRow(selectedRow);
-
         JOptionPane.showMessageDialog(this, "Flight Booked: " + flightNum);
     }//GEN-LAST:event_button1ActionPerformed
 
@@ -669,16 +695,13 @@ public class FlightBooking extends javax.swing.JFrame {
         String time    = yourFlightsModel.getValueAt(selectedRow, 2).toString();
         String origin  = yourFlightsModel.getValueAt(selectedRow, 3).toString();
         String dest    = yourFlightsModel.getValueAt(selectedRow, 4).toString();
-        String flightNum = yourFlightsModel.getValueAt(selectedRow, 5).toString(); // Get the flight number!
+        String flightNum = yourFlightsModel.getValueAt(selectedRow, 5).toString(); 
 
-        // IMPORTANT: This must match the format in saveBookingToTxt EXACTLY
-        // Format: Airline - Origin - Destination - Time - FlightNum
-        String record = airline + " - " + origin + " - " + dest + " - " + time + " - " + flightNum;
-
-        // 1. Remove from the TXT file
+       
+        // Format Airline - Origin - Destination - Time - FlightNum
+        String record = airline + " - " + origin + " - " + dest + " - " + time + " - " + flightNum + " - " + day;
         removeBookingFromTxt(record);
 
-        // 2. Move back to Available Table (UI)
         availableModel.addRow(new Object[]{airline, day, time, origin, dest});
 
         // 3. Remove from Your Flights (UI)
@@ -688,9 +711,9 @@ public class FlightBooking extends javax.swing.JFrame {
     }//GEN-LAST:event_button2ActionPerformed
 
     private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed
-        this.dispose(); 
 
         new UserDashboard(this.username).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_button3ActionPerformed
 
     private void SearchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusGained

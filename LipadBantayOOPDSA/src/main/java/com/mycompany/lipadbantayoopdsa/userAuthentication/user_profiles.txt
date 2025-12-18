@@ -4,3 +4,4 @@ arcos1,joshua,joshua@gmai.com,User
 alknchn,Al Kenchen O. Valenciano,alkenchenv@gmail.com,User
 josh,joshua,jos@gmail.com,User
 SL,Joshua Arcos,SIXSEVEN,Manager
+joshua_123,Joshua Oliver C. Arcos,joshuacarcos@gmail.com,User
