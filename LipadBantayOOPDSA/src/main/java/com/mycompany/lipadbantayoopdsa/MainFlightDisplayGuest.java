@@ -164,6 +164,7 @@ public class MainFlightDisplayGuest extends javax.swing.JFrame {
             }
         });
 
+        jToggleButton2.setBackground(new java.awt.Color(102, 102, 102));
         jToggleButton2.setText("BACK");
         jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

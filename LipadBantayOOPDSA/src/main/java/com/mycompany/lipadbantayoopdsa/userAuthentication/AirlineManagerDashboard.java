@@ -50,6 +50,7 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
         MANAGER = new javax.swing.JLabel();
         AIRLINE = new javax.swing.JLabel();
         FLPREFIX = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -70,7 +71,7 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
 
         title.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
         title.setForeground(new java.awt.Color(0, 153, 204));
-        title.setText("Airline Manager Console");
+        title.setText("Airline Manager Details");
 
         airlineNameText.setText("Manager Name");
 
@@ -87,6 +88,8 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
             }
         });
 
+        btnLogout.setBackground(new java.awt.Color(255, 153, 153));
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
         btnLogout.setText("Logout");
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,6 +103,20 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
 
         FLPREFIX.setText("jLabel3");
 
+        jPanel2.setBackground(new java.awt.Color(0, 153, 204));
+        jPanel2.setForeground(new java.awt.Color(0, 153, 204));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 46, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -112,28 +129,30 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
                             .addComponent(airlineNameText)
                             .addComponent(iataCodeText)
                             .addComponent(flPrefixText))
-                        .addGap(26, 26, 26)
+                        .addGap(45, 45, 45)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(FLPREFIX)
                             .addComponent(AIRLINE)
                             .addComponent(MANAGER)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(209, 209, 209)
-                        .addComponent(title))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(258, 258, 258)
+                        .addGap(262, 262, 262)
                         .addComponent(btnManageFlts, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(294, 294, 294)
-                        .addComponent(btnLogout)))
-                .addContainerGap(246, Short.MAX_VALUE))
+                        .addGap(300, 300, 300)
+                        .addComponent(btnLogout))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(217, 217, 217)
+                        .addComponent(title)))
+                .addContainerGap(247, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(101, 101, 101)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
                 .addComponent(title)
-                .addGap(48, 48, 48)
+                .addGap(45, 45, 45)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(MANAGER)
@@ -151,11 +170,11 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
                                 .addGap(43, 43, 43)
                                 .addComponent(flPrefixText))
                             .addComponent(iataCodeText, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(43, 43, 43)
-                .addComponent(btnManageFlts)
+                .addGap(35, 35, 35)
+                .addComponent(btnManageFlts, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnLogout)
-                .addContainerGap(122, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -297,6 +316,7 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel flPrefixText;
     private javax.swing.JLabel iataCodeText;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel title;
