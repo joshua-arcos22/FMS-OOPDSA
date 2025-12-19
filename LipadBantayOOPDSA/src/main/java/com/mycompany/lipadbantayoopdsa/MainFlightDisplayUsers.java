@@ -316,10 +316,10 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
                    
-                    // Create an instance of your calculator (assuming it's not static)
+                   
                     distanceCalculator distCalc = new distanceCalculator(rowData[2], rowData[3], rowData[1]);
                     
-                    // --- NEW CODE START ---
+                   
                     String airline = rowData[0];
                     String aircraft = rowData[1];
                     String origin = rowData[2];
@@ -332,26 +332,26 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                     String durationStr = "N/A";
 
                     try {
-                        // Instantiate your calculator with the specific row data
+                        
                         distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
 
-                        // 1. Get Distance
+                     
                         double distVal = calc.calculateDistanceKm();
                         distanceStr = String.format("%.0f km", distVal);
 
-                        // 2. Get Duration
+                      
                         int totalMinutes = calc.calculateFlightDurationMinutes();
                         int hrs = totalMinutes / 60;
                         int mins = totalMinutes % 60;
                         durationStr = hrs + "h " + mins + "m";
 
                     } catch (Exception e) {
-                        // If file not found or calc error, keep as N/A
+                        
                         System.out.println("Calc Error: " + e.getMessage());
                     }
-                    // --- NEW CODE END ---
+                
 
-                    // Add to Table (Notice indices 7 and 8 for Duration and Distance)
+                   
                     if (rowData.length == 6) {                   
                         String[] adjustedRow = {
                             airline, aircraft, origin, destination, freq, time, "", 
@@ -415,7 +415,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                         durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
                     } catch (Exception e) {}
 
-                    // Add Row
+                    
                     String[] adjustedRow = { 
                         airline, aircraft, origin, destination, freq, time, flightNo, 
                         durationStr, distanceStr 
@@ -443,19 +443,19 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
      //-----------------------------------------------------------------------
     
     public void searchFlights() {
-        // 1. Get the current active file path
+   
         String filePath = getActiveTimetablePath();
         File file = new File(filePath);
 
-        // 2. Get the search term and normalize it for comparison
+     
         String searchTerm = SearchField.getText().trim().toLowerCase();
 
-        // Check if the current text is the placeholder text
+      
         String placeholderText = "search for a flight".toLowerCase();
 
-        // A simple check: if the text is the placeholder, treat it as an empty search.
+      
         if (searchTerm.equals(placeholderText) || searchTerm.isEmpty()) {
-            // Reload all flights based on the active tab (Arrival or Departure)
+           
             if (Arrival.getBackground().equals(Color.WHITE)) {
                 loadFlightsToTableArrival();
             } else {
@@ -465,7 +465,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
         }
 
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-        model.setRowCount(0); // Clear existing data
+        model.setRowCount(0); 
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -474,7 +474,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
 
-                    // 3. Check if any column in the row contains the search term
+                   
                     boolean match = false;
                     for (String data : rowData) {
                         if (data.trim().toLowerCase().contains(searchTerm)) {
@@ -483,12 +483,12 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                         }
                     }
 
-                    // 4. If there is a match, add the row to the table
+                
                     if (match) {
                         String distanceStr = "N/A";
                         String durationStr = "N/A";
 
-                        // Calculate logic
+                      
                         try {
                             distanceCalculator calc = new distanceCalculator(rowData[2], rowData[3], rowData[1]);
                             double distVal = calc.calculateDistanceKm();
@@ -515,8 +515,8 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            // Log the error instead of silently swallowing it
-            logger.log(Level.SEVERE, "Error reading flight file for search.", e);
+          
+            System.out.println("Error reading flight file for search");
         }
     }
     

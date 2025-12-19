@@ -661,11 +661,11 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
             return;
         }
 
-        // 1. Extract data from the table
+     
         Object airlineValue = FlightTable.getValueAt(selectedRow, 0);
         String airline = (airlineValue != null) ? airlineValue.toString() : "";
 
-        // Fallback logic
+    
         if (airline.equalsIgnoreCase("null") || airline.isEmpty()) {
             airline = this.currentAirlineName;
         }
@@ -677,13 +677,12 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         String time = FlightTable.getValueAt(selectedRow, 5).toString();
         String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
 
-        // 2. Initialize the popup 
-        // FIX: Make sure the last parameter is currentAirlinePrefix, not airline again
+     
         editFlightScreen_M editPopUp = new editFlightScreen_M(
                 airline, aircraft, origin, destination, frequency, time, flightNumber, currentAirlinePrefix
         );
 
-        // 3. Add the Listener so the table refreshes when you finish editing
+       
         editPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
@@ -695,7 +694,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
             }
         });
 
-        // 4. CRITICAL: Show the window!
+      
         editPopUp.setVisible(true);
     }//GEN-LAST:event_editFlightActionPerformed
 

@@ -1,3 +1,8 @@
+//-------------------------------------------------------
+//-------------------------------------------------------
+// THIS IS THE TEMPLATE DO NOT DELETE
+//-------------------------------------------------------
+//-------------------------------------------------------
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -271,41 +276,41 @@ public class MainFlightDisplay extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
   
     public void loadFlightsToTableDeparture() {
-        // 1. Get the model from your JTable
+        
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
 
-        // 2. Clear existing data
+      
         model.setRowCount(0);
 
-        // 3. Define the file path
+       
         String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
         File file = new File(filePath);
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
-            int count = 0; // Counter for the 20 flight limit
+            int count = 0;
 
-            // 4. Loop through the file (Stop if line is null OR count reaches 20)
+          
             while ((line = br.readLine()) != null) {
 
                 if (!line.trim().isEmpty()) {
-                    // Split the string by the dash "-"
+                   
                     String[] rowData = line.split("-");
 
-                    // Handle the 6 vs 7 column issue (PAL vs CebuPac)
+                    
                     if (rowData.length == 6) {
-                        // If missing Flight No., add an empty placeholder
+                        
                         String[] adjustedRow = {
-                            rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "" // Correct: Only use rowData[0] through rowData[5], then add ""
+                            rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "" 
                         };
                         model.addRow(adjustedRow);
                     } else {
-                        // If it has all 7 columns, add directly
+                     
                         model.addRow(rowData);
                     }
 
-                    count++; // Increment the counter
+                    count++; 
                 }
             }
             br.close();
@@ -317,41 +322,41 @@ public class MainFlightDisplay extends javax.swing.JFrame {
     
     
     public void loadFlightsToTableArrival() {
-    // 1. Get the model from your JTable
+   
     DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
 
-    // 2. Clear existing data
+
     model.setRowCount(0);
 
-    // 3. Define the file path
+
     String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
     File file = new File(filePath);
 
     try {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line;
-        int count = 0; // Counter for the 20 flight limit
+        int count = 0; 
 
-        // 4. Loop through the file (Stop if line is null OR count reaches 20)
+        
         while ((line = br.readLine()) != null) {
             
             if (!line.trim().isEmpty()) {
-                // Split the string by the dash "-"
+              
                 String[] rowData = line.split("-");
 
-                // Handle the 6 vs 7 column issue (PAL vs CebuPac)
+                
                 if (rowData.length == 6) {
-                    // If missing Flight No., add an empty placeholder
+                  
                     String[] adjustedRow = { 
                         rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "" 
                     };
                     model.addRow(adjustedRow);
                 } else {
-                    // If it has all 7 columns, add directly
+                    
                     model.addRow(rowData);
                 }
                 
-                count++; // Increment the counter
+                count++; 
             }
         }
         br.close();
@@ -360,36 +365,36 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         
     }
 }
-    // Helper method
+
     private String getActiveTimetablePath() {
-        // Departure file path
+
         String departurePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master - Copy.txt";
         
         String arrivalPath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
         
-        // Assuming Departure is the default/active view if neither button has been clicked yet.
+       
         if (Arrival.getBackground().equals(Color.WHITE)) {
             return arrivalPath;
         } else {
-            // This covers the initial state and when the Departures button is clicked
+   
             return departurePath;
         }
     }
     
         public void searchFlights() {
-        // 1. Get the current active file path
+        
         String filePath = getActiveTimetablePath();
         File file = new File(filePath);
 
-        // 2. Get the search term and normalize it for comparison
+       
         String searchTerm = SearchField.getText().trim().toLowerCase();
 
-        // Check if the current text is the placeholder text
+       
         String placeholderText = "search for a flight".toLowerCase();
 
-        // A simple check: if the text is the placeholder, treat it as an empty search.
+      
         if (searchTerm.equals(placeholderText) || searchTerm.isEmpty()) {
-            // Reload all flights based on the active tab (Arrival or Departure)
+            
             if (Arrival.getBackground().equals(Color.WHITE)) {
                 loadFlightsToTableArrival();
             } else {
@@ -399,8 +404,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
         }
 
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-        model.setRowCount(0); // Clear existing data
-
+        model.setRowCount(0); 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
 
@@ -408,7 +412,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
 
-                    // 3. Check if any column in the row contains the search term
+                   
                     boolean match = false;
                     for (String data : rowData) {
                         if (data.trim().toLowerCase().contains(searchTerm)) {
@@ -417,12 +421,12 @@ public class MainFlightDisplay extends javax.swing.JFrame {
                         }
                     }
 
-                    // 4. If there is a match, add the row to the table
+                    
                     if (match) {
-                        // Replicate your existing logic for handling 6 vs 7 columns
+                       
                         if (rowData.length == 6) {
                             String[] adjustedRow = {
-                                rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "" // Add empty Flight No.
+                                rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], "" 
                             };
                             model.addRow(adjustedRow);
                         } else {
@@ -432,7 +436,7 @@ public class MainFlightDisplay extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            // Log the error instead of silently swallowing it
+      
             logger.log(Level.SEVERE, "Error reading flight file for search.", e);
         }
     }
