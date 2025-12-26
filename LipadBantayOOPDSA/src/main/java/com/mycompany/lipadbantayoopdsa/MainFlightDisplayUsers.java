@@ -7,6 +7,8 @@ package com.mycompany.lipadbantayoopdsa;
 import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen;
 import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_1;
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
+import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunction;
+import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunctionA;
 import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.UserDashboard;
@@ -173,7 +175,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
         BottomContainerLayout.setVerticalGroup(
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BottomContainerLayout.createSequentialGroup()
-                .addContainerGap(61, Short.MAX_VALUE)
+                .addContainerGap(47, Short.MAX_VALUE)
                 .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(60, 60, 60))
         );
@@ -259,10 +261,6 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
             .addComponent(TopContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(BottomContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(ContainerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2)
-                .addContainerGap())
-            .addGroup(ContainerLayout.createSequentialGroup()
                 .addGap(8, 8, 8)
                 .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -278,6 +276,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(resetFilters, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane2)
         );
 
         ContainerLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {Combo_Airline, Combo_Status});
@@ -295,10 +294,11 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                     .addComponent(Combo_Destination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(resetFilters)
                     .addComponent(applyFilters))
-                .addGap(6, 6, 6)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(BottomContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BottomContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -330,7 +330,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
     
     //------------------DEPARTURE TABLE------------------------------
     public void loadFlightsToTableDeparture() {
-        
+  
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
         

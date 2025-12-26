@@ -14,11 +14,14 @@ import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen_M;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_M;
 import java.awt.Color;
+import java.awt.Component;
 import java.io.*;
 import java.util.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 
 /**
@@ -37,6 +40,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
      * Creates new form MainFlightDisplay
      */
     public MainFlightDisplayManagers() {
+        this("TEST", "TS");
         initComponents();
         loadFlightsToTableDeparture();
         ArrivalTimetableGenerator.generate();
@@ -53,6 +57,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         Title.setText("LIPAD BANTAY (" + Airlinename.toUpperCase() + ")");
 
         loadFlightsToTableDeparture();
+        intializeComboBoxes();
         ArrivalTimetableGenerator.generate();
     }
     
@@ -74,11 +79,16 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         SearchButton = new javax.swing.JButton();
         BottomContainer = new javax.swing.JPanel();
         addFlight = new javax.swing.JToggleButton();
-        Arrival = new javax.swing.JToggleButton();
-        Departures = new javax.swing.JToggleButton();
         deleteFlight = new javax.swing.JToggleButton();
         editFlight = new javax.swing.JToggleButton();
         jToggleButton1 = new javax.swing.JToggleButton();
+        Combo_Status = new javax.swing.JComboBox<>();
+        Combo_Airline = new javax.swing.JComboBox<>();
+        Combo_Aircraft = new javax.swing.JComboBox<>();
+        Combo_Origin = new javax.swing.JComboBox<>();
+        Combo_Destination = new javax.swing.JComboBox<>();
+        applyFilters = new javax.swing.JButton();
+        resetFilters = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         FlightTable = new javax.swing.JTable();
 
@@ -169,32 +179,6 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
             }
         });
 
-        Arrival.setBackground(new java.awt.Color(0, 153, 255));
-        Arrival.setForeground(new java.awt.Color(255, 255, 255));
-        Arrival.setText("Arrival");
-        Arrival.setBorder(null);
-        Arrival.setMaximumSize(new java.awt.Dimension(120, 35));
-        Arrival.setMinimumSize(new java.awt.Dimension(120, 35));
-        Arrival.setPreferredSize(new java.awt.Dimension(120, 35));
-        Arrival.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ArrivalActionPerformed(evt);
-            }
-        });
-
-        Departures.setBackground(new java.awt.Color(0, 153, 255));
-        Departures.setForeground(new java.awt.Color(255, 255, 255));
-        Departures.setText("Departure");
-        Departures.setBorder(null);
-        Departures.setMaximumSize(new java.awt.Dimension(120, 35));
-        Departures.setMinimumSize(new java.awt.Dimension(120, 35));
-        Departures.setPreferredSize(new java.awt.Dimension(120, 35));
-        Departures.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DeparturesActionPerformed(evt);
-            }
-        });
-
         deleteFlight.setBackground(new java.awt.Color(255, 102, 102));
         deleteFlight.setText("DELETE");
         deleteFlight.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -226,58 +210,74 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BottomContainerLayout.createSequentialGroup()
                 .addGap(61, 61, 61)
-                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(BottomContainerLayout.createSequentialGroup()
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(addFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(editFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(deleteFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(232, 232, 232))
-                    .addGroup(BottomContainerLayout.createSequentialGroup()
-                        .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53))))
+                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
+                .addComponent(addFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(editFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(deleteFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(232, 232, 232))
         );
-
-        BottomContainerLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {Arrival, Departures});
-
         BottomContainerLayout.setVerticalGroup(
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BottomContainerLayout.createSequentialGroup()
-                .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Arrival, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Departures, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addContainerGap(48, Short.MAX_VALUE)
                 .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(deleteFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(editFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38))
+                .addGap(59, 59, 59))
         );
+
+        Combo_Status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        Combo_Status.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Combo_StatusActionPerformed(evt);
+            }
+        });
+
+        Combo_Airline.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        Combo_Aircraft.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        Combo_Origin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        Combo_Destination.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        applyFilters.setText("Apply");
+        applyFilters.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyFiltersActionPerformed(evt);
+            }
+        });
+
+        resetFilters.setText("Reset Filters");
+        resetFilters.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetFiltersActionPerformed(evt);
+            }
+        });
 
         FlightTable.setBackground(new java.awt.Color(255, 255, 255));
         FlightTable.setForeground(new java.awt.Color(0, 102, 204));
         FlightTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Ariline", "Aircraft", "Origin", "Destination", "Frequency", "Time", "Flight Number", "Duration", "Distance"
+                "Status", "Airline", "Aircraft", "Origin", "Destination", "Frequency", "ETD", "ETA", "Flight Number", "Duration", "Distance", "Pax", "Cargo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -289,38 +289,51 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(FlightTable);
-        if (FlightTable.getColumnModel().getColumnCount() > 0) {
-            FlightTable.getColumnModel().getColumn(0).setResizable(false);
-            FlightTable.getColumnModel().getColumn(1).setResizable(false);
-            FlightTable.getColumnModel().getColumn(2).setResizable(false);
-            FlightTable.getColumnModel().getColumn(3).setResizable(false);
-            FlightTable.getColumnModel().getColumn(4).setResizable(false);
-            FlightTable.getColumnModel().getColumn(5).setResizable(false);
-            FlightTable.getColumnModel().getColumn(6).setResizable(false);
-            FlightTable.getColumnModel().getColumn(7).setResizable(false);
-            FlightTable.getColumnModel().getColumn(8).setResizable(false);
-        }
 
         javax.swing.GroupLayout ContainerLayout = new javax.swing.GroupLayout(Container);
         Container.setLayout(ContainerLayout);
         ContainerLayout.setHorizontalGroup(
             ContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(TopContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(BottomContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(ContainerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(ContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BottomContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
+                    .addGroup(ContainerLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Combo_Airline, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Combo_Aircraft, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Combo_Origin, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Combo_Destination, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(applyFilters, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(resetFilters, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         ContainerLayout.setVerticalGroup(
             ContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ContainerLayout.createSequentialGroup()
                 .addComponent(TopContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(BottomContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(ContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Combo_Airline, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Combo_Origin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Combo_Aircraft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Combo_Destination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(resetFilters)
+                    .addComponent(applyFilters))
+                .addGap(3, 3, 3)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BottomContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -350,183 +363,19 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
         
     
+    
     //------------------DEPARTURE TABLE------------------------------
     public void loadFlightsToTableDeparture() {
-        
+
         SortingFunction.sortFile();
         SortingFunctionA.sortFile();
         FlightTable.revalidate();
         FlightTable.repaint();
-        
+
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-        //INTIALIZE TABLE
         model.setRowCount(0);
 
         File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
-        
-        //reads from file and then displays to Deparutre table
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;    
-
-             
-
-            while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] rowData = line.split("-");
-
-                  
-                    // skip if not from currentiarlines
-                    if (currentAirlineName != null && !rowData[0].trim().equalsIgnoreCase(currentAirlineName)) {
-                        continue; 
-                    }
-                  
-                    String airline = rowData[0];
-                    String aircraft = rowData[1];
-                    String origin = rowData[2];
-                    String destination = rowData[3];
-                    String freq = rowData[4];
-                    String time = rowData[5];
-                    String flightNo = (rowData.length == 7) ? rowData[6] : "";
-
-                    String distanceStr = "N/A";
-                    String durationStr = "N/A";
-
-                    try {
-                        
-                        distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
-
-                        
-                        double distVal = calc.calculateDistanceKm();
-                        distanceStr = String.format("%.0f km", distVal);
-
-                        
-                        int totalMinutes = calc.calculateFlightDurationMinutes();
-                        int hrs = totalMinutes / 60;
-                        int mins = totalMinutes % 60;
-                        durationStr = hrs + "h " + mins + "m";
-
-                    } catch (Exception e) {
-                       
-                        System.out.println("Error in Calculating Time");
-                    }
-    
-                    String[] adjustedRow = {
-                        airline, aircraft, origin, destination, freq, time, flightNo, 
-                        durationStr, distanceStr 
-                    };
-                    model.addRow(adjustedRow);
-                    
-                }
-            }
-            br.close();
-
-        } catch (IOException e) {
-            System.out.println("Error loading departures");
-        }
-    }
-    //-----------------------------------------------------------------------
-
-    //------------------ARRIVAL TABLE------------------------------
-    public void loadFlightsToTableArrival() {
-  
-        SortingFunction.sortFile();
-        SortingFunctionA.sortFile();
-        FlightTable.revalidate();
-        FlightTable.repaint();
-        
-        DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-        //INTIALIZE TABLE
-        model.setRowCount(0);
-
-        File file = new File(AdminOperations.Database_TimeTable_Arrivals_Path);
-
-        //reads from file and then displays to Arrival table
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] rowData = line.split("-");
-
-                    
-                    if (currentAirlineName != null && !rowData[0].trim().equalsIgnoreCase(currentAirlineName)) {
-                        continue; 
-                    }
-                    
-
-                  
-                    String airline = rowData[0];
-                    String aircraft = rowData[1];
-                    String origin = rowData[2];
-                    String destination = rowData[3];
-                    String freq = rowData[4];
-                    String time = rowData[5];
-                    String flightNo = (rowData.length == 7) ? rowData[6] : "";
-
-                    String distanceStr = "N/A";
-                    String durationStr = "N/A";
-
-               
-                    try {
-                        distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
-                        double distVal = calc.calculateDistanceKm();
-                        distanceStr = String.format("%.0f km", distVal);
-
-                        int totalMinutes = calc.calculateFlightDurationMinutes();
-                        durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
-                    } catch (Exception e) {}
-
-                    
-                    String[] adjustedRow = { 
-                        airline, aircraft, origin, destination, freq, time, flightNo, 
-                        durationStr, distanceStr 
-                    };
-                    model.addRow(adjustedRow);
-                }
-            }
-            br.close();
-
-        } catch (IOException e) {
-            System.out.println("Error loading arrivals ");
-        }
-    }
-    //-----------------------------------------------------------------------
-    
-    //------------------DEFAULT TABLE VIEW------------------------------
-    private String getActiveTimetablePath() {
-        if (Arrival.getBackground().equals(Color.WHITE)) {
-            return AdminOperations.Database_TimeTable_Arrivals_Path;
-        } else {       
-            return AdminOperations.Database_TimeTable_Departure_Path;
-        }
-    }
-     //-----------------------------------------------------------------------
-    
-    public void searchFlights() {
-     
-        String filePath = getActiveTimetablePath();
-        File file = new File(filePath);
-
-        
-        String searchTerm = SearchField.getText().trim().toLowerCase();
-
-   
-        String placeholderText = "search for a flight".toLowerCase();
-
-      
-        if (searchTerm.equals(placeholderText) || searchTerm.isEmpty()) {
-          
-            if (Arrival.getBackground().equals(Color.WHITE)) {
-                loadFlightsToTableArrival();
-            } else {
-                loadFlightsToTableDeparture();
-            }
-            return;
-        }
-
-        DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-        model.setRowCount(0); // Clear existing data
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -535,13 +384,226 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
 
-                    
                     if (currentAirlineName != null && !rowData[0].trim().equalsIgnoreCase(currentAirlineName)) {
                         continue; 
                     }
-                   
+                    
+                    // Ensure the line has enough parts to avoid ArrayIndexOutOfBoundsException
+                    if (rowData.length >= 10) {
+                        String airline = rowData[0];
+                        String aircraft = rowData[1];
+                        String origin = rowData[2];
+                        String destination = rowData[3];
+                        String freq = rowData[4];
+                        String ETD = rowData[5];
+                        String ETA = "";
+                        String flightNo = rowData[6];
+                        String flightPax = rowData[7];
+                        String flightCargo = rowData[8];
+                        String flightStatus = rowData[9];
 
-                   
+                        String distanceStr = "N/A";
+                        String durationStr = "N/A";
+
+                        // Calculations
+                        try {
+                            distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
+
+                            double distVal = calc.calculateDistanceKm();
+                            distanceStr = String.format("%.0f km", distVal);
+
+                            int totalMinutes = calc.calculateFlightDurationMinutes();
+                            int durHrs = totalMinutes / 60;
+                            int durMins = totalMinutes % 60;
+                            durationStr = durHrs + "h " + durMins + "m";
+
+                            int etdHours = Integer.parseInt(ETD.substring(0, 2));
+                            int etdMins = Integer.parseInt(ETD.substring(2, 4));
+
+                            int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
+
+                            int etaHours = (arrivalTotalMins / 60) % 24; // % 24 handles midnight rollover
+                            int etaMins = arrivalTotalMins % 60;
+
+                            ETA = String.format("%02d%02d", etaHours, etaMins);
+
+                        } catch (Exception e) {
+                            System.out.println("Calc Error: " + e.getMessage());
+                            ETA = "N/A";
+                        }
+
+                        Object[] adjustedRow = {
+                            flightStatus,
+                            airline,
+                            aircraft,
+                            origin,
+                            destination,
+                            freq,
+                            ETD,
+                            ETA,
+                            flightNo,
+                            durationStr,
+                            distanceStr,
+                            flightPax,
+                            flightCargo
+                        };
+
+                        model.addRow(adjustedRow);
+
+                        applyTableStyle(flightStatus);
+
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // Log error using your existing logger
+            logger.log(Level.SEVERE, "Error loading departures", e);
+        }
+    }
+    //-----------------------------------------------------------------------
+    
+    //----------------------------------------------------------------------
+    private void applyTableStyle(String flightStatus){
+        if(flightStatus.equalsIgnoreCase("Scheduled")){
+            DefaultTableCellRenderer statusRowRenderer = new DefaultTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value,
+                        boolean isSelected, boolean hasFocus, int row, int column) {
+
+                    Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                    String status = table.getValueAt(row, 0).toString();
+
+                    if (status.equals("Scheduled")) {
+                        c.setBackground(new Color(200, 255, 200)); 
+                        c.setForeground(Color.BLACK);             
+                    } else if (status.equals("Delayed")) {
+                        c.setBackground(new Color(255, 213, 128)); 
+                        c.setForeground(Color.BLACK);  
+                    } else if (status.equals("Canceled")) {
+                        c.setBackground(new Color(255, 128, 128)); 
+                        c.setForeground(Color.BLACK);  
+                    } else {
+                        if (!isSelected) {
+                            c.setBackground(table.getBackground());
+                            c.setForeground(table.getForeground());
+                        }
+                    }
+
+                    return c;
+                }
+            };
+
+            for (int i = 0; i < FlightTable.getColumnCount(); i++) {
+                FlightTable.getColumnModel().getColumn(i).setCellRenderer(statusRowRenderer);
+            }
+        }
+    }
+    //----------------------------------------------------------------------
+    
+    
+    public void intializeComboBoxes() {
+
+        // Flight Status;
+        Combo_Status.removeAllItems();
+        Combo_Status.addItem("N/A");
+        Combo_Status.addItem("Scheduled");
+        Combo_Status.addItem("Delayed");
+        Combo_Status.addItem("Canceled");
+
+        //Airline
+        Combo_Airline.removeAllItems();
+        Combo_Airline.addItem("N/A");
+        try {
+            File airlineMaster = new File(AdminOperations.Database_Airlines_Path);
+            Scanner airlineReader = new Scanner(airlineMaster);
+            // adds options for the combobox, reads from the ac database
+            while (airlineReader.hasNextLine()) {
+                String arilineStringLine = airlineReader.nextLine();
+                String arilineStringLineArray[] = arilineStringLine.split("-");
+                Combo_Airline.addItem(arilineStringLineArray[0]);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found ");
+        }
+
+        //Aircraft
+        Combo_Aircraft.removeAllItems();
+        Combo_Aircraft.addItem("N/A");
+        try {
+            File aircraftMaster = new File(AdminOperations.Database_Aircarfts_Path);
+            Scanner aircraftReader = new Scanner(aircraftMaster);
+            // adds options for the combobox, reads from the ac database
+            while (aircraftReader.hasNextLine()) {
+                String aircraftStringLine = aircraftReader.nextLine();
+                String aircraftStringLineArray[] = aircraftStringLine.split("-");
+                Combo_Aircraft.addItem(aircraftStringLineArray[0]);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found ");
+        }
+
+        //Origin
+        Combo_Origin.removeAllItems();
+        Combo_Origin.addItem("N/A");
+        try {
+            File originMaster = new File(AdminOperations.Database_Aiports_Path);
+            Scanner originReader = new Scanner(originMaster);
+            // adds options for the combobox, reads from the ac database
+            while (originReader.hasNextLine()) {
+                String originStringLine = originReader.nextLine();
+                String originStringLineArray[] = originStringLine.split("-");
+                Combo_Origin.addItem(originStringLineArray[1]);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found ");
+        }
+
+        //Destination 
+        Combo_Destination.removeAllItems();
+        Combo_Destination.addItem("N/A");
+        try {
+            File destinationMaster = new File(AdminOperations.Database_Aiports_Path);
+            Scanner destiantionReader = new Scanner(destinationMaster);
+            // adds options for the combobox, reads from the ac database
+            while (destiantionReader.hasNextLine()) {
+                String destinationStringLine = destiantionReader.nextLine();
+                String destinationStringLineArray[] = destinationStringLine.split("-");
+                Combo_Destination.addItem(destinationStringLineArray[1]);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found ");
+        }
+
+    }
+    
+    
+    
+    
+    //-----------------------------------------------------------------------
+    
+    public void searchFlights() {
+        File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
+        String searchTerm = SearchField.getText().trim().toLowerCase();
+        String placeholderText = "search for a flight".toLowerCase();
+
+   
+        if (searchTerm.equals(placeholderText) || searchTerm.isEmpty()) {
+            loadFlightsToTableDeparture();
+            return;
+        }
+
+        DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
+        model.setRowCount(0);
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] rowData = line.split("-");
+
+                    // Check if any part of the line matches the search term
                     boolean match = false;
                     for (String data : rowData) {
                         if (data.trim().toLowerCase().contains(searchTerm)) {
@@ -550,70 +612,167 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                         }
                     }
 
-                  
-                    if (match) {
+                    if (match && rowData.length >= 10) {
+                        // 1. Extract Data
+                        String airline = rowData[0];
+                        String aircraft = rowData[1];
+                        String origin = rowData[2];
+                        String destination = rowData[3];
+                        String freq = rowData[4];
+                        String ETD = rowData[5];
+                        String flightNo = rowData[6];
+                        String flightPax = rowData[7];
+                        String flightCargo = rowData[8];
+                        String flightStatus = rowData[9];
+
                         String distanceStr = "N/A";
                         String durationStr = "N/A";
+                        String ETA = "N/A";
 
-                      
+                        // 2. Perform Calculations
                         try {
-                            distanceCalculator calc = new distanceCalculator(rowData[2], rowData[3], rowData[1]);
+                            distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
+
+                            // Distance
                             double distVal = calc.calculateDistanceKm();
                             distanceStr = String.format("%.0f km", distVal);
+
+                            // Duration
                             int totalMinutes = calc.calculateFlightDurationMinutes();
                             durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
+
+                            // ETA Math (Simple string/int operations)
+                            int etdHours = Integer.parseInt(ETD.substring(0, 2));
+                            int etdMins = Integer.parseInt(ETD.substring(2, 4));
+                            int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
+
+                            int etaHours = (arrivalTotalMins / 60) % 24;
+                            int etaMins = arrivalTotalMins % 60;
+                            ETA = String.format("%02d%02d", etaHours, etaMins);
+
                         } catch (Exception e) {
+                            System.out.println("Calculation error during search for: " + flightNo);
                         }
 
-                        
-                        String[] adjustedRow = {
-                            rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5], rowData[6],
-                            durationStr, distanceStr
+                        // 3. Create the 13-column Row
+                        Object[] adjustedRow = {
+                            flightStatus, // Col 0
+                            airline, // Col 1
+                            aircraft, // Col 2
+                            origin, // Col 3
+                            destination, // Col 4
+                            freq, // Col 5
+                            ETD, // Col 6
+                            ETA, // Col 7
+                            flightNo, // Col 8
+                            durationStr, // Col 9
+                            distanceStr, // Col 10
+                            flightPax, // Col 11
+                            flightCargo // Col 12
                         };
+
                         model.addRow(adjustedRow);
-                        
                     }
                 }
             }
         } catch (IOException e) {
-           
             System.out.println("Error reading flight file for search");
         }
     }
+    
+    
+     //----------------------------------------------------------------------
+    public void applyFilters() {
+        File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
+
+        // Get current filter values
+        String searchTerm = SearchField.getText().trim().toLowerCase();
+        String placeholder = "search for a flight".toLowerCase();
+
+        String selStatus = Combo_Status.getSelectedItem().toString();
+        String selAirline = Combo_Airline.getSelectedItem().toString();
+        String selAircraft = Combo_Aircraft.getSelectedItem().toString();
+        String selOrigin = Combo_Origin.getSelectedItem().toString();
+        String selDest = Combo_Destination.getSelectedItem().toString();
+
+        DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
+        model.setRowCount(0); // Clear table
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] rowData = line.split("-");
+                if (rowData.length < 10) {
+                    continue;
+                }
+
+                // Map file data to variables for clarity
+                String airline = rowData[0];
+                String aircraft = rowData[1];
+                String origin = rowData[2];
+                String destination = rowData[3];
+                String freq = rowData[4];
+                String ETD = rowData[5];
+                String flightNo = rowData[6];
+                String flightPax = rowData[7];
+                String flightCargo = rowData[8];
+                String flightStatus = rowData[9];
+
+                
+                boolean matchesSearch = searchTerm.equals(placeholder) || searchTerm.isEmpty()
+                        || line.toLowerCase().contains(searchTerm);
+
+            
+                boolean matchesStatus = selStatus.equals("N/A") || flightStatus.equalsIgnoreCase(selStatus);
+                boolean matchesAirline = selAirline.equals("N/A") || airline.equalsIgnoreCase(selAirline);
+                boolean matchesAircraft = selAircraft.equals("N/A") || aircraft.equalsIgnoreCase(selAircraft);
+                boolean matchesOrigin = selOrigin.equals("N/A") || origin.substring(0,4).equalsIgnoreCase(selOrigin);
+                boolean matchesDest = selDest.equals("N/A") || destination.substring(0,4).equalsIgnoreCase(selDest);
+
+           
+                if (matchesSearch && matchesStatus && matchesAirline && matchesAircraft && matchesOrigin && matchesDest) {
+
+                    // Perform Calculations for the row
+                    String distanceStr = "N/A";
+                    String durationStr = "N/A";
+                    String ETA = "N/A";
+
+                    try {
+                        distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
+                        double distVal = calc.calculateDistanceKm();
+                        distanceStr = String.format("%.0f km", distVal);
+
+                        int totalMinutes = calc.calculateFlightDurationMinutes();
+                        durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
+
+                        int etdHours = Integer.parseInt(ETD.substring(0, 2));
+                        int etdMins = Integer.parseInt(ETD.substring(2, 4));
+                        int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
+                        ETA = String.format("%02d%02d", (arrivalTotalMins / 60) % 24, arrivalTotalMins % 60);
+                    } catch (Exception e) {
+                    }
+
+                    model.addRow(new Object[]{
+                        flightStatus, airline, aircraft, origin, destination,
+                        freq, ETD, ETA, flightNo, durationStr, distanceStr, flightPax, flightCargo
+                    });
+                }
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error filtering flights", e);
+        }
+    }
+    
     
     private void resetSearchField() {
         SearchField.setText("Search for a flight");
         SearchField.setForeground(Color.LIGHT_GRAY);
     }
     
-    private void ArrivalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArrivalActionPerformed
-        Arrival.setBackground(Color.WHITE);
-        Arrival.setForeground(Color.BLACK);
-        Departures.setBackground(Color.getHSBColor(0.5833f, 0.8f, 1.0f));
-        Departures.setForeground(Color.WHITE);
-        
-        FlightTable.getColumnModel().getColumn(5).setHeaderValue("ETA");
-        FlightTable.getTableHeader().repaint();
-        
-        loadFlightsToTableArrival();
-        
-        resetSearchField();
-    }//GEN-LAST:event_ArrivalActionPerformed
-
-    private void DeparturesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeparturesActionPerformed
-        Departures.setBackground(Color.WHITE);
-        Departures.setForeground(Color.BLACK);
-        Arrival.setBackground(Color.getHSBColor(0.5833f, 0.8f, 1.0f));
-        Arrival.setForeground(Color.WHITE);
-        
-        FlightTable.getColumnModel().getColumn(5).setHeaderValue("ETD");
-        FlightTable.getTableHeader().repaint();
-        
-        loadFlightsToTableDeparture();
-        
-        resetSearchField();
-    }//GEN-LAST:event_DeparturesActionPerformed
-
     private void SearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFieldActionPerformed
         searchFlights();
     }//GEN-LAST:event_SearchFieldActionPerformed
@@ -640,11 +799,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         addPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                if (Arrival.getBackground().equals(Color.WHITE)) {
-                    loadFlightsToTableArrival();
-                } else {
                     loadFlightsToTableDeparture();
-                }
             }
         });
 
@@ -654,47 +809,37 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
     private void editFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFlightActionPerformed
         
+        //selects a content of the table 
         selectedRow = FlightTable.getSelectedRow();
 
         if (selectedRow == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please select a flight to edit.");
+            // ... selection check ...
             return;
         }
 
-     
-        Object airlineValue = FlightTable.getValueAt(selectedRow, 0);
-        String airline = (airlineValue != null) ? airlineValue.toString() : "";
+        // Updating indices to match your TableModel:
+        String status = FlightTable.getValueAt(selectedRow, 0).toString();
+        String airline = FlightTable.getValueAt(selectedRow, 1).toString();
+        String aircraft = FlightTable.getValueAt(selectedRow, 2).toString();
+        String origin = FlightTable.getValueAt(selectedRow, 3).toString();
+        String destination = FlightTable.getValueAt(selectedRow, 4).toString();
+        String frequency = FlightTable.getValueAt(selectedRow, 5).toString();
+        String time = FlightTable.getValueAt(selectedRow, 6).toString();
+        String flightNumber = FlightTable.getValueAt(selectedRow, 8).toString(); // Flight No is column 8
 
-    
-        if (airline.equalsIgnoreCase("null") || airline.isEmpty()) {
-            airline = this.currentAirlineName;
-        }
-
-        String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
-        String origin = FlightTable.getValueAt(selectedRow, 2).toString();
-        String destination = FlightTable.getValueAt(selectedRow, 3).toString();
-        String frequency = FlightTable.getValueAt(selectedRow, 4).toString();
-        String time = FlightTable.getValueAt(selectedRow, 5).toString();
-        String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
-
-     
-        editFlightScreen_M editPopUp = new editFlightScreen_M(
-                airline, aircraft, origin, destination, frequency, time, flightNumber, currentAirlinePrefix
+        // Ensure your editFlightScreen_1 constructor is updated to receive status if needed
+        editFlightScreen_1 editPopUp = new editFlightScreen_1(
+                airline, aircraft, origin, destination, frequency, time, flightNumber
         );
 
-       
+        // same fucntion from the add popup updatest eh table if the windwos is closed
         editPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                if (Arrival.getBackground().equals(java.awt.Color.WHITE)) {
-                    loadFlightsToTableArrival();
-                } else {
-                    loadFlightsToTableDeparture();
-                }
+                loadFlightsToTableDeparture();
             }
         });
 
-      
         editPopUp.setVisible(true);
     }//GEN-LAST:event_editFlightActionPerformed
 
@@ -788,8 +933,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     
 
     private void updateTimetableFile(String airline, String aircraft, String origin, String destination, String frequency, String time, String flightNumber) {
-        String filePath = getActiveTimetablePath();
-        File file = new File(filePath);
+        File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
 
         try {
             
@@ -834,6 +978,23 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
+    private void Combo_StatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Combo_StatusActionPerformed
+
+    }//GEN-LAST:event_Combo_StatusActionPerformed
+
+    private void applyFiltersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyFiltersActionPerformed
+        applyFilters();
+    }//GEN-LAST:event_applyFiltersActionPerformed
+
+    private void resetFiltersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersActionPerformed
+        Combo_Aircraft.setSelectedIndex(0);
+        Combo_Airline.setSelectedIndex(0);
+        Combo_Destination.setSelectedIndex(0);
+        Combo_Origin.setSelectedIndex(0);
+        Combo_Status.setSelectedIndex(0);
+        applyFilters();
+    }//GEN-LAST:event_resetFiltersActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -860,10 +1021,13 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton Arrival;
     private javax.swing.JPanel BottomContainer;
+    private javax.swing.JComboBox<String> Combo_Aircraft;
+    private javax.swing.JComboBox<String> Combo_Airline;
+    private javax.swing.JComboBox<String> Combo_Destination;
+    private javax.swing.JComboBox<String> Combo_Origin;
+    private javax.swing.JComboBox<String> Combo_Status;
     private javax.swing.JPanel Container;
-    private javax.swing.JToggleButton Departures;
     private javax.swing.JTable FlightTable;
     private javax.swing.JButton SearchButton;
     private javax.swing.JPanel SearchContainer;
@@ -871,10 +1035,12 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     private javax.swing.JLabel Title;
     private javax.swing.JPanel TopContainer;
     private javax.swing.JToggleButton addFlight;
+    private javax.swing.JButton applyFilters;
     private javax.swing.JToggleButton deleteFlight;
     private javax.swing.JToggleButton editFlight;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JButton resetFilters;
     // End of variables declaration//GEN-END:variables
 }
