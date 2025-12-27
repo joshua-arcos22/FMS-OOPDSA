@@ -409,8 +409,7 @@ public class archiveScreen extends javax.swing.JFrame {
     
     public void applyFilters() {
         String[] filesToFilter = {
-            AdminOperations.Database_TimeTable_Departure_Path,
-            AdminOperations.Database_TimeTable_Arrivals_Path
+            AdminOperations.Database_TimeTable_Archive_Path
         };
 
         String searchTerm = SearchField.getText().trim().toLowerCase();
@@ -564,8 +563,7 @@ public class archiveScreen extends javax.swing.JFrame {
         model.addRow(new String[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
 
         String[] filesToSearch = {
-            AdminOperations.Database_TimeTable_Departure_Path,
-            AdminOperations.Database_TimeTable_Arrivals_Path
+            AdminOperations.Database_TimeTable_Archive_Path
         };
 
         for (String filePath : filesToSearch) {
