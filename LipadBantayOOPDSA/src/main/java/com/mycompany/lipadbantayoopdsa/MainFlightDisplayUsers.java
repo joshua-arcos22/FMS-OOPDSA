@@ -40,13 +40,14 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
         initComponents();
         loadFlightsToTableDeparture();
         intializeComboBoxes();
-         this.username = username;
+        this.username = username;
 
     }
     public MainFlightDisplayUsers() {
         initComponents();
         loadFlightsToTableDeparture();
         intializeComboBoxes();
+        
     }
 
     /**
@@ -139,7 +140,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
             .addGroup(TopContainerLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(Title, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 301, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 375, Short.MAX_VALUE)
                 .addComponent(SearchContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
@@ -330,7 +331,9 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
     
     //------------------DEPARTURE TABLE------------------------------
     public void loadFlightsToTableDeparture() {
-  
+        ArrivalTimetableGenerator calculateArrival = new ArrivalTimetableGenerator();
+        calculateArrival.generate();
+        
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
         
@@ -418,9 +421,94 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
             // Log error using your existing logger
             logger.log(Level.SEVERE, "Error loading departures", e);
         }
+        
+        
+        File fileArrival = new File(AdminOperations.Database_TimeTable_Arrivals_Path);
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fileArrival))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] rowData = line.split("-");
+
+                    // Ensure the line has enough parts to avoid ArrayIndexOutOfBoundsException
+                    if (rowData.length >= 10) {
+                        String airline = rowData[0];
+                        String aircraft = rowData[1];
+                        String origin = rowData[2];
+                        String destination = rowData[3];
+                        String freq = rowData[4];
+                        String ETD = rowData[5];
+                        String ETA = "";
+                        String flightNo = rowData[6];
+                        String flightPax = rowData[7];
+                        String flightCargo = rowData[8];
+                        String flightStatus = rowData[9];
+
+                        String distanceStr = "N/A";
+                        String durationStr = "N/A";
+
+                        // Calculations
+                        try {
+                            distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
+
+                            double distVal = calc.calculateDistanceKm();
+                            distanceStr = String.format("%.0f km", distVal);
+
+                            int totalMinutes = calc.calculateFlightDurationMinutes();
+                            int durHrs = totalMinutes / 60;
+                            int durMins = totalMinutes % 60;
+                            durationStr = durHrs + "h " + durMins + "m";
+
+                            int etdHours = Integer.parseInt(ETD.substring(0, 2));
+                            int etdMins = Integer.parseInt(ETD.substring(2, 4));
+
+                            int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
+
+                            int etaHours = (arrivalTotalMins / 60) % 24; // % 24 handles midnight rollover
+                            int etaMins = arrivalTotalMins % 60;
+
+                            ETA = String.format("%02d%02d", etaHours, etaMins);
+
+                        } catch (Exception e) {
+                            System.out.println("Calc Error: " + e.getMessage());
+                            ETA = "N/A";
+                        }
+
+                        Object[] adjustedRow = {
+                            flightStatus,
+                            airline,
+                            aircraft,
+                            origin,
+                            destination,
+                            freq,
+                            ETD,
+                            ETA,
+                            flightNo,
+                            durationStr,
+                            distanceStr,
+                            flightPax,
+                            flightCargo
+                        };
+
+                        model.addRow(adjustedRow);
+
+                        applyTableStyle(flightStatus);
+
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // Log error using your existing logger
+            logger.log(Level.SEVERE, "Error loading departures", e);
+        }  
     }
     //-----------------------------------------------------------------------
 
+    
+    
+    
     
     //----------------------------------------------------------------------
     private void applyTableStyle(String flightStatus){
@@ -552,11 +640,10 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
     
     //----------------------------------------------------------------------
     public void searchFlights() {
-        File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
         String searchTerm = SearchField.getText().trim().toLowerCase();
         String placeholderText = "search for a flight".toLowerCase();
 
-   
+        // If search is empty, reload the default view
         if (searchTerm.equals(placeholderText) || searchTerm.isEmpty()) {
             loadFlightsToTableDeparture();
             return;
@@ -565,87 +652,82 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
 
-            while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] rowData = line.split("-");
+        // Array of files to search through
+        String[] filesToSearch = {
+            AdminOperations.Database_TimeTable_Departure_Path,
+            AdminOperations.Database_TimeTable_Arrivals_Path // Ensure this path exists in AdminOperations
+        };
 
-                    // Check if any part of the line matches the search term
-                    boolean match = false;
-                    for (String data : rowData) {
-                        if (data.trim().toLowerCase().contains(searchTerm)) {
-                            match = true;
-                            break;
-                        }
-                    }
+        for (String filePath : filesToSearch) {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                continue;
+            }
 
-                    if (match && rowData.length >= 10) {
-                        // 1. Extract Data
-                        String airline = rowData[0];
-                        String aircraft = rowData[1];
-                        String origin = rowData[2];
-                        String destination = rowData[3];
-                        String freq = rowData[4];
-                        String ETD = rowData[5];
-                        String flightNo = rowData[6];
-                        String flightPax = rowData[7];
-                        String flightCargo = rowData[8];
-                        String flightStatus = rowData[9];
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (!line.trim().isEmpty()) {
+                        String[] rowData = line.split("-");
 
-                        String distanceStr = "N/A";
-                        String durationStr = "N/A";
-                        String ETA = "N/A";
-
-                        // 2. Perform Calculations
-                        try {
-                            distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
-
-                            // Distance
-                            double distVal = calc.calculateDistanceKm();
-                            distanceStr = String.format("%.0f km", distVal);
-
-                            // Duration
-                            int totalMinutes = calc.calculateFlightDurationMinutes();
-                            durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
-
-                            // ETA Math (Simple string/int operations)
-                            int etdHours = Integer.parseInt(ETD.substring(0, 2));
-                            int etdMins = Integer.parseInt(ETD.substring(2, 4));
-                            int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
-
-                            int etaHours = (arrivalTotalMins / 60) % 24;
-                            int etaMins = arrivalTotalMins % 60;
-                            ETA = String.format("%02d%02d", etaHours, etaMins);
-
-                        } catch (Exception e) {
-                            System.out.println("Calculation error during search for: " + flightNo);
+                        // Check if any part of the line matches the search term
+                        boolean match = false;
+                        for (String data : rowData) {
+                            if (data.trim().toLowerCase().contains(searchTerm)) {
+                                match = true;
+                                break;
+                            }
                         }
 
-                        // 3. Create the 13-column Row
-                        Object[] adjustedRow = {
-                            flightStatus, // Col 0
-                            airline, // Col 1
-                            aircraft, // Col 2
-                            origin, // Col 3
-                            destination, // Col 4
-                            freq, // Col 5
-                            ETD, // Col 6
-                            ETA, // Col 7
-                            flightNo, // Col 8
-                            durationStr, // Col 9
-                            distanceStr, // Col 10
-                            flightPax, // Col 11
-                            flightCargo // Col 12
-                        };
-
-                        model.addRow(adjustedRow);
+                        if (match && rowData.length >= 10) {
+                            processAndAddSearchRow(model, rowData);
+                        }
                     }
                 }
+            } catch (IOException e) {
+                System.out.println("Error reading file: " + filePath);
             }
-        } catch (IOException e) {
-            System.out.println("Error reading flight file for search");
+        }
+    }
+
+    
+    private void processAndAddSearchRow(DefaultTableModel model, String[] rowData) {
+        try {
+            String airline = rowData[0];
+            String aircraft = rowData[1];
+            String origin = rowData[2];
+            String destination = rowData[3];
+            String freq = rowData[4];
+            String ETD = rowData[5];
+            String flightNo = rowData[6];
+            String flightPax = rowData[7];
+            String flightCargo = rowData[8];
+            String flightStatus = rowData[9];
+
+            distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
+
+            // Calculations
+            double distVal = calc.calculateDistanceKm();
+            String distanceStr = String.format("%.0f km", distVal);
+
+            int totalMinutes = calc.calculateFlightDurationMinutes();
+            String durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
+
+            // ETA Math
+            int etdHours = Integer.parseInt(ETD.substring(0, 2));
+            int etdMins = Integer.parseInt(ETD.substring(2, 4));
+            int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
+            String ETA = String.format("%02d%02d", (arrivalTotalMins / 60) % 24, arrivalTotalMins % 60);
+
+            Object[] row = {
+                flightStatus, airline, aircraft, origin, destination,
+                freq, ETD, ETA, flightNo, durationStr, distanceStr, flightPax, flightCargo
+            };
+
+            model.addRow(row);
+        } catch (Exception e) {
+            // Skip malformed rows
         }
     }
     
@@ -655,9 +737,13 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
     
     //----------------------------------------------------------------------
     public void applyFilters() {
-        File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
+        // Array of files to filter through
+        String[] filesToFilter = {
+            AdminOperations.Database_TimeTable_Departure_Path,
+            AdminOperations.Database_TimeTable_Arrivals_Path
+        };
 
-        // Get current filter values
+        // Get current filter values from UI
         String searchTerm = SearchField.getText().trim().toLowerCase();
         String placeholder = "search for a flight".toLowerCase();
 
@@ -668,74 +754,55 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
         String selDest = Combo_Destination.getSelectedItem().toString();
 
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
-        model.setRowCount(0); // Clear table
+        model.setRowCount(0); // Clear table before filtering
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
+        // Loop through both Departure and Arrival files
+        for (String filePath : filesToFilter) {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                continue;
+            }
 
-                String[] rowData = line.split("-");
-                if (rowData.length < 10) {
-                    continue;
-                }
-
-                // Map file data to variables for clarity
-                String airline = rowData[0];
-                String aircraft = rowData[1];
-                String origin = rowData[2];
-                String destination = rowData[3];
-                String freq = rowData[4];
-                String ETD = rowData[5];
-                String flightNo = rowData[6];
-                String flightPax = rowData[7];
-                String flightCargo = rowData[8];
-                String flightStatus = rowData[9];
-
-                
-                boolean matchesSearch = searchTerm.equals(placeholder) || searchTerm.isEmpty()
-                        || line.toLowerCase().contains(searchTerm);
-
-            
-                boolean matchesStatus = selStatus.equals("N/A") || flightStatus.equalsIgnoreCase(selStatus);
-                boolean matchesAirline = selAirline.equals("N/A") || airline.equalsIgnoreCase(selAirline);
-                boolean matchesAircraft = selAircraft.equals("N/A") || aircraft.equalsIgnoreCase(selAircraft);
-                boolean matchesOrigin = selOrigin.equals("N/A") || origin.substring(0,4).equalsIgnoreCase(selOrigin);
-                boolean matchesDest = selDest.equals("N/A") || destination.substring(0,4).equalsIgnoreCase(selDest);
-
-           
-                if (matchesSearch && matchesStatus && matchesAirline && matchesAircraft && matchesOrigin && matchesDest) {
-
-                    // Perform Calculations for the row
-                    String distanceStr = "N/A";
-                    String durationStr = "N/A";
-                    String ETA = "N/A";
-
-                    try {
-                        distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
-                        double distVal = calc.calculateDistanceKm();
-                        distanceStr = String.format("%.0f km", distVal);
-
-                        int totalMinutes = calc.calculateFlightDurationMinutes();
-                        durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
-
-                        int etdHours = Integer.parseInt(ETD.substring(0, 2));
-                        int etdMins = Integer.parseInt(ETD.substring(2, 4));
-                        int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
-                        ETA = String.format("%02d%02d", (arrivalTotalMins / 60) % 24, arrivalTotalMins % 60);
-                    } catch (Exception e) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) {
+                        continue;
                     }
 
-                    model.addRow(new Object[]{
-                        flightStatus, airline, aircraft, origin, destination,
-                        freq, ETD, ETA, flightNo, durationStr, distanceStr, flightPax, flightCargo
-                    });
+                    String[] rowData = line.split("-");
+                    if (rowData.length < 10) {
+                        continue;
+                    }
+
+                    // Extract fields for comparison
+                    String airline = rowData[0];
+                    String aircraft = rowData[1];
+                    String origin = rowData[2];
+                    String destination = rowData[3];
+                    String flightStatus = rowData[9];
+
+                    // Check matches for Search Field
+                    boolean matchesSearch = searchTerm.equals(placeholder) || searchTerm.isEmpty()
+                            || line.toLowerCase().contains(searchTerm);
+
+                    // Check matches for Combo Boxes
+                    boolean matchesStatus = selStatus.equals("N/A") || flightStatus.equalsIgnoreCase(selStatus);
+                    boolean matchesAirline = selAirline.equals("N/A") || airline.equalsIgnoreCase(selAirline);
+                    boolean matchesAircraft = selAircraft.equals("N/A") || aircraft.equalsIgnoreCase(selAircraft);
+
+                    // Matches Origin/Dest (Checking first 4 chars for airport codes like RPLL)
+                    boolean matchesOrigin = selOrigin.equals("N/A") || origin.toLowerCase().contains(selOrigin.toLowerCase());
+                    boolean matchesDest = selDest.equals("N/A") || destination.toLowerCase().contains(selDest.toLowerCase());
+
+                    // If ALL conditions pass, add the row
+                    if (matchesSearch && matchesStatus && matchesAirline && matchesAircraft && matchesOrigin && matchesDest) {
+                        processAndAddSearchRow(model, rowData);
+                    }
                 }
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Error filtering file: " + filePath, e);
             }
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error filtering flights", e);
         }
     }
     

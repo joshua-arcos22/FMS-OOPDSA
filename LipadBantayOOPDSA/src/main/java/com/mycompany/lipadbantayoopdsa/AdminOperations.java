@@ -1,52 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.lipadbantayoopdsa;
-
 
 import java.io.*;
 import java.util.*;
 
-
-/**
- *
- * @author Joshua
- */
 public class AdminOperations {
-    
-    //PATHSS FOR THE DATA BASE FILES 
-    public static String Database_Aircarfts_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
-    public static String Database_Airlines_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt";  // lack of time did not use
-    public static String Database_Aiports_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt";
-    //private String Database_Routes_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Routes/Aircraft_Master.txt"; // lack of time did not use
-    public static String Database_TimeTable_Departure_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
-    public static String Database_TimeTable_Arrivals_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+
+    // PATHS FOR THE DATA BASE FILES 
+    public static final String Database_Aircarfts_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
+    public static final String Database_Airlines_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt"; 
+    public static final String Database_Aiports_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airports/Airport_Master.txt";
+    public static final String Database_TimeTable_Departure_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
+    public static final String Database_TimeTable_Arrivals_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+    public static final String Database_TimeTable_Archive_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Archive_Timetable.txt";
+            
+            
     private boolean runwayCapable;
-    
-    
-    //VARIABLES 
-    private String Airline_Name;
-    private String Ac_Type;
-    private String Origin_Airport;
-    private String Destination_Airport;
-    private String Frequency;
-    private String Time;
-    private String Flight_Number;
-        
-      // OVERLOAD CONSTURCTOR TO CALL METHODS
-    public AdminOperations(){
-    }
-    
-    
-    // ASSIGNING ALL OF THE FLIGHT DETAILS 
-    public AdminOperations(     String Airline_Name,
-                                String Ac_Type,
-                                String Origin_Airport,
-                                String Destination_Airport,
-                                String Frequency,
-                                String Time,
-                                String Flight_Number){
+
+    // VARIABLES 
+    private String Airline_Name, Ac_Type, Origin_Airport, Destination_Airport, Frequency, Time, Flight_Number, Flight_Pax, Flight_Cargo, Flight_Status;
+
+    public AdminOperations() {}
+
+    public AdminOperations(String Airline_Name, String Ac_Type, String Origin_Airport,
+                           String Destination_Airport, String Frequency, String Time,
+                           String Flight_Number, String Flight_Pax, String Flight_Cargo,
+                           String Flight_Status) {
         this.Airline_Name = Airline_Name;
         this.Ac_Type = Ac_Type;
         this.Origin_Airport = Origin_Airport;
@@ -54,153 +32,100 @@ public class AdminOperations {
         this.Frequency = Frequency;
         this.Time = Time;
         this.Flight_Number = Flight_Number;
+        this.Flight_Pax = Flight_Pax;
+        this.Flight_Cargo = Flight_Cargo;
+        this.Flight_Status = Flight_Status;
     }
 
-    
-    // methods 
-    //ADD FLIGHT 
-   public void Admin_AddFlight() throws IOException {
-        
-        
-       // writes on file 
-        try (FileWriter addFlight = new FileWriter(Database_TimeTable_Departure_Path, true);
-             BufferedWriter addFlightEntry = new BufferedWriter(addFlight)) {
-            
-            // Formats the data in the constructor call ino the format same as teh data base depature_time_table
-            //  airlinename-actype-origin-destination-frequency-time-flno
-            String flightEntry = addFlightFormat(Airline_Name, Ac_Type, Origin_Airport, Destination_Airport, Frequency, Time, Flight_Number);
-            
-            
-            // if aiport runway length < ac runway length capability then it is not possible to land
-            if (!runwayCapable) {
-                System.out.println("Ac not runway capable");
-                return;
-            }
-            
-            //Adds the formatted line to the database
-            addFlightEntry.write(flightEntry);
-            addFlightEntry.newLine();
-            
-            // succes print 
-            System.out.println("Success: written to file.");
-            
-        } catch (IOException e) {
-            //error print
-            System.out.println("Error writing to file: " + e.getMessage());
+    /**
+     * Appends a new flight to the Departure master file.
+     */
+    public void Admin_AddFlight() throws IOException {
+        String flightEntry = addFlightFormat(Airline_Name, Ac_Type, Origin_Airport, Destination_Airport, 
+                                            Frequency, Time, Flight_Number, Flight_Pax, Flight_Cargo, Flight_Status);
+
+        if (!runwayCapable) {
+            System.out.println("Error: Aircraft not runway capable for these airports.");
+            return;
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Database_TimeTable_Departure_Path, true))) {
+            writer.write(flightEntry);
+            writer.newLine();
+            System.out.println("Success: Flight " + Flight_Number + " added.");
         }
     }
-    
-    
-    //adds flight format 
-    public String addFlightFormat ( String Airline_Name,
-                                    String Ac_Type,
-                                    String Origin_Airport,
-                                    String Destination_Airport,
-                                    String Frequency,
-                                    String Time,
-                                    String Flight_Number){
+
+    /**
+     * Formats flight data into a standardized hyphen-separated string.
+     */
+    public String addFlightFormat(String Airline_Name, String Ac_Type, String Origin_Airport,
+                                   String Destination_Airport, String Frequency, String Time,
+                                   String Flight_Number, String Flight_Pax, String Flight_Cargo,
+                                   String Flight_Status) {
         
-        String flightFormat = "";
-        
-        //Calls distance calculator class in order to determine the distance between 2 points
-        //this used the haversine formula
-        distanceCalculator findAirportName = new distanceCalculator(Origin_Airport, Destination_Airport, Ac_Type);
-        
+        distanceCalculator calc = new distanceCalculator(Origin_Airport, Destination_Airport, Ac_Type);
         
         try {
-            // FINDS THE NAME OF ORIGIN AND DESTINATION AIRPORT 
-            // findign airport name 
-            String aiportName = findAirportName.getAirportNames();
-            String aiportNameSeperator[] = aiportName.split("-"); // seperate them
-            // airport data base has alos the same format, entries have seperation of "-"
+            String airportName = calc.getAirportNames();
+            String[] names = airportName.split("-"); 
             
+            String runway = calc.getRunwayLenght().trim();
+            String[] runways = runway.split("-");
             
-            //Finding if it s runway capable
-            String airprotRunwayLenght = findAirportName.getRunwayLenght().trim();
-            String airprotRunwayLenghtSeperator[] = airprotRunwayLenght.split("-");
+            AircraftFinder acFinder = new AircraftFinder(Ac_Type);
+            runwayCapable = acFinder.runwayLengthVerfiier(
+                Integer.parseInt(runways[0]), 
+                Integer.parseInt(runways[1])
+            );
             
-            
-            // CALLS THE AC AIRPORT VALIDATOR 
-            AircraftFinder ac_airport_validator = new AircraftFinder(Ac_Type);
-            runwayCapable = ac_airport_validator.runwayLengthVerfiier(Integer.parseInt(airprotRunwayLenghtSeperator[0]), Integer.parseInt(airprotRunwayLenghtSeperator[1]));
-            // determines if aircrft is capable of landing or taking off on aiport
-            
-            // format for thereturn statement of the flight to be addedo n the master file 
-               flightFormat =   Airline_Name + "-" +
-                                Ac_Type + "-" + 
-                                Origin_Airport.toUpperCase() + "(" +
-                                aiportNameSeperator[0] + ")" + "-" +
-                                Destination_Airport.toUpperCase()  + "(" +
-                                aiportNameSeperator[1] + ")" + "-" +
-                                Frequency + "-" +
-                                Time + "-" +
-                                Flight_Number;
+            // Format: Airline-Aircraft-Origin(City)-Dest(City)-Freq-Time-FlightNo-Pax-Cargo-Status
+            return Airline_Name + "-" + Ac_Type + "-" +
+                   Origin_Airport.toUpperCase() + "(" + names[0] + ")-" +
+                   Destination_Airport.toUpperCase() + "(" + names[1] + ")-" +
+                   Frequency + "-" + Time + "-" + Flight_Number + "-" +
+                   Flight_Pax + "-" + Flight_Cargo + "-" + Flight_Status;
 
-               
-               
-               
         } catch (FileNotFoundException e) {
-            System.out.println("The file does not exist");
+            System.out.println("Database Error: " + e.getMessage());
+            return "";
         }
-        // returns the flight format  
-        return flightFormat;
-        
     }
-    
-    
-    //editing flight, the key is the flightNumber in order to determine which one is updated or not
-    public void Admin_EditFlight(String originalFlightNum) throws IOException {
-        //FILE HANDLINGS
-        File inputFile = new File(Database_TimeTable_Departure_Path);
-        File tempFile = new File("temp_timetable.txt");
 
-        
-        // reads and writes the departure timetable 
+    /**
+     * Replaces an existing flight entry by finding the original flight number.
+     */
+    public void Admin_EditFlight(String originalFlightNum) throws IOException {
+        File inputFile = new File(Database_TimeTable_Departure_Path);
+        File tempFile = new File("src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/temp_timetable.txt");
+
+        String updatedEntry = addFlightFormat(Airline_Name, Ac_Type, Origin_Airport, Destination_Airport, 
+                                             Frequency, Time, Flight_Number, Flight_Pax, Flight_Cargo, Flight_Status);
+
         try (Scanner reader = new Scanner(inputFile);
              BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
 
-            // Use the new data to format the new string
-            String updatedFlight = addFlightFormat(Airline_Name, Ac_Type, Origin_Airport,
-                                                   Destination_Airport, Frequency, Time, Flight_Number);
-            
-            //reads line from the departure 
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
+                String[] parts = line.split("-");
                 
-                // if still old flno then write the updated format
-                if (line.contains(originalFlightNum)) {
-                    writer.write(updatedFlight);
+                // Flight Number is at Index 6 in your format
+                if (parts.length > 6 && parts[6].equalsIgnoreCase(originalFlightNum)) {
+                    writer.write(updatedEntry);
                 } else {
-                    //just writes the same line 
                     writer.write(line);
                 }
                 writer.newLine();
             }
         }
 
-        // Replace original file with temp file
-        if (!inputFile.delete()) {
-            System.out.println("Could not delete original file.");
-
+        // Atomic swap of files
+        if (inputFile.delete()) {
+            if (tempFile.renameTo(inputFile)) {
+                System.out.println("Edit Success: File updated.");
+                // After editing departure, refresh the arrival timetable
+                ArrivalTimetableGenerator.generate();
+            }
         }
-        if (!tempFile.renameTo(inputFile)) {
-            System.out.println("Could not rename temp file.");
-        }
-
-        
     }
-    
-    
-    
-    
-    
-    
-    public static void main (String Args[]) throws IOException{
-        // main methods for creating flights
-        AdminOperations createFlight = new AdminOperations();
-        createFlight.Admin_AddFlight();
-    }
-    
-    
-    
 }
