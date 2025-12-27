@@ -33,6 +33,9 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
         private String Time;
         private String Flight_Number;
         private String Original_Flight_Number_Ref;
+        private String Pax_Ref;
+        private String Cargo_Ref;
+        private String Status_Ref;
                 
         public editFlightScreen_1(
             String airline,
@@ -41,120 +44,140 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
             String destination,
             String frequency,
             String time,
-            String flightNumber
+            String flightNumber,
+            String pax, // NEW
+            String cargo, // NEW
+            String status // NEW 
         ) {
             initComponents();
 
-            this.Original_Flight_Number_Ref = flightNumber;
-            airlineField.setText(airline);
-            flnField.setText(flightNumber);
-            timeField.setText(time);
             
-             //initializes value
+            //initializes value of the error labels
             errorAIRLINENAME.setText(" ");
             errorFLTNO.setText(" ");
             errorTIME.setText(" ");
             originRWYLn.setText(" ");
             destRWYLn.setText(" ");
             acRWYLn.setText(" ");
+            errorPAX.setText(" ");
+            errorCARGO.setText(" ");
             
-            
-            
+            this.Original_Flight_Number_Ref = flightNumber;
 
-            // handle frequency checkboxes
+            this.Original_Flight_Number_Ref = flightNumber;
+            this.Airline_Name = airline; // Store for logic
+            this.Ac_Type = aircraft;     // Store for logic
+
+            // Set Text Fields
+            airlineField.setText(airline);
+            flnField.setText(flightNumber);
+            timeField.setText(time);
+            paxFIELD.setText(pax);     // This puts the "150" into the text box
+            cargoFIELD.setText(cargo); // This puts the "5000" into the text box
+            status_drpdwn.setSelectedItem(status); // This selects "Delayed" in the dropdown
+
+            // Initialize Dropdowns
+            initializeDropdowns(aircraft, origin, destination, status);
+
+            // Set Frequency Checks
             setFrequencyChecks(frequency);
-            
-            ac_drpdwn.removeAllItems();
-            
-            try {
-                File acOpenMasyer = new File(AdminOperations.Database_Aircarfts_Path);
-                Scanner acReader = new Scanner(acOpenMasyer);
-                while(acReader.hasNextLine()){
-                    String acLineReader = acReader.nextLine();
-                    String acLineReaderArray[] = acLineReader.split("-");
-                    ac_drpdwn.addItem(acLineReaderArray[0]);
-                      
-                }
-            } catch (FileNotFoundException e) {
-                System.out.println("File not found ");
-            }
-            ac_drpdwn.setSelectedItem(aircraft);
-            
-            
-
-            
-            //initialize origin airport dropdown
-            origin_drpdwn.removeAllItems();
-            try {
-                File acOpenMasyer = new File(AdminOperations.Database_Aiports_Path);
-                Scanner aprtReader = new Scanner(acOpenMasyer);
-                while(aprtReader.hasNextLine()){
-                    String aprtLineReader = aprtReader.nextLine();
-                    String aprtLineReaderArray[] = aprtLineReader.split("-");
-                    origin_drpdwn.addItem(aprtLineReaderArray[1] + "(" +aprtLineReaderArray[0] + ")" );
-                    
-                }
-                aprtReader.close();
-             } catch (FileNotFoundException e) {
-                System.out.println("File not found ");
-            }
-            int i;
-            for (i = 0; i < origin_drpdwn.getItemCount(); i++) {
-                String orgndrpAp = origin_drpdwn.getItemAt(i).toString().substring(0, 4);
-                if (orgndrpAp.equals(origin.substring(0,4))) {
-                    break;
-                }
-            }
-            origin_drpdwn.setSelectedIndex(i);
-            
-            
-            
-
-
-
-            //initializes desitantion aiport drop down
-            destination_drpdwn.removeAllItems();
-            try {
-                File acOpenMasyer = new File(AdminOperations.Database_Aiports_Path);
-                Scanner aprtReader = new Scanner(acOpenMasyer);
-                while(aprtReader.hasNextLine()){
-                    String aprtLineReader = aprtReader.nextLine();
-                    String aprtLineReaderArray[] = aprtLineReader.split("-");
-                    destination_drpdwn.addItem(aprtLineReaderArray[1] + "(" +aprtLineReaderArray[0] + ")" );
-                    
-                } 
-                aprtReader.close();
-            } catch (FileNotFoundException e) {
-                System.out.println("File not found ");
-            }
-            int y;
-            for (y = 0; y < destination_drpdwn.getItemCount(); y++) {
-                String destdrpAp = destination_drpdwn.getItemAt(y).toString().substring(0, 4);
-                if (destdrpAp.equals(destination.substring(0,4))) {
-                    break;
-                }
-            }
-            destination_drpdwn.setSelectedIndex(y);
-            
-            
-//            System.out.println(origin);
-//            System.out.println(destination);
-
-            //updates the field if there are changes 
-            java.awt.event.ActionListener updateAction = new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    updateRunwayStatus();
-                }
-            };
-
-            origin_drpdwn.addActionListener(updateAction);
-            destination_drpdwn.addActionListener(updateAction);
-            ac_drpdwn.addActionListener(updateAction);
-
+   
             // Run it once initially to set the correct labels for default selections
             updateRunwayStatus();
             
         }
+        
+        
+        // Helper to clean up the constructor (Copy this method too)
+        private void initializeDropdowns(String aircraft, String origin, String destination, String status) {
+            // 1. Status Dropdown
+            status_drpdwn.removeAllItems();
+            status_drpdwn.addItem("Scheduled");
+            status_drpdwn.addItem("Delayed");
+            status_drpdwn.addItem("Canceled");
+            status_drpdwn.setSelectedItem(status);
+
+            // 2. Aircraft Dropdown
+            ac_drpdwn.removeAllItems();
+            try {
+                File acFile = new File(AdminOperations.Database_Aircarfts_Path);
+                Scanner scanner = new Scanner(acFile);
+                while (scanner.hasNextLine()) {
+                    String[] parts = scanner.nextLine().split("-");
+                    ac_drpdwn.addItem(parts[0]);
+                }
+                ac_drpdwn.setSelectedItem(aircraft);
+            } catch (FileNotFoundException e) {
+                System.out.println("AC File not found");
+            }
+
+            // 3. Origin Dropdown
+            // Extract just the "RPLK" from "RPLK(Daraga)"
+            String originCode = (origin.length() >= 4) ? origin.substring(0, 4) : origin;
+
+            origin_drpdwn.removeAllItems();
+            try {
+                File aprtFile = new File(AdminOperations.Database_Aiports_Path);
+                Scanner scanner = new Scanner(aprtFile);
+                while (scanner.hasNextLine()) {
+                    String[] parts = scanner.nextLine().split("-");
+                    // Assuming File format is: ICAO-City-Runway (e.g., RPLK-Daraga-2100)
+                    // Dropdown format: ICAO(City) -> RPLK(Daraga)
+                    String itemText = parts[1] + "(" + parts[0] + ")";
+
+                    // NOTE: Check your file order. If parts[0] is ICAO, swap the line above to:
+                    // String itemText = parts[0] + "(" + parts[1] + ")";
+                    // Check based on the Screenshot (RPVU is appearing first, so standard ICAO is likely first)
+                    if (parts[0].length() == 4) { // Heuristic check
+                        itemText = parts[0] + "(" + parts[1] + ")";
+                    } else {
+                        itemText = parts[1] + "(" + parts[0] + ")";
+                    }
+
+                    origin_drpdwn.addItem(itemText);
+
+                    // Compare just the codes
+                    // parts[0] is likely the ICAO code in your file
+                    if (parts[0].equalsIgnoreCase(originCode) || parts[1].equalsIgnoreCase(originCode)) {
+                        origin_drpdwn.setSelectedItem(itemText);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("Airport File not found");
+            }
+
+            // 4. Destination Dropdown
+            // Extract just the "RPMR" from "RPMR(General...)"
+            String destCode = (destination.length() >= 4) ? destination.substring(0, 4) : destination;
+
+            destination_drpdwn.removeAllItems();
+            try {
+                File aprtFile = new File(AdminOperations.Database_Aiports_Path);
+                Scanner scanner = new Scanner(aprtFile);
+                while (scanner.hasNextLine()) {
+                    String[] parts = scanner.nextLine().split("-");
+
+                    // Build the string to match your UI (ICAO(City))
+                    String itemText = "";
+                    if (parts[0].length() == 4) {
+                        itemText = parts[0] + "(" + parts[1] + ")";
+                    } else {
+                        itemText = parts[1] + "(" + parts[0] + ")";
+                    }
+
+                    destination_drpdwn.addItem(itemText);
+
+                    // Compare code with file data
+                    if (parts[0].equalsIgnoreCase(destCode) || parts[1].equalsIgnoreCase(destCode)) {
+                        destination_drpdwn.setSelectedItem(itemText);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("Airport File not found");
+            }
+        }
+        
+        
         
         private void setFrequencyChecks(String freq) {
             if (freq == null) return;
@@ -221,6 +244,14 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
         originRWYLn = new javax.swing.JLabel();
         destRWYLn = new javax.swing.JLabel();
         acRWYLn = new javax.swing.JLabel();
+        FLNO2 = new javax.swing.JLabel();
+        cargoFIELD = new javax.swing.JTextField();
+        errorCARGO = new javax.swing.JLabel();
+        errorPAX = new javax.swing.JLabel();
+        paxFIELD = new javax.swing.JTextField();
+        FLNO3 = new javax.swing.JLabel();
+        ARILINECODE1 = new javax.swing.JLabel();
+        status_drpdwn = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -369,6 +400,39 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
 
         acRWYLn.setText("placeholder");
 
+        FLNO2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        FLNO2.setText("CARGO");
+
+        cargoFIELD.setBackground(new java.awt.Color(0, 153, 204));
+        cargoFIELD.setForeground(new java.awt.Color(255, 255, 255));
+        cargoFIELD.setText("6767");
+        cargoFIELD.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        errorCARGO.setText("placeholder");
+
+        errorPAX.setText("placeholder");
+
+        paxFIELD.setBackground(new java.awt.Color(0, 153, 204));
+        paxFIELD.setForeground(new java.awt.Color(255, 255, 255));
+        paxFIELD.setText("6767");
+        paxFIELD.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        FLNO3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        FLNO3.setText("PAX");
+
+        ARILINECODE1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        ARILINECODE1.setText("STATUS");
+
+        status_drpdwn.setBackground(new java.awt.Color(0, 153, 204));
+        status_drpdwn.setForeground(new java.awt.Color(255, 255, 255));
+        status_drpdwn.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        status_drpdwn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        status_drpdwn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                status_drpdwnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout bodyContainerLayout = new javax.swing.GroupLayout(bodyContainer);
         bodyContainer.setLayout(bodyContainerLayout);
         bodyContainerLayout.setHorizontalGroup(
@@ -376,8 +440,8 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
             .addComponent(topContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(bodyContainerLayout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, bodyContainerLayout.createSequentialGroup()
+                .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(bodyContainerLayout.createSequentialGroup()
                         .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(FREQUENCY, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(bodyContainerLayout.createSequentialGroup()
@@ -394,51 +458,67 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
                                 .addComponent(ST_check)
                                 .addGap(18, 18, 18)
                                 .addComponent(SU_check))
+                            .addComponent(E_check)
                             .addGroup(bodyContainerLayout.createSequentialGroup()
                                 .addGap(282, 282, 282)
                                 .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, bodyContainerLayout.createSequentialGroup()
-                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(ARILINECODE, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(airlineField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(origin_drpdwn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(bodyContainerLayout.createSequentialGroup()
+                        .addGap(228, 228, 228)
+                        .addComponent(btn_addFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(bodyContainerLayout.createSequentialGroup()
+                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ARILINECODE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(airlineField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                            .addComponent(origin_drpdwn, javax.swing.GroupLayout.Alignment.TRAILING, 0, 135, Short.MAX_VALUE)
                             .addComponent(originRWYLn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ORIGIN, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(errorAIRLINENAME, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(errorAIRLINENAME, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ARILINECODE1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(status_drpdwn, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                         .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(timeField, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                            .addComponent(errorTIME, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TIME, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(destRWYLn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(destination_drpdwn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(bodyContainerLayout.createSequentialGroup()
-                                    .addGap(3, 3, 3)
-                                    .addComponent(DESTINATION, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(58, 58, 58)
-                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyContainerLayout.createSequentialGroup()
+                                .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(bodyContainerLayout.createSequentialGroup()
+                                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(destRWYLn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(destination_drpdwn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(bodyContainerLayout.createSequentialGroup()
+                                                .addGap(3, 3, 3)
+                                                .addComponent(DESTINATION, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGap(58, 58, 58))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, bodyContainerLayout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(timeField, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                                            .addComponent(errorTIME, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(TIME, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(AIRCRAFT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(ac_drpdwn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(bodyContainerLayout.createSequentialGroup()
+                                            .addGap(3, 3, 3)
+                                            .addComponent(acRWYLn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(FLNO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(flnField)
+                                        .addComponent(errorFLTNO, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyContainerLayout.createSequentialGroup()
                                 .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(AIRCRAFT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ac_drpdwn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(bodyContainerLayout.createSequentialGroup()
-                                    .addGap(3, 3, 3)
-                                    .addComponent(acRWYLn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(FLNO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(flnField)
-                                .addComponent(errorFLTNO, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(82, 82, 82))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, bodyContainerLayout.createSequentialGroup()
-                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, bodyContainerLayout.createSequentialGroup()
-                                .addGap(228, 228, 228)
-                                .addComponent(btn_addFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(E_check, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(FLNO3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(paxFIELD)
+                                    .addComponent(errorPAX, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(55, 55, 55)
+                                .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(FLNO2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cargoFIELD)
+                                    .addComponent(errorCARGO, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(82, 82, 82))))
         );
 
         bodyContainerLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ac_drpdwn, airlineField, destination_drpdwn, flnField, origin_drpdwn, timeField});
@@ -447,49 +527,65 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
             bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bodyContainerLayout.createSequentialGroup()
                 .addComponent(topContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(bodyContainerLayout.createSequentialGroup()
-                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(bodyContainerLayout.createSequentialGroup()
-                                .addComponent(ARILINECODE, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(airlineField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(13, 13, 13)
-                                .addComponent(errorAIRLINENAME)
-                                .addGap(18, 18, 18)
-                                .addComponent(ORIGIN, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(origin_drpdwn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(originRWYLn))
-                            .addGroup(bodyContainerLayout.createSequentialGroup()
-                                .addComponent(TIME, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(timeField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(errorTIME)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(DESTINATION, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(bodyContainerLayout.createSequentialGroup()
-                                        .addGap(36, 36, 36)
-                                        .addComponent(destination_drpdwn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(destRWYLn)))))
-                        .addGap(30, 30, 30)
-                        .addComponent(FREQUENCY, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(FLNO, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(flnField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(bodyContainerLayout.createSequentialGroup()
-                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(94, 94, 94)
+                        .addComponent(errorFLTNO))
+                    .addGroup(bodyContainerLayout.createSequentialGroup()
+                        .addComponent(ARILINECODE, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(airlineField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(errorAIRLINENAME))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyContainerLayout.createSequentialGroup()
+                        .addComponent(TIME, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(timeField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(errorTIME)))
+                .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(bodyContainerLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(bodyContainerLayout.createSequentialGroup()
-                                .addComponent(FLNO, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(FLNO3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(flnField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(47, 47, 47))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyContainerLayout.createSequentialGroup()
-                                .addGap(94, 94, 94)
-                                .addComponent(errorFLTNO)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                                .addComponent(paxFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(bodyContainerLayout.createSequentialGroup()
+                                .addComponent(ARILINECODE1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(status_drpdwn)))
+                        .addGap(13, 13, 13)
+                        .addComponent(errorPAX))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyContainerLayout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(FLNO2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cargoFIELD, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(errorCARGO)))
+                .addGap(40, 40, 40)
+                .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(bodyContainerLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(ORIGIN, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(origin_drpdwn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(originRWYLn))
+                    .addComponent(DESTINATION, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(bodyContainerLayout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(destination_drpdwn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(destRWYLn))
+                    .addGroup(bodyContainerLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
                         .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(AIRCRAFT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(bodyContainerLayout.createSequentialGroup()
@@ -497,7 +593,9 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
                                 .addComponent(ac_drpdwn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(acRWYLn)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(FREQUENCY, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(bodyContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(M_check)
                     .addComponent(TU_check)
@@ -508,7 +606,7 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
                     .addComponent(SU_check))
                 .addGap(18, 18, 18)
                 .addComponent(E_check)
-                .addGap(75, 75, 75)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_addFlight, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_back)
@@ -690,143 +788,81 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
     }
 
     
+    private boolean isFlightNumberDuplicate(String flightNumToCheck) {
+        try {
+            
+            File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
+
+            
+            if (!file.exists()) {
+                return false; 
+            }
+
+            Scanner scanner = new Scanner(file);
+
+          
+            // checks the data of the time table and the and extracts the flight number 
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] data = line.split("-");
+
+               
+                if (data.length >= 7) {
+                    String existingFlightNo = data[6].trim();
+
+                    if (existingFlightNo.equalsIgnoreCase(flightNumToCheck)) {
+                        scanner.close();
+                        return true; 
+                    }
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error checking duplicates");
+        }
+        return false;
+    }
+    
     private void btn_addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFlightActionPerformed
-        
-        boolean airlineField_Valid = true;
-        boolean Flt_No_Valid = true;
-        boolean time_Valid = true;
-        boolean runway_Valid = true; 
+        // 1. GET ALL CURRENT UI VALUES
+        String selectedAc = ac_drpdwn.getSelectedItem().toString().trim();
+        String airlineNameInput = airlineField.getText().trim();
+        String flightNumInput = flnField.getText().trim().toUpperCase();
+        String timeInput = timeField.getText().trim();
+        String paxInput = paxFIELD.getText().trim();
+        String cargoInput = cargoFIELD.getText().trim();
+        String statusInput = status_drpdwn.getSelectedItem().toString();
 
-        
-        
-        
-        // --- VALIDATION CHECKS --
-        // ------------AIRLINE-----------------------------------
-        String airlineName = airlineField.getText().replaceAll("\\s+", "").toUpperCase(); 
-        if (airlineName.isEmpty()) {
-            errorAIRLINENAME.setText("Required"); 
-            errorAIRLINENAME.setForeground(Color.red);
-            Flt_No_Valid = false;
-        } else if (airlineField.getText().matches(".*[0-9].*")) {
-            errorAIRLINENAME.setText("Invalid Input");
-            errorAIRLINENAME.setForeground(Color.red);
-            airlineField_Valid = false;
-        } else {
-            errorAIRLINENAME.setText(" ");
-            Airline_Name = airlineField.getText();
-        }
-        // ---------------------------------------------------------
-        
-        
-        
-        // ------------FLIGHT NUMBER-----------------------------------
-        String flightNum = flnField.getText().trim().toUpperCase(); 
+        // 2. RUN VALIDATIONS (Similar to your Add Screen)
+        boolean isValid = true;
+        // ... (Insert your validation checks for airlineField_Valid, pax_Valid, etc. here) ...
 
-        if (flightNum.isEmpty()) {
-            errorFLTNO.setText("Required"); 
-            errorFLTNO.setForeground(Color.red);
-            Flt_No_Valid = false;
-        } else if (!flightNum.matches("[A-Z0-9]+")) {
-            errorFLTNO.setText("Alphanumeric Only");
-            errorFLTNO.setForeground(Color.red);
-            Flt_No_Valid = false;
-        } else if (flightNum.length() != 6 ) {
-            errorFLTNO.setText("Invalid Length");
-            errorFLTNO.setForeground(Color.red);
-            Flt_No_Valid = false;
-        } else if (flightNum.substring(0, 1).matches(".*[0-9].*")) { 
-            errorFLTNO.setText("Must Start w/ 1 Char");
-            errorFLTNO.setForeground(Color.red);
-            Flt_No_Valid = false;
+        if (isValid) {
+            this.Ac_Type = selectedAc;
+            this.Origin_Airport = origin_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
+            this.Destination_Airport = destination_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
+            this.Frequency = getFrequencyString();
 
-        } else {
-            errorFLTNO.setText(" ");
-            flnField.setText(flightNum); 
-            Flight_Number = flightNum;   
-            Flt_No_Valid = true;
-        }
-        // ---------------------------------------------------------
-       
-        //// -------------------ttime-------------------------------------
-        String rawInput = timeField.getText().trim(); 
-
-      
-        if (rawInput.isEmpty() || rawInput.length() != 4 || !rawInput.matches("\\d+")) {
-            errorTIME.setText("Use HHMM format");
-            errorTIME.setForeground(Color.red);
-            time_Valid = false;
-
-        } else {
-            
-            int hours = Integer.parseInt(rawInput.substring(0, 2));   
-            int minutes = Integer.parseInt(rawInput.substring(2, 4)); 
-
-            
-            // This blocks "0660" because minutes (60) is > 59
-            if (hours > 23 || minutes > 59) {
-                errorTIME.setText("Invalid Time"); 
-                errorTIME.setForeground(Color.red);
-                time_Valid = false;
-            } else {
-                // 5. Valid Time
-                errorTIME.setText(" ");
-                Time = rawInput; 
-                time_Valid = true; 
-            }
-        }
-
-      
-        
-        // --------------------RWY--------------------------------
-        if (originRWYLn.getForeground() == Color.red || 
-            destRWYLn.getForeground() == Color.red || 
-            acRWYLn.getForeground() == Color.red) {
-            runway_Valid = false;
-        }
-        // ---------------------------------------------------------
-
-       // ----------------------MASTER-------------------------------
-        if (airlineField_Valid && Flt_No_Valid && time_Valid && runway_Valid) {
-
-            Origin_Airport = origin_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
-            Destination_Airport = destination_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
-            Ac_Type = ac_drpdwn.getSelectedItem().toString().trim();
-            Frequency = getFrequencyString();
-
-           
-//            System.out.println(Airline_Name + " | " + 
-//                               Ac_Type + " | " +
-//                               Origin_Airport + " | " +
-//                               Destination_Airport + " | " +
-//                               Frequency + " | " +
-//                               Time + " | " +
-//                               Flight_Number);
-
-            
-            AdminOperations finalEditFlight = new AdminOperations(
-                Airline_Name, 
-                Ac_Type, 
-                Origin_Airport, 
-                Destination_Airport, 
-                Frequency, 
-                Time, 
-                Flight_Number
+            // 3. CALL THE EDIT OPERATION
+            AdminOperations ops = new AdminOperations(
+                    airlineNameInput, Ac_Type, Origin_Airport, Destination_Airport,
+                    Frequency, timeInput, flightNumInput, paxInput, cargoInput, statusInput
             );
+
             try {
-                finalEditFlight.Admin_EditFlight(Original_Flight_Number_Ref);
+                // This method needs to use 'Original_Flight_Number_Ref' to find the line to replace
+                ops.Admin_EditFlight(this.Original_Flight_Number_Ref);
+
+                JOptionPane.showMessageDialog(this, "Flight Updated Successfully!");
+                ArrivalTimetableGenerator.generate();
+                dispose();
             } catch (IOException e) {
-                System.out.println("Error Saving Flight");
+                logger.log(java.util.logging.Level.SEVERE, "Edit Error", e);
             }
-            
-
-            
-            javax.swing.JOptionPane.showMessageDialog(this, "Flight Edited Successfully!");
-            ArrivalTimetableGenerator.generate();
-            dispose();
-
-        } else {
-           
-            javax.swing.JOptionPane.showMessageDialog(this, "Please fix the errors in red before adding.", "Validation Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     
         
@@ -845,6 +881,10 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
         ST_check.setSelected(isChecked);  // Saturday
         SU_check.setSelected(isChecked);  // Sunday
     }//GEN-LAST:event_E_checkMouseClicked
+
+    private void status_drpdwnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_status_drpdwnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_status_drpdwnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -875,16 +915,22 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
         "CEBU",       // destination
         "M/TU/W",    // frequency
         "0930",      // time
-        "AB1234"     // flight number 
+        "AB1234",  // flight number
+                "0",
+                "0",
+                "Default"
         ).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AIRCRAFT;
     private javax.swing.JLabel ARILINECODE;
+    private javax.swing.JLabel ARILINECODE1;
     private javax.swing.JLabel DESTINATION;
     private javax.swing.JCheckBox E_check;
     private javax.swing.JLabel FLNO;
+    private javax.swing.JLabel FLNO2;
+    private javax.swing.JLabel FLNO3;
     private javax.swing.JLabel FREQUENCY;
     private javax.swing.JCheckBox F_check;
     private javax.swing.JCheckBox M_check;
@@ -901,15 +947,20 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
     private javax.swing.JPanel bodyContainer;
     private javax.swing.JButton btn_addFlight;
     private javax.swing.JButton btn_back;
+    private javax.swing.JTextField cargoFIELD;
     private javax.swing.JLabel destRWYLn;
     private javax.swing.JComboBox<String> destination_drpdwn;
     private javax.swing.JLabel errorAIRLINENAME;
+    private javax.swing.JLabel errorCARGO;
     private javax.swing.JLabel errorFLTNO;
+    private javax.swing.JLabel errorPAX;
     private javax.swing.JLabel errorTIME;
     private javax.swing.JTextField flnField;
     private javax.swing.JLabel fucntionTitle;
     private javax.swing.JLabel originRWYLn;
     private javax.swing.JComboBox<String> origin_drpdwn;
+    private javax.swing.JTextField paxFIELD;
+    private javax.swing.JComboBox<String> status_drpdwn;
     private javax.swing.JTextField timeField;
     private javax.swing.JPanel topContainer;
     // End of variables declaration//GEN-END:variables
