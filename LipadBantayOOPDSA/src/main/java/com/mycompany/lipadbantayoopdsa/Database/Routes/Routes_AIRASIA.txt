@@ -12,3 +12,6 @@ A320-RPLL(Manila)-RPVR(Roxas)-1500
 A320-RPVM(Mactan)-RPLL(Manila)-1500
 A320-RPVM(Mactan)-RPMD(Davao)-1500
 A320-RPVM(Mactan)-RPVE(Caticlan)-1500
+A320-RPLC(Mabalacat)-RPMG(Dipolog)-1500
+A320-RPLC(Mabalacat)-RPLK(Daraga)-1600
+A320-RPLK(Daraga)-RPMR(General Santos)-1500
