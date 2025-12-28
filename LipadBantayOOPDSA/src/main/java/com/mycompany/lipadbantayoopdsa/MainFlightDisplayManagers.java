@@ -86,7 +86,6 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         jToggleButton1 = new javax.swing.JToggleButton();
         deleteFlight1 = new javax.swing.JToggleButton();
         Combo_Status = new javax.swing.JComboBox<>();
-        Combo_Airline = new javax.swing.JComboBox<>();
         Combo_Aircraft = new javax.swing.JComboBox<>();
         Combo_Origin = new javax.swing.JComboBox<>();
         Combo_Destination = new javax.swing.JComboBox<>();
@@ -94,6 +93,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         resetFilters = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         FlightTable = new javax.swing.JTable();
+        airlineName = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -254,8 +254,6 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
             }
         });
 
-        Combo_Airline.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         Combo_Aircraft.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         Combo_Origin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -316,11 +314,10 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                 .addGroup(ContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(BottomContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(ContainerLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
                         .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Combo_Airline, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(airlineName, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(Combo_Aircraft, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Combo_Origin, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -329,7 +326,8 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(applyFilters, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(resetFilters, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(resetFilters, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(jScrollPane2)
         );
@@ -338,16 +336,17 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
             .addGroup(ContainerLayout.createSequentialGroup()
                 .addComponent(TopContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(ContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Combo_Airline, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Combo_Origin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Combo_Aircraft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Combo_Destination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(resetFilters)
-                    .addComponent(applyFilters))
-                .addGap(3, 3, 3)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+                .addGroup(ContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(airlineName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(ContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Combo_Origin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Combo_Aircraft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Combo_Destination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(resetFilters)
+                        .addComponent(applyFilters)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BottomContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -622,20 +621,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         Combo_Status.addItem("Canceled");
 
         //Airline
-        Combo_Airline.removeAllItems();
-        Combo_Airline.addItem("N/A");
-        try {
-            File airlineMaster = new File(AdminOperations.Database_Airlines_Path);
-            Scanner airlineReader = new Scanner(airlineMaster);
-            // adds options for the combobox, reads from the ac database
-            while (airlineReader.hasNextLine()) {
-                String arilineStringLine = airlineReader.nextLine();
-                String arilineStringLineArray[] = arilineStringLine.split("-");
-                Combo_Airline.addItem(arilineStringLineArray[0]);
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found ");
-        }
+        airlineName.setText(currentAirlineName);
 
         //Aircraft
         Combo_Aircraft.removeAllItems();
@@ -794,7 +780,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         String placeholder = "search for a flight".toLowerCase();
 
         String selStatus = Combo_Status.getSelectedItem().toString();
-        String selAirline = Combo_Airline.getSelectedItem().toString();
+        String selAirline = airlineName.getText().toString();
         String selAircraft = Combo_Aircraft.getSelectedItem().toString();
         String selOrigin = Combo_Origin.getSelectedItem().toString();
         String selDest = Combo_Destination.getSelectedItem().toString();
@@ -1084,14 +1070,10 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteFlightActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        LoginForm display = new LoginForm();
+        AirlineManagerDashboard display = new AirlineManagerDashboard(currentAirlineName, currentAirlinePrefix);
         display.setVisible(true);
         dispose();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
-
-    private void Combo_StatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Combo_StatusActionPerformed
-
-    }//GEN-LAST:event_Combo_StatusActionPerformed
 
     private void applyFiltersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyFiltersActionPerformed
         applyFilters();
@@ -1099,7 +1081,6 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
     private void resetFiltersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersActionPerformed
         Combo_Aircraft.setSelectedIndex(0);
-        Combo_Airline.setSelectedIndex(0);
         Combo_Destination.setSelectedIndex(0);
         Combo_Origin.setSelectedIndex(0);
         Combo_Status.setSelectedIndex(0);
@@ -1112,6 +1093,10 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         display.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_deleteFlight1ActionPerformed
+
+    private void Combo_StatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Combo_StatusActionPerformed
+
+    }//GEN-LAST:event_Combo_StatusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1141,7 +1126,6 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BottomContainer;
     private javax.swing.JComboBox<String> Combo_Aircraft;
-    private javax.swing.JComboBox<String> Combo_Airline;
     private javax.swing.JComboBox<String> Combo_Destination;
     private javax.swing.JComboBox<String> Combo_Origin;
     private javax.swing.JComboBox<String> Combo_Status;
@@ -1153,6 +1137,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     private javax.swing.JLabel Title;
     private javax.swing.JPanel TopContainer;
     private javax.swing.JToggleButton addFlight;
+    private javax.swing.JLabel airlineName;
     private javax.swing.JButton applyFilters;
     private javax.swing.JToggleButton deleteFlight;
     private javax.swing.JToggleButton deleteFlight1;
