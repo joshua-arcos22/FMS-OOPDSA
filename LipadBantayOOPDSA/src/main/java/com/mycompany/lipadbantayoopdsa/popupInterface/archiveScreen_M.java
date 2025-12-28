@@ -66,7 +66,6 @@ public class archiveScreen_M extends javax.swing.JFrame {
         SearchField = new javax.swing.JTextField();
         SearchButton = new javax.swing.JButton();
         Combo_Status = new javax.swing.JComboBox<>();
-        Combo_Airline = new javax.swing.JComboBox<>();
         Combo_Aircraft = new javax.swing.JComboBox<>();
         Combo_Origin = new javax.swing.JComboBox<>();
         Combo_Destination = new javax.swing.JComboBox<>();
@@ -78,6 +77,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
         deleteFlight = new javax.swing.JToggleButton();
         back = new javax.swing.JToggleButton();
         unarchive = new javax.swing.JToggleButton();
+        Airline = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -159,8 +159,6 @@ public class archiveScreen_M extends javax.swing.JFrame {
                 Combo_StatusActionPerformed(evt);
             }
         });
-
-        Combo_Airline.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         Combo_Aircraft.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -276,7 +274,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Combo_Airline, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Airline, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Combo_Aircraft, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -294,13 +292,13 @@ public class archiveScreen_M extends javax.swing.JFrame {
                 .addComponent(TopContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Combo_Airline, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Combo_Origin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Combo_Aircraft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Combo_Destination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(resetFilters)
-                    .addComponent(applyFilters))
+                    .addComponent(applyFilters)
+                    .addComponent(Airline, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(3, 3, 3)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -320,21 +318,6 @@ public class archiveScreen_M extends javax.swing.JFrame {
         Combo_Status.addItem("Delayed");
         Combo_Status.addItem("Canceled");
 
-        //Airline
-        Combo_Airline.removeAllItems();
-        Combo_Airline.addItem("N/A");
-        try {
-            File airlineMaster = new File(AdminOperations.Database_Airlines_Path);
-            Scanner airlineReader = new Scanner(airlineMaster);
-            // adds options for the combobox, reads from the ac database
-            while (airlineReader.hasNextLine()) {
-                String arilineStringLine = airlineReader.nextLine();
-                String arilineStringLineArray[] = arilineStringLine.split("-");
-                Combo_Airline.addItem(arilineStringLineArray[0]);
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found ");
-        }
 
         //Aircraft
         Combo_Aircraft.removeAllItems();
@@ -352,6 +335,10 @@ public class archiveScreen_M extends javax.swing.JFrame {
             System.out.println("File not found ");
         }
 
+        //Airline 
+        Airline.setText(currentAirlineName);
+        
+        
         //Origin
         Combo_Origin.removeAllItems();
         Combo_Origin.addItem("N/A");
@@ -435,7 +422,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
         String placeholder = "search for a flight".toLowerCase();
 
         String selStatus = Combo_Status.getSelectedItem().toString();
-        String selAirline = Combo_Airline.getSelectedItem().toString();
+        String selAirline = Airline.getText().toString();
         String selAircraft = Combo_Aircraft.getSelectedItem().toString();
         String selOrigin = Combo_Origin.getSelectedItem().toString();
         String selDest = Combo_Destination.getSelectedItem().toString();
@@ -661,7 +648,6 @@ public class archiveScreen_M extends javax.swing.JFrame {
 
     private void resetFiltersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersActionPerformed
         Combo_Aircraft.setSelectedIndex(0);
-        Combo_Airline.setSelectedIndex(0);
         Combo_Destination.setSelectedIndex(0);
         Combo_Origin.setSelectedIndex(0);
         Combo_Status.setSelectedIndex(0);
@@ -809,9 +795,9 @@ public class archiveScreen_M extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Airline;
     private javax.swing.JPanel BottomContainer;
     private javax.swing.JComboBox<String> Combo_Aircraft;
-    private javax.swing.JComboBox<String> Combo_Airline;
     private javax.swing.JComboBox<String> Combo_Destination;
     private javax.swing.JComboBox<String> Combo_Origin;
     private javax.swing.JComboBox<String> Combo_Status;
