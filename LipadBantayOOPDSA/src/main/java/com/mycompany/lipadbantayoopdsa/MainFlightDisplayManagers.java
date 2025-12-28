@@ -11,6 +11,8 @@ import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunction;
 import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunctionA;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
 import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen_M;
+import com.mycompany.lipadbantayoopdsa.popupInterface.archiveScreen;
+import com.mycompany.lipadbantayoopdsa.popupInterface.archiveScreen_M;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_M;
 import java.awt.Color;
@@ -181,7 +183,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         });
 
         deleteFlight.setBackground(new java.awt.Color(255, 102, 102));
-        deleteFlight.setText("DELETE");
+        deleteFlight.setText("ARCHIVE");
         deleteFlight.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         deleteFlight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -938,48 +940,66 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
         int selectedRow = FlightTable.getSelectedRow();
 
-
         if (selectedRow == -1) {
-            javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Please select a flight to delete.",
-                "No Selection",
-                javax.swing.JOptionPane.WARNING_MESSAGE
-            );
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a flight to archive.");
             return;
         }
 
-
+        // Confirmation Dialog
         int confirm = javax.swing.JOptionPane.showConfirmDialog(
-            this, 
-            "Are you sure you want to delete this flight from BOTH Departures and Arrivals?", 
-            "Confirm Deletion", 
-            javax.swing.JOptionPane.YES_NO_OPTION
+                this,
+                "Are you sure you want to ARCHIVE this flight? It will be moved to the Archive list.",
+                "Confirm Archive",
+                javax.swing.JOptionPane.YES_NO_OPTION
         );
 
-       
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-            DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
+            String flightNumber = FlightTable.getValueAt(selectedRow, 8).toString();
 
-            
-            String flightNumber = FlightTable.getValueAt(selectedRow, 6).toString();
-
-            
-            model.removeRow(selectedRow);
-
-            
             try {
-                
-                deleteLineFromFile(AdminOperations.Database_TimeTable_Departure_Path, flightNumber);
+                // 1. COPY to Archive File
+                archiveFlightLine(flightNumber);
 
-                
+                // 2. DELETE from Active Files (Departure & Arrival)
+                deleteLineFromFile(AdminOperations.Database_TimeTable_Departure_Path, flightNumber);
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Arrivals_Path, flightNumber);
 
-                javax.swing.JOptionPane.showMessageDialog(this, "Flight deleted successfully from database.");
+                // 3. Refresh Table
+                loadFlightsToTableDeparture();
+
+                javax.swing.JOptionPane.showMessageDialog(this, "Flight archived successfully.");
 
             } catch (IOException e) {
-                System.out.println("Error deleting flight from file: " + e.getMessage());
-                javax.swing.JOptionPane.showMessageDialog(this, "Error updating database file.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                logger.log(Level.SEVERE, "Archive Error", e);
+                javax.swing.JOptionPane.showMessageDialog(this, "Error archiving flight.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    private void archiveFlightLine(String flightNum) throws IOException {
+        File source = new File(AdminOperations.Database_TimeTable_Departure_Path);
+        File dest = new File(AdminOperations.Database_TimeTable_Archive_Path); // Ensure this path exists in AdminOperations
+
+        // Create archive file if it doesn't exist
+        if (!dest.exists()) {
+            dest.createNewFile();
+        }
+
+        try (Scanner scanner = new Scanner(source); BufferedWriter writer = new BufferedWriter(new FileWriter(dest, true))) { // 'true' = append mode
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] parts = line.split("-");
+                // Check if this is the correct flight (Index 6 is Flight Number)
+                if (parts.length > 6 && parts[6].equalsIgnoreCase(flightNum)) {
+                    writer.write(line);
+                    writer.newLine();
+                    break; // Found and archived, exit loop
+                }
             }
         }
     }
@@ -1088,6 +1108,9 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
     private void deleteFlight1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFlight1ActionPerformed
         // TODO add your handling code here:
+        archiveScreen_M display = new archiveScreen_M(currentAirlineName, currentAirlinePrefix);
+        display.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_deleteFlight1ActionPerformed
 
     /**
