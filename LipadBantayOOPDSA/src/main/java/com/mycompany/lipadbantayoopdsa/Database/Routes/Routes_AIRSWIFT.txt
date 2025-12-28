@@ -1,13 +1,5 @@
-T6
-ATR42-RPVE(Caticlan)-RPEN(ElNido) 
-ATR42-RPEN(ElNido)-RPVE(Caticlan) 
-ATR42-RPVV(Busuanga)-RPEN(ElNido) 
-ATR42-RPEN(ElNido)-RPVV(Busuanga)
-ATR72-RPLL(Manila)-RPEN(ElNido) 
-ATR72-RPEN(ElNido)-RPLL(Manila) 
-ATR72-RPVM(Cebu)-RPEN(ElNido) 
-ATR72-RPEN(ElNido)-RPVM(Cebu) 
-ATR72-RPLC(Clark)-RPEN(ElNido) 
-ATR72-RPEN(ElNido)-RPLC(Clark) 
-ATR72-RPSP(BoholPanglao)-RPEN(ElNido) 
-ATR72-RPEN(ElNido)-RPSP(BoholPanglao)
+ATR72-RPEN(El Nido)-RPLL(Manila)-1500
+ATR72-RPEN(El Nido)-RPSP(Panglao)-1500
+ATR72-RPEN(El Nido)-RPVE(Caticlan)-1500
+ATR72-RPEN(El Nido)-RPVM(Mactan)-1500
+ATR72-RPEN(El Nido)-RPVV(Busuanga)-1500

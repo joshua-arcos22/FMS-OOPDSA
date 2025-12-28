@@ -1,5 +1,1 @@
-RW
-A320-RPLL(Manila)-RPVE(Caticlan) 
-A320-RPVE(Caticlan)-RPLL(Manila) 
-A320-RPLC(Clark)-RPVE(Caticlan) 
-A320-RPVE(Caticlan)-RPLC(Clark)
+A320-RPLL(Manila)-RPVE(Caticlan)-1500

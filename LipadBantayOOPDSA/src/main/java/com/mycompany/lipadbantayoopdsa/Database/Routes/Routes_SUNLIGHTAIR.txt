@@ -1,17 +1,8 @@
-2R
-ATR72-RPLC(Clark)-RPVV(Busuanga) 
-ATR72-RPLC(Clark)-RPVE(Caticlan) 
-ATR72-RPLC(Clark)-RPNS(Siargao) 
-ATR72-RPLC(Clark)-RPVM(Cebu) 
-ATR72-RPLL(Manila)-RPVV(Busuanga) 
-ATR72-RPLL(Manila)-RPVM(Cebu) 
-ATR72-RPLL(Manila)-RPVZ(Siquijor) 
-ATR72-RPVM(Cebu)-RPLL(Manila) 
-ATR72-RPVM(Cebu)-RPVV(Busuanga) 
-ATR72-RPVM(Cebu)-RPNS(Siargao) 
-ATR72-RPVM(Cebu)-RPVZ(Siquijor) 
-ATR72-RPVM(Cebu)-RPVE(Caticlan) 
-ATR72-RPVV(Busuanga)-RPVE(Caticlan)
-ATR72-RPVV(Busuanga)-RPLL(Manila) 
-ATR72-RPVV(Busuanga)-RPLC(Clark) 
-ATR72-RPVV(Busuanga)-RPVM(Cebu)
+ATR72-RPLC(Clark)-RPNS(Del Carmen)-1500
+ATR72-RPLC(Clark)-RPVE(Caticlan)-1500
+ATR72-RPLC(Clark)-RPVV(Busuanga)-1500
+ATR72-RPLL(Manila)-RPVM(Mactan)-1500
+ATR72-RPLL(Manila)-RPVV(Busuanga)-1500
+ATR72-RPVM(Mactan)-RPLL(Manila)-1500
+ATR72-RPVM(Mactan)-RPNS(Del Carmen)-1500
+ATR72-RPVM(Mactan)-RPVV(Busuanga)-1500

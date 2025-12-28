@@ -1,32 +1,63 @@
-PR
-A320-RPLL(Manila)-RPVK(Kalibo)
-A320-RPLL(Manila)-RPLI(Laoag)
-A320-RPLL(Manila)-RPLI(Tuguegarao)
-A320-RPLL(Manila)-RPUY(Cauayan)
-A320-RPLL(Manila)-RPLK(Legazpi/Bicol)
-A320-RPLL(Manila)-RPME(Butuan)
-A320-RPLL(Manila)-RPVD(Dumaguete)
-A320-RPLL(Manila)-RPMG(Dipolog)
-A320-RPLL(Manila)-RPMC(Cotabato)
-A320-RPLL(Manila)-RPMO(Ozamiz)
-A320-RPLL(Manila)-RPMP(Pagadian)
-A320-RPLL(Manila)-RPVR(Roxas)
-A321-RPLL(Manila)-RPVM(Cebu)
-A321-RPLL(Manila)-RPMD(Davao)
-A321-RPLL(Manila)-RPMR(GeneralSantos)
-A321-RPLL(Manila)-RPVI(Iloilo)
-A321-RPLL(Manila)-RPVB(Bacolod)
-A321-RPLL(Manila)-RPMY(CagayanDeOro)
-A321-RPLL(Manila)-RPVA(Tacloban)
-A321-RPLL(Manila)-RPSP(BoholPanglao)
-A321-RPLL(Manila)-RPVP(PuertoPrincesa)
-A321-RPLL(Manila)-RPMZ(Zamboanga)
-A330-RPLL(Manila)-RPVM(Cebu)
-A330-RPLL(Manila)-RPMD(Davao)
-A330-RPLL(Manila)-RPMR(GeneralSantos)
-A350-RPLL(Manila)-RPVM(Cebu)
-A350-RPLL(Manila)-RPMD(Davao)
-A350-RPLL(Manila)-RPMR(GeneralSantos)
-B777-RPLL(Manila)-RPVM(Cebu)
-B777-RPLL(Manila)-RPMD(Davao)
-B777-RPLL(Manila)-RPMR(GeneralSantos)
+A320-RPLL(Manila)-RPLI(Laoag)-200
+A320-RPLL(Manila)-RPLK(Legazpi)-700
+A320-RPLL(Manila)-RPMC(Cotabato)-1500
+A320-RPLL(Manila)-RPMD(Davao)-1500
+A320-RPLL(Manila)-RPME(Butuan)-2500
+A320-RPLL(Manila)-RPMG(Dipolog)-1500
+A320-RPLL(Manila)-RPMO(Ozamiz)-1500
+A320-RPLL(Manila)-RPMR(General Santos)-1500
+A320-RPLL(Manila)-RPMY(Cagayan de Oro)-1500
+A320-RPLL(Manila)-RPMZ(Zamboanga)-1500
+A320-RPLL(Manila)-RPSP(Panglao)-1500
+A320-RPLL(Manila)-RPUT(Tuguegarao)-1500
+A320-RPLL(Manila)-RPUY(Cauayan)-1500
+A320-RPLL(Manila)-RPVA(Tacloban)-1500
+A320-RPLL(Manila)-RPVB(Bacolod)-1500
+A320-RPLL(Manila)-RPVD(Dumaguete)-1500
+A320-RPLL(Manila)-RPVE(Caticlan)-1500
+A320-RPLL(Manila)-RPVI(Iloilo)-1500
+A320-RPLL(Manila)-RPVM(Mactan)-1500
+A320-RPLL(Manila)-RPVP(Puerto Princesa)-1500
+A320-RPLL(Manila)-RPVR(Roxas)-1500
+A320-RPMZ(Zamboanga)-RPMN(Tawi Tawi)-1500
+A320-RPVM(Mactan)-RPMD(Davao)-1500
+A320-RPVM(Mactan)-RPVA(Tacloban)-1500
+A320-RPVM(Mactan)-RPVE(Caticlan)-1500
+A320-RPVM(Mactan)-RPVP(Puerto Princesa)-1500
+A321-RPLL(Manila)-RPMD(Davao)-1500
+A321-RPLL(Manila)-RPMR(General Santos)-1500
+A321-RPLL(Manila)-RPMY(Cagayan de Oro)-1500
+A321-RPLL(Manila)-RPSP(Panglao)-1500
+A321-RPLL(Manila)-RPVA(Tacloban)-1500
+A321-RPLL(Manila)-RPVB(Bacolod)-1500
+A321-RPLL(Manila)-RPVI(Iloilo)-1500
+A321-RPLL(Manila)-RPVM(Mactan)-1500
+A321-RPLL(Manila)-RPVP(Puerto Princesa)-1500
+A330-RPLL(Manila)-RPMD(Davao)-1500
+A330-RPLL(Manila)-RPMR(General Santos)-1500
+A330-RPLL(Manila)-RPVM(Mactan)-1500
+Q400-RPLC(Clark)-RPNS(Del Carmen)-1500
+Q400-RPLC(Clark)-RPUO(Basco)-1500
+Q400-RPLC(Clark)-RPVV(Busuanga)-1500
+Q400-RPLL(Manila)-RPNS(Del Carmen)-1500
+Q400-RPLL(Manila)-RPVF(Catarman)-1500
+Q400-RPLL(Manila)-RPVS(San Jose de Buenavista)-1500
+Q400-RPLL(Manila)-RPVV(Busuanga)-1500
+Q400-RPMC(Cotabato)-RPMN(Tawi Tawi)-1500
+Q400-RPMD(Davao)-RPSP(Panglao)-1500
+Q400-RPVM(Mactan)-RPMC(Cotabato)-1500
+Q400-RPVM(Mactan)-RPMD(Davao)-1500
+Q400-RPVM(Mactan)-RPME(Butuan)-1500
+Q400-RPVM(Mactan)-RPMO(Ozamiz)-1500
+Q400-RPVM(Mactan)-RPMR(General Santos)-1500
+Q400-RPVM(Mactan)-RPMY(Cagayan de Oro)-1500
+Q400-RPVM(Mactan)-RPMZ(Zamboanga)-1500
+Q400-RPVM(Mactan)-RPNS(Del Carmen)-1500
+Q400-RPVM(Mactan)-RPVA(Tacloban)-1500
+Q400-RPVM(Mactan)-RPVB(Bacolod)-1500
+Q400-RPVM(Mactan)-RPVC(Calbayog)-1500
+Q400-RPVM(Mactan)-RPVE(Caticlan)-1500
+Q400-RPVM(Mactan)-RPVF(Catarman)-1500
+Q400-RPVM(Mactan)-RPVP(Puerto Princesa)-1500
+Q400-RPVM(Mactan)-RPVV(Busuanga)-1500
+Q400-RPVM(Mactan)-RPVW(Borongan)-1500
