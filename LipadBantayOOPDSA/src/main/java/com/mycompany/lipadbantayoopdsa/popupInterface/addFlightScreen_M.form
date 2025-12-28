@@ -192,8 +192,8 @@
                                               <Component id="DESTINATION" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
                                               <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                                                   <Component id="FLNO4" alignment="0" max="32767" attributes="0"/>
-                                                  <Component id="flnField4" alignment="0" max="32767" attributes="0"/>
-                                                  <Component id="errorFLTNO4" alignment="0" min="-2" pref="173" max="-2" attributes="0"/>
+                                                  <Component id="paxFIELD" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="errorPAX" alignment="0" min="-2" pref="173" max="-2" attributes="0"/>
                                               </Group>
                                               <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                                                   <Component id="timeField" linkSize="1" pref="135" max="32767" attributes="0"/>
@@ -214,8 +214,8 @@
                               </Group>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="FLNO5" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="flnField5" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="errorFLTNO5" alignment="0" min="-2" pref="173" max="-2" attributes="0"/>
+                                  <Component id="cargoFIELD" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="errorCARGO" alignment="0" min="-2" pref="173" max="-2" attributes="0"/>
                               </Group>
                               <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="AIRCRAFT" max="32767" attributes="0"/>
@@ -265,16 +265,16 @@
                       <Group type="102" attributes="0">
                           <Component id="FLNO5" min="-2" pref="30" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="flnField5" min="-2" pref="40" max="-2" attributes="0"/>
+                          <Component id="cargoFIELD" min="-2" pref="40" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                          <Component id="errorFLTNO5" min="-2" max="-2" attributes="0"/>
+                          <Component id="errorCARGO" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="FLNO4" min="-2" pref="30" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="flnField4" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="paxFIELD" min="-2" pref="40" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="ARILINECODE2" min="-2" pref="30" max="-2" attributes="0"/>
@@ -283,7 +283,7 @@
                               </Group>
                           </Group>
                           <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                          <Component id="errorFLTNO4" min="-2" max="-2" attributes="0"/>
+                          <Component id="errorPAX" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -665,7 +665,7 @@
             <Property name="text" type="java.lang.String" value="PAX"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="flnField4">
+        <Component class="javax.swing.JTextField" name="paxFIELD">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="99" red="0" type="rgb"/>
@@ -673,7 +673,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="6767"/>
+            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder/>
@@ -681,17 +681,17 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="errorFLTNO4">
+        <Component class="javax.swing.JLabel" name="errorPAX">
           <Properties>
             <Property name="text" type="java.lang.String" value="placeholder"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="errorFLTNO5">
+        <Component class="javax.swing.JLabel" name="errorCARGO">
           <Properties>
             <Property name="text" type="java.lang.String" value="placeholder"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="flnField5">
+        <Component class="javax.swing.JTextField" name="cargoFIELD">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="99" red="0" type="rgb"/>
@@ -699,7 +699,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="6767"/>
+            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder/>

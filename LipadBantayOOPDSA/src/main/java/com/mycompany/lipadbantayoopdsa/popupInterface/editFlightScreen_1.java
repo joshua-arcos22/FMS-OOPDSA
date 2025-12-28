@@ -405,7 +405,7 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
 
         cargoFIELD.setBackground(new java.awt.Color(0, 153, 204));
         cargoFIELD.setForeground(new java.awt.Color(255, 255, 255));
-        cargoFIELD.setText("6767");
+        cargoFIELD.setText("0");
         cargoFIELD.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         errorCARGO.setText("placeholder");
@@ -414,7 +414,7 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
 
         paxFIELD.setBackground(new java.awt.Color(0, 153, 204));
         paxFIELD.setForeground(new java.awt.Color(255, 255, 255));
-        paxFIELD.setText("6767");
+        paxFIELD.setText("0");
         paxFIELD.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         FLNO3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -827,8 +827,64 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
         return false;
     }
     
+    
+    private void verifyAndAddRoute(String airlineName, String aircraft, String origin, String destination) {
+        String projectRoot = System.getProperty("user.dir");
+        String filename = "Routes_" + airlineName.trim().toUpperCase() + ".txt";
+        String routePath = java.nio.file.Paths.get(projectRoot,
+                "src", "main", "java", "com", "mycompany", "lipadbantayoopdsa",
+                "Database", "Routes", filename).toString();
+
+        File file = new File(routePath);
+
+        // Create file if missing
+        if (!file.exists()) {
+            try {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            } catch (IOException e) {
+                return;
+            }
+        }
+
+        boolean routeExists = false;
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+                String[] parts = line.split("-");
+                if (parts.length >= 3) {
+                    if (parts[0].equalsIgnoreCase(aircraft)
+                            && parts[1].equalsIgnoreCase(origin)
+                            && parts[2].equalsIgnoreCase(destination)) {
+                        routeExists = true;
+                        break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+        }
+
+        // Append if missing
+        if (!routeExists) {
+            try (java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(file, true))) {
+                
+                // Format: Aircraft-Origin-Destination-0.00
+                writer.write(aircraft + "-" + origin + "-" + destination + "-0.00");
+                writer.newLine();
+            } catch (IOException e) {
+            }
+        }
+    }
+    
+    
+    
+    
+    
     private void btn_addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFlightActionPerformed
-        // 1. GET ALL CURRENT UI VALUES
+        // 1. GET RAW INPUTS
         String selectedAc = ac_drpdwn.getSelectedItem().toString().trim();
         String airlineNameInput = airlineField.getText().trim();
         String flightNumInput = flnField.getText().trim().toUpperCase();
@@ -837,32 +893,165 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
         String cargoInput = cargoFIELD.getText().trim();
         String statusInput = status_drpdwn.getSelectedItem().toString();
 
-        // 2. RUN VALIDATIONS (Similar to your Add Screen)
-        boolean isValid = true;
-        // ... (Insert your validation checks for airlineField_Valid, pax_Valid, etc. here) ...
+        // 2. INITIALIZE VALIDATION FLAGS
+        boolean airlineField_Valid = true;
+        boolean Flt_No_Valid = true;
+        boolean time_Valid = true;
+        boolean runway_Valid = true;
+        boolean pax_Valid = true;
+        boolean cargo_Valid = true;
 
-        if (isValid) {
+        // --- A. AIRLINE NAME VALIDATION (Admin Specific) ---
+        if (airlineNameInput.isEmpty()) {
+            errorAIRLINENAME.setText("Required");
+            errorAIRLINENAME.setForeground(Color.red);
+            airlineField_Valid = false;
+        } else if (airlineNameInput.matches(".*[0-9].*")) {
+            errorAIRLINENAME.setText("Invalid Input");
+            errorAIRLINENAME.setForeground(Color.red);
+            airlineField_Valid = false;
+        } else {
+            errorAIRLINENAME.setText(" ");
+            this.Airline_Name = airlineNameInput;
+        }
+
+        // --- B. FLIGHT NUMBER VALIDATION ---
+        if (flightNumInput.isEmpty()) {
+            errorFLTNO.setText("Required");
+            errorFLTNO.setForeground(Color.red);
+            Flt_No_Valid = false;
+        } else if (!flightNumInput.matches("[A-Z0-9]+")) {
+            errorFLTNO.setText("Alphanumeric Only");
+            errorFLTNO.setForeground(Color.red);
+            Flt_No_Valid = false;
+        } else if (flightNumInput.length() != 6) {
+            errorFLTNO.setText("Invalid Length");
+            errorFLTNO.setForeground(Color.red);
+            Flt_No_Valid = false;
+            // Note: No Prefix check for Admin (they control all airlines)
+        } else if (!flightNumInput.equalsIgnoreCase(Original_Flight_Number_Ref) && isFlightNumberDuplicate(flightNumInput)) {
+            errorFLTNO.setText("Flight Exists");
+            errorFLTNO.setForeground(Color.red);
+            Flt_No_Valid = false;
+        } else {
+            errorFLTNO.setText(" ");
+            this.Flight_Number = flightNumInput;
+        }
+
+        // --- C. TIME VALIDATION ---
+        if (timeInput.length() != 4 || !timeInput.matches("\\d+")) {
+            errorTIME.setText("Use HHMM");
+            errorTIME.setForeground(Color.red);
+            time_Valid = false;
+        } else {
+            int hrs = Integer.parseInt(timeInput.substring(0, 2));
+            int mins = Integer.parseInt(timeInput.substring(2, 4));
+            if (hrs > 23 || mins > 59) {
+                errorTIME.setText("Invalid Time");
+                errorTIME.setForeground(Color.red);
+                time_Valid = false;
+            } else {
+                errorTIME.setText(" ");
+                this.Time = timeInput;
+            }
+        }
+
+        // --- D. AIRCRAFT LIMITS (PAX & CARGO) ---
+        try {
+            File acFile = new File(AdminOperations.Database_Aircarfts_Path);
+            Scanner reader = new Scanner(acFile);
+            int maxPax = 0;
+            int maxCargo = 0;
+            while (reader.hasNextLine()) {
+                String line = reader.nextLine();
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+                String[] parts = line.split("-");
+                if (parts[0].equalsIgnoreCase(selectedAc)) {
+                    maxPax = Integer.parseInt(parts[2]);
+                    maxCargo = Integer.parseInt(parts[4]);
+                    break;
+                }
+            }
+            reader.close();
+
+            // Check Pax
+            if (!paxInput.matches("\\d+")) {
+                errorPAX.setText("Invalid");
+                pax_Valid = false;
+            } else if (Integer.parseInt(paxInput) > maxPax) {
+                errorPAX.setText("Limit: " + maxPax);
+                errorPAX.setForeground(Color.red);
+                pax_Valid = false;
+            } else {
+                errorPAX.setText(" ");
+            }
+
+            // Check Cargo
+            if (!cargoInput.matches("\\d+")) {
+                errorCARGO.setText("Invalid");
+                cargo_Valid = false;
+            } else if (Integer.parseInt(cargoInput) > maxCargo) {
+                errorCARGO.setText("Limit: " + maxCargo);
+                errorCARGO.setForeground(Color.red);
+                cargo_Valid = false;
+            } else {
+                errorCARGO.setText(" ");
+            }
+
+        } catch (Exception e) {
+            System.out.println("AC Database Error");
+        }
+
+        // --- E. RUNWAY CHECK ---
+        if (originRWYLn.getForeground() == Color.red || destRWYLn.getForeground() == Color.red || acRWYLn.getForeground() == Color.red) {
+            runway_Valid = false;
+        }
+
+        // 3. FINAL EXECUTION
+        if (airlineField_Valid && Flt_No_Valid && time_Valid && runway_Valid && pax_Valid && cargo_Valid) {
+
             this.Ac_Type = selectedAc;
+
+            // --- 1. CAPTURE BOTH SHORT AND FULL NAMES ---
+            // Short Code (e.g., "RPVM") for Timetable
             this.Origin_Airport = origin_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
             this.Destination_Airport = destination_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
+
+            // Full Name (e.g., "RPVM(Cebu)") for Route File
+            String originFull = origin_drpdwn.getSelectedItem().toString().trim();
+            String destFull = destination_drpdwn.getSelectedItem().toString().trim();
+            // ---------------------------------------------
+
             this.Frequency = getFrequencyString();
 
-            // 3. CALL THE EDIT OPERATION
+            // Update Timetable using Short Codes
             AdminOperations ops = new AdminOperations(
-                    airlineNameInput, Ac_Type, Origin_Airport, Destination_Airport,
-                    Frequency, timeInput, flightNumInput, paxInput, cargoInput, statusInput
+                    Airline_Name, Ac_Type, Origin_Airport, Destination_Airport,
+                    Frequency, Time, Flight_Number, paxInput, cargoInput, statusInput
             );
 
             try {
-                // This method needs to use 'Original_Flight_Number_Ref' to find the line to replace
                 ops.Admin_EditFlight(this.Original_Flight_Number_Ref);
 
-                JOptionPane.showMessageDialog(this, "Flight Updated Successfully!");
+                // --- 2. UPDATE PRICING USING FULL NAMES ---
+                verifyAndAddRoute(
+                        Airline_Name, // Passed from text field (Admin can edit this)
+                        Ac_Type,
+                        originFull,
+                        destFull
+                );
+                // ------------------------------------------
+
+                javax.swing.JOptionPane.showMessageDialog(this, "Flight Updated Successfully!");
                 ArrivalTimetableGenerator.generate();
                 dispose();
             } catch (IOException e) {
-                logger.log(java.util.logging.Level.SEVERE, "Edit Error", e);
+                System.out.println("Error Saving Flight");
             }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please fix the errors in red.", "Validation Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     
         
