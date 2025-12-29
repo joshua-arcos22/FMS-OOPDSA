@@ -4,7 +4,7 @@ A320-RPLC(Clark)-RPVI(Iloilo)-1500
 A320-RPLC(Clark)-RPVM(Mactan)-1500
 A320-RPLC(Clark)-RPVP(Puerto Princesa)-1500
 A320-RPLL(Manila)-RPLI(Laoag)-1500
-A320-RPLL(Manila)-RPLK(Legazpi)-1500
+A320-RPLL(Manila)-RPLK(Legazpi)-2500.00
 A320-RPLL(Manila)-RPMD(Davao)-1500
 A320-RPLL(Manila)-RPME(Butuan)-1500
 A320-RPLL(Manila)-RPMG(Dipolog)-1500

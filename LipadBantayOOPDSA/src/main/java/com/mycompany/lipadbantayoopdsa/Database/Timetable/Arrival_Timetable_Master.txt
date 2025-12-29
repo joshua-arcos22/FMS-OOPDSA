@@ -1,8 +1,9 @@
 AEL-A321-RPMD(Davao)-RPLK(Daraga)-E-1328-AL6647-0-0-Delayed
 AEL-ATR42-RPVU(Alcantara)-RPUB(Baguio)-W-1701-AL1123-0-0-Canceled
 AEL-Q400-RPLK(Daraga)-RPVM(Mactan)-W/F-1308-AL1234-0-0-Scheduled
-AFE-ATR42-RPVU(Alcantara)-RPUB(Baguio)-W-1335-AL9902-0-0-Scheduled
-AIRASIA-A320-RPVE(Caticlan)-RPLC(Clark)-ST/SU/M/TH/F-1017-Z25937-0-0-Scheduled
+AIRASIA-A320-RPLK(Daraga)-RPLC(Mabalacat)-W/TH-1308-Z27743-67-0-Scheduled
+AIRASIA-A320-RPVE(Caticlan)-RPLC(Mabalacat)-ST/SU/M/TH/F-1017-Z25937-150-0-Scheduled
+AIRASIA-A320-RPMR(General Santos)-RPLK(Daraga)-TH-1335-Z28867-0-0-Scheduled
 AIRASIA-A320-RPMY(Cagayan de Oro)-RPLL(Manila)-E-0452-Z28611-0-0-Scheduled
 AIRASIA-A320-RPMY(Cagayan de Oro)-RPLL(Manila)-E-1702-Z21738-0-0-Scheduled
 AIRASIA-A320-RPSP(Panglao)-RPLL(Manila)-E-0738-Z24684-0-0-Scheduled
