@@ -509,9 +509,9 @@ public class fareEditor_M extends javax.swing.JFrame {
     
     //----------------------------------------------------------------------
     public void applyFilters() {
-        // CHANGE: Point to the Routes path
         File file = new File(airlineRoutesPath);
 
+        // Get selected string values
         String selAircraft = Combo_Aircraft.getSelectedItem().toString();
         String selOrigin = Combo_Origin.getSelectedItem().toString();
         String selDest = Combo_Destination.getSelectedItem().toString();
@@ -535,12 +535,19 @@ public class fareEditor_M extends javax.swing.JFrame {
                     continue;
                 }
 
-                // Route Format: [0]Aircraft [1]Origin [2]Dest [3]Price
-                // Flexible matching
-                // If Selection is "Item 1" (default) or empty, ignore filter
-                boolean matchesAircraft = selAircraft.startsWith("Item") || selAircraft.isEmpty() || rowData[0].equalsIgnoreCase(selAircraft);
-                boolean matchesOrigin = selOrigin.startsWith("Item") || selOrigin.isEmpty() || rowData[1].equalsIgnoreCase(selOrigin);
-                boolean matchesDest = selDest.startsWith("Item") || selDest.isEmpty() || rowData[2].equalsIgnoreCase(selDest);
+                // FIX 1: Treat "N/A" as "Ignore this filter"
+                // FIX 2: Use .contains() instead of .equals() to handle "RPLL(Manila)" matching "RPLL"
+                boolean matchesAircraft = selAircraft.equals("N/A")
+                        || selAircraft.isEmpty()
+                        || rowData[0].equalsIgnoreCase(selAircraft);
+
+                boolean matchesOrigin = selOrigin.equals("N/A")
+                        || selOrigin.isEmpty()
+                        || rowData[1].contains(selOrigin);
+
+                boolean matchesDest = selDest.equals("N/A")
+                        || selDest.isEmpty()
+                        || rowData[2].contains(selDest);
 
                 if (matchesAircraft && matchesOrigin && matchesDest) {
                     processAndAddSearchRow(model, rowData);
