@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.lipadbantayoopdsa.flightBooking;
-
+import com.mycompany.lipadbantayoopdsa.AdminOperations;
+import com.mycompany.lipadbantayoopdsa.distanceCalculator;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -32,19 +33,28 @@ public class FlightBooking extends javax.swing.JFrame {
      */
     
     private String username;
-    
-    private static final Logger logger = Logger.getLogger(FlightBooking.class.getName());
-    
-    public FlightBooking(String username) {
+    private String filterOrigin;
+    private String filterDest;
+    private String filterDate;
+    private final String bookingsPath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
+
+    public FlightBooking(String username, String origin, String dest, String date) {
         this.username = username;
+        this.filterOrigin = origin;
+        this.filterDest = dest;
+        this.filterDate = date;
+
         initComponents();
-        
-        loadFlightsToTableDeparture();
-        
-        ((DefaultTableModel) jTable2.getModel()).setRowCount(0);
-        
+
+        // 1. Load Filtered Available Flights (Left Table)
+        loadFilteredFlights();
+
+        // 2. Load User's existing bookings (Right Table)
         loadUserBookings();
     }
+    
+    
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -114,7 +124,7 @@ public class FlightBooking extends javax.swing.JFrame {
                 .addGap(46, 46, 46)
                 .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(SearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                .addComponent(SearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(41, 41, 41))
         );
         panel1Layout.setVerticalGroup(
@@ -158,20 +168,20 @@ public class FlightBooking extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Airline", "Day", "Time", "Origin", "Destination", "Flight Number"
+                "Airline", "AcType", "Day", "Time", "Origin", "Destination", "Flight Number", "Price"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -191,21 +201,23 @@ public class FlightBooking extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(3).setResizable(false);
             jTable1.getColumnModel().getColumn(4).setResizable(false);
             jTable1.getColumnModel().getColumn(5).setResizable(false);
+            jTable1.getColumnModel().getColumn(6).setResizable(false);
+            jTable1.getColumnModel().getColumn(7).setResizable(false);
         }
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Airline", "Day", "Time", "Origin", "Destination", "Flight Number"
+                "Airline", "AcType", "Day", "Time", "Origin", "Destination", "Flight Number"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -221,6 +233,7 @@ public class FlightBooking extends javax.swing.JFrame {
             jTable2.getColumnModel().getColumn(3).setResizable(false);
             jTable2.getColumnModel().getColumn(4).setResizable(false);
             jTable2.getColumnModel().getColumn(5).setResizable(false);
+            jTable2.getColumnModel().getColumn(6).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -237,7 +250,7 @@ public class FlightBooking extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -245,7 +258,7 @@ public class FlightBooking extends javax.swing.JFrame {
                 .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(302, 302, 302)
+                .addGap(352, 352, 352)
                 .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(148, 148, 148))
         );
@@ -259,8 +272,8 @@ public class FlightBooking extends javax.swing.JFrame {
                     .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -273,27 +286,177 @@ public class FlightBooking extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1172, Short.MAX_VALUE)
+            .addGap(0, 1280, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 591, Short.MAX_VALUE)
+            .addGap(0, 720, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    private double getAirlineRate(String airlineName) {
+        File file = new File(AdminOperations.Database_Airlines_Path);
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("-");
+                // Format: AIRASIA-Z2-2.50
+                if (parts.length >= 3 && parts[0].equalsIgnoreCase(airlineName)) {
+                    return Double.parseDouble(parts[2]);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Rate not found for " + airlineName);
+        }
+        return 1.0; // Default rate
+    }
+    
+    private double getBaseFare(String airline, String originStr, String destStr) {
+        // Ensure filename matches your actual file (e.g. "Routes_PAL.txt" or "PAL_Route.txt")
+        // Based on your previous setup, we look for "Routes_" + airline
+        String fileName = "Routes_" + airline + ".txt";
+        File file = new File("src/main/java/com/mycompany/lipadbantayoopdsa/Database/Routes/" + fileName);
+
+        // Debugging: Print if file is found
+        if (!file.exists()) {
+            System.out.println("Price File Not Found: " + file.getAbsolutePath());
+            return 1500.0;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("-");
+                // Format: A320(0)-RPLL(Manila)(1)-RPSP(Panglao)(2)-1500(3)
+                if (parts.length >= 4) {
+                    String fileOrigin = parts[1];
+                    String fileDest = parts[2];
+
+                    boolean matchDirect = fileOrigin.contains(this.filterOrigin) && fileDest.contains(this.filterDest);
+
+                    boolean matchReverse = fileOrigin.contains(this.filterDest) && fileDest.contains(this.filterOrigin);
+
+                    if (matchDirect || matchReverse) {
+                        return Double.parseDouble(parts[3].trim());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 1500.0; // Default if route not found in file
+    }
+    
+    
+    
+    private String getDayCode(String dateStr) {
+        try {
+            java.util.Date date = new java.text.SimpleDateFormat("MM/dd/yyyy").parse(dateStr);
+            String dayName = new java.text.SimpleDateFormat("EEEE").format(date);
+            switch (dayName) {
+                case "Monday":
+                    return "M";
+                case "Tuesday":
+                    return "TU";
+                case "Wednesday":
+                    return "W";
+                case "Thursday":
+                    return "TH";
+                case "Friday":
+                    return "F";
+                case "Saturday":
+                    return "ST";
+                case "Sunday":
+                    return "SU";
+                default:
+                    return "";
+            }
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public void loadFilteredFlights() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+        String selectedDayCode = getDayCode(this.filterDate);
+        String[] filesToSearch = {
+            AdminOperations.Database_TimeTable_Departure_Path,
+            AdminOperations.Database_TimeTable_Arrivals_Path
+        };
+
+        for (String path : filesToSearch) {
+            File file = new File(path);
+            if (!file.exists()) {
+                continue;
+            }
+
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] rowData = line.trim().split("-");
+
+                    // Format: Airline(0)-AcType(1)-Origin(2)-Dest(3)-Freq(4)-Time(5)-No(6)-Pax(7)-Cargo(8)-Status(9)
+                    if (rowData.length >= 10) {
+                        String airline = rowData[0];
+                        String acType = rowData[1];
+                        String dbOrigin = rowData[2]; // e.g. RPLL(Manila)
+                        String dbDest = rowData[3]; // e.g. RPSP(Panglao)
+                        String dbFreq = rowData[4];
+                        String time = rowData[5];
+                        String flightNo = rowData[6];
+                        String status = rowData[9];
+
+                        // Filter Logic
+                        boolean matchesRoute = dbOrigin.toUpperCase().contains(filterOrigin.toUpperCase())
+                                && dbDest.toUpperCase().contains(filterDest.toUpperCase());
+                        boolean matchesDate = dbFreq.equalsIgnoreCase("E") || dbFreq.contains(selectedDayCode);
+
+                        if (matchesRoute && matchesDate) {
+                            
+                            distanceCalculator calc = new distanceCalculator(filterOrigin, filterDest, acType);
+                            double realDistance = calc.calculateDistanceKm();
+
+                            // 2. Get Rates
+                            double base = getBaseFare(airline, dbOrigin, dbDest);
+                            double rate = getAirlineRate(airline);
+
+                            // 3. Final Formula
+                            double finalPrice = base + (rate * realDistance);
+                            String priceStr = String.format("%.2f", finalPrice);
+
+                            model.addRow(new Object[]{
+                                airline, // Col 0
+                                acType, // Col 1
+                                dbFreq, // Col 2
+                                time, // Col 3
+                                dbOrigin, // Col 4
+                                dbDest, // Col 5
+                                flightNo, // Col 6
+                                priceStr, // Col 7 (PRICE)
+
+                            });
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    
+    
     public void loadFlightsToTableDeparture() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
@@ -486,42 +649,40 @@ public class FlightBooking extends javax.swing.JFrame {
     }
     
     private void loadUserBookings() {
-        DefaultTableModel destModel = (DefaultTableModel) jTable2.getModel();
-        destModel.setRowCount(0);
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        model.setRowCount(0);
         String userHeader = "(" + this.username + ")";
+        File file = new File(bookingsPath);
 
-        File file = new File(filePath);
-        if (!file.exists()) return;
+        if (!file.exists()) {
+            return;
+        }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            boolean insideMySection = false;
-
+            boolean insideUser = false;
             while ((line = br.readLine()) != null) {
                 String trimmed = line.trim();
-                if (trimmed.isEmpty()) continue;
-
                 if (trimmed.startsWith("(") && !trimmed.equals(userHeader)) {
-                    insideMySection = false;
+                    insideUser = false;
                 }
-
                 if (trimmed.equals(userHeader)) {
-                    insideMySection = true;
-                    continue; 
+                    insideUser = true;
+                    continue;
                 }
 
-                if (insideMySection) {
+                if (insideUser) {
+                    // NEW FORMAT: Airline - Aircraft - Origin - Dest - Time - FNo - Day - Status - Date
                     String[] parts = trimmed.split(" - ");
-                    // FIX: Changed from 7 to 6 because your save format has 6 parts
-                    if (parts.length >= 6) { 
-                        destModel.addRow(new Object[]{
+                    if (parts.length >= 9) { // Increased to 9 parts
+                        model.addRow(new Object[]{
                             parts[0], // Airline
-                            parts[5], // Day (This is index 5, the 6th part)
-                            parts[3], // Time
-                            parts[1], // Origin
-                            parts[2], // Destination
-                            parts[4]  // Flight Number
+                            parts[1], // Aircraft (NEW)
+                            parts[6], // Day
+                            parts[4], // Time
+                            parts[2], // Origin
+                            parts[3], // Dest
+                            parts[5] // Flight Num
                         });
                     }
                 }
@@ -643,66 +804,126 @@ public class FlightBooking extends javax.swing.JFrame {
         }
         return false; // No match found in this row
     }
+    private void saveCancellationRequest(String requestData) {
+      try {
+        String projectPath = System.getProperty("user.dir");
+        
+        // This path matches your screenshot: src/main/java/.../flightBooking/
+        java.nio.file.Path path = java.nio.file.Paths.get(projectPath, 
+                "src", "main", "java", "com", "mycompany", 
+                "lipadbantayoopdsa", "flightBooking", "cancellation_requests.txt");
+        
+        File file = path.toFile();
+
+        // Use 'true' to append so previous requests aren't deleted
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
+            bw.write(requestData);
+            bw.newLine();
+            bw.flush(); 
+            }
+        
+        System.out.println("SUCCESS: Request logged in " + file.getAbsolutePath());
+        
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+}
+    
+    private boolean isCancellationPending(String flightNumber) {
+    String projectPath = System.getProperty("user.dir");
+    java.nio.file.Path path = java.nio.file.Paths.get(projectPath, 
+            "src", "main", "java", "com", "mycompany", 
+            "lipadbantayoopdsa", "flightBooking", "cancellation_requests.txt");
+    
+    File file = path.toFile();
+    if (!file.exists()) return false;
+
+    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(" \\| ");
+            
+            if (parts.length >= 6) {
+                String savedUser = parts[0].trim();
+                String savedFlightNum = parts[2].trim();
+                String savedStatus = parts[5].trim();
+
+                if (savedUser.equals(this.username) && 
+                    savedFlightNum.equals(flightNumber) && 
+                    savedStatus.equalsIgnoreCase("PENDING")) {
+                    return true; 
+                }
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
     
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
-        DefaultTableModel sourceModel = (DefaultTableModel) jTable1.getModel();
-        DefaultTableModel destModel = (DefaultTableModel) jTable2.getModel();
         int selectedRow = jTable1.getSelectedRow();
-
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a flight first.");
+            JOptionPane.showMessageDialog(this, "Please select a flight.");
             return;
         }
 
-        // Get data from all 6 columns (Indices 0 to 5)
-        String airline = sourceModel.getValueAt(selectedRow, 0).toString();
-        String day     = sourceModel.getValueAt(selectedRow, 1).toString();
-        String time    = sourceModel.getValueAt(selectedRow, 2).toString();
-        String origin  = sourceModel.getValueAt(selectedRow, 3).toString();
-        String dest    = sourceModel.getValueAt(selectedRow, 4).toString();
-        String flightNum = sourceModel.getValueAt(selectedRow, 5).toString(); 
+        // FETCH DATA FROM TABLE
+        String airline = jTable1.getValueAt(selectedRow, 0).toString();
+        String acType = jTable1.getValueAt(selectedRow, 1).toString();
+        String day = jTable1.getValueAt(selectedRow, 2).toString();
+        String time = jTable1.getValueAt(selectedRow, 3).toString();
+        String origin = jTable1.getValueAt(selectedRow, 4).toString();
+        String dest = jTable1.getValueAt(selectedRow, 5).toString();
+        String fNo = jTable1.getValueAt(selectedRow, 6).toString();
+        String price = jTable1.getValueAt(selectedRow, 7).toString();
+        String status = jTable1.getValueAt(selectedRow, 8).toString();
 
-       
-        String record = airline + " - " + origin + " - " + dest + " - " + time + " - " + flightNum + " - " + day;
+        BookingDetailsPopup popup = new BookingDetailsPopup(airline, acType, day, time, origin, dest, fNo, status, this.filterDate, price, this.username);
 
-        saveBookingToTxt(record);
-
-      
-        destModel.addRow(new Object[]{airline, day, time, origin, dest, flightNum});
-
-        sourceModel.removeRow(selectedRow);
-        JOptionPane.showMessageDialog(this, "Flight Booked: " + flightNum);
+        popup.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                loadUserBookings();
+                loadFilteredFlights();
+            }
+        });
+        popup.setVisible(true);
     }//GEN-LAST:event_button1ActionPerformed
 
+    
     private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
-        DefaultTableModel yourFlightsModel = (DefaultTableModel) jTable2.getModel();
-        DefaultTableModel availableModel = (DefaultTableModel) jTable1.getModel();
-
-        int selectedRow = jTable2.getSelectedRow();
+      int selectedRow = jTable2.getSelectedRow();
+    
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a booked flight to cancel.");
+            JOptionPane.showMessageDialog(this, "Please select a booking to cancel.");
             return;
         }
 
-        // Get data from the table
-        String airline = yourFlightsModel.getValueAt(selectedRow, 0).toString();
-        String day     = yourFlightsModel.getValueAt(selectedRow, 1).toString();
-        String time    = yourFlightsModel.getValueAt(selectedRow, 2).toString();
-        String origin  = yourFlightsModel.getValueAt(selectedRow, 3).toString();
-        String dest    = yourFlightsModel.getValueAt(selectedRow, 4).toString();
-        String flightNum = yourFlightsModel.getValueAt(selectedRow, 5).toString(); 
+        // Capture flight details
+        String airline = jTable2.getValueAt(selectedRow, 0).toString(); 
+        String day = jTable2.getValueAt(selectedRow, 1).toString();
+        String flightNum = jTable2.getValueAt(selectedRow, 5).toString();
+        String origin = jTable2.getValueAt(selectedRow, 3).toString();
+        String dest = jTable2.getValueAt(selectedRow, 4).toString();
 
-       
-        // Format Airline - Origin - Destination - Time - FlightNum
-        String record = airline + " - " + origin + " - " + dest + " - " + time + " - " + flightNum + " - " + day;
-        removeBookingFromTxt(record);
+        // NEW: Check if this flight already has a pending request
+        if (isCancellationPending(flightNum)) {
+            JOptionPane.showMessageDialog(this, 
+                "A cancellation request for Flight " + flightNum + " is already pending approval.\n" +
+                "Please wait for the Airline Manager to process your request.", 
+                "Request Already Submitted", 
+                JOptionPane.WARNING_MESSAGE);
+            return; 
+        }
 
-        availableModel.addRow(new Object[]{airline, day, time, origin, dest});
+        // Prepare and save request
+        String cancelRequest = String.format("%s | %s | %s | %s | %s to %s | PENDING", 
+                                              this.username, airline, flightNum, day, origin, dest);
 
-        // 3. Remove from Your Flights (UI)
-        yourFlightsModel.removeRow(selectedRow);
-
-        JOptionPane.showMessageDialog(this, "Flight " + flightNum + " Cancelled.");
+        saveCancellationRequest(cancelRequest);
+        JOptionPane.showMessageDialog(this, "Cancellation request sent for approval.");
     }//GEN-LAST:event_button2ActionPerformed
 
     private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed

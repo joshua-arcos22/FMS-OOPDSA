@@ -1,8 +1,2 @@
 (joshua_123)
-AIRASIA - RPVM(Mactan) - RPLL(Manila) - 0005 - Z28921 - E
-AIRASIA - RPLL(Manila) - RPVM(Mactan) - 0025 - Z29496 - E
-
-(josh)
-AIRASIA - RPVM(Mactan) - RPLL(Manila) - 0005 - Z28921 - E
-(joshua123)
-AIRASIA - RPLL(Manila) - RPSP(Panglao) - 1130 - Z21738 - E
+CEBUPAC - A320 - RPLK(Legazpi) - RPLL(Manila) - 0517 - 5J2538 - E - Scheduled - 12/30/2025
