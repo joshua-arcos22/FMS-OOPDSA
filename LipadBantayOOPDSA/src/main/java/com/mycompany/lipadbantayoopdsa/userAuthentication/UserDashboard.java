@@ -5,6 +5,8 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  */
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayUsers;
 import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
+import com.mycompany.lipadbantayoopdsa.flightBooking.FlightPicker;
+import com.mycompany.lipadbantayoopdsa.flightBooking.UserBookedFlights;
 import java.io.*;
 import java.nio.file.Paths;
 import javax.swing.*;
@@ -50,8 +52,7 @@ public class UserDashboard extends javax.swing.JFrame {
 
              
                 txtName.setText("Full Name: " + parts[1].trim()); 
-                txtEmail.setText("Email: " + parts[2].trim()); 
-        
+                        
 
                 return; // stop reading once the user is found
             }
@@ -80,11 +81,11 @@ public class UserDashboard extends javax.swing.JFrame {
         lblTitle = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtName = new javax.swing.JLabel();
-        txtEmail = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jButton4 = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -110,8 +111,6 @@ public class UserDashboard extends javax.swing.JFrame {
         jLabel2.setText("Profile:");
 
         txtName.setText("Full Name:");
-
-        txtEmail.setText("Email:");
 
         jButton2.setBackground(new java.awt.Color(0, 153, 204));
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
@@ -154,15 +153,22 @@ public class UserDashboard extends javax.swing.JFrame {
             .addGap(0, 46, Short.MAX_VALUE)
         );
 
+        jButton4.setBackground(new java.awt.Color(0, 153, 204));
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("VIEW BOOKED");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(145, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(303, 303, 303))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,18 +177,18 @@ public class UserDashboard extends javax.swing.JFrame {
                         .addComponent(lblTitle))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(89, 89, 89)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(178, 178, 178)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(122, 122, 122)
+                                .addGap(211, 211, 211)
                                 .addComponent(btnLogout))
+                            .addComponent(jLabel2)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -195,12 +201,11 @@ public class UserDashboard extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(20, 20, 20)
                 .addComponent(txtName)
-                .addGap(18, 18, 18)
-                .addComponent(txtEmail)
-                .addGap(44, 44, 44)
+                .addGap(78, 78, 78)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(41, 41, 41)
                 .addComponent(btnLogout)
                 .addContainerGap(43, Short.MAX_VALUE))
@@ -235,10 +240,16 @@ public class UserDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        FlightBooking display = new FlightBooking(loggedInUsername);
+        FlightPicker display = new FlightPicker(loggedInUsername);
         display.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        UserBookedFlights display = new UserBookedFlights(loggedInUsername);
+        display.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
   
 
@@ -246,13 +257,13 @@ public class UserDashboard extends javax.swing.JFrame {
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblTitle;
-    private javax.swing.JLabel txtEmail;
     private javax.swing.JLabel txtName;
     // End of variables declaration//GEN-END:variables
 }
