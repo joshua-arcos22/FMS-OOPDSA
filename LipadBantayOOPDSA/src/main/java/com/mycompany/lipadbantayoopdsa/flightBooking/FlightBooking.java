@@ -44,12 +44,9 @@ public class FlightBooking extends javax.swing.JFrame {
         this.filterDest = dest;
         this.filterDate = date;
 
-        initComponents();
+        initComponents(); // Creates table with 9 columns (Index 0-8)
 
-        // 1. Load Filtered Available Flights (Left Table)
         loadFilteredFlights();
-
-        // 2. Load User's existing bookings (Right Table)
         loadUserBookings();
     }
     
@@ -124,7 +121,7 @@ public class FlightBooking extends javax.swing.JFrame {
                 .addGap(46, 46, 46)
                 .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(SearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(SearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                 .addGap(41, 41, 41))
         );
         panel1Layout.setVerticalGroup(
@@ -168,20 +165,20 @@ public class FlightBooking extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Airline", "AcType", "Day", "Time", "Origin", "Destination", "Flight Number", "Price"
+                "Airline", "AcType", "Day", "Time", "Origin", "Destination", "Flight Number", "Price", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -203,6 +200,7 @@ public class FlightBooking extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(5).setResizable(false);
             jTable1.getColumnModel().getColumn(6).setResizable(false);
             jTable1.getColumnModel().getColumn(7).setResizable(false);
+            jTable1.getColumnModel().getColumn(8).setResizable(false);
         }
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
@@ -249,8 +247,8 @@ public class FlightBooking extends javax.swing.JFrame {
                 .addGap(245, 245, 245))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -444,6 +442,7 @@ public class FlightBooking extends javax.swing.JFrame {
                                 dbDest, // Col 5
                                 flightNo, // Col 6
                                 priceStr, // Col 7 (PRICE)
+                                status
 
                             });
                         }
@@ -653,11 +652,9 @@ public class FlightBooking extends javax.swing.JFrame {
         model.setRowCount(0);
         String userHeader = "(" + this.username + ")";
         File file = new File(bookingsPath);
-
         if (!file.exists()) {
             return;
         }
-
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             boolean insideUser = false;
@@ -670,14 +667,13 @@ public class FlightBooking extends javax.swing.JFrame {
                     insideUser = true;
                     continue;
                 }
-
                 if (insideUser) {
-                    // NEW FORMAT: Airline - Aircraft - Origin - Dest - Time - FNo - Day - Status - Date
+                    // FORMAT: Airline - AcType - Origin - Dest - Time - FNum - Day - Status - Date
                     String[] parts = trimmed.split(" - ");
-                    if (parts.length >= 9) { // Increased to 9 parts
+                    if (parts.length >= 9) {
                         model.addRow(new Object[]{
                             parts[0], // Airline
-                            parts[1], // Aircraft (NEW)
+                            parts[1], // AcType
                             parts[6], // Day
                             parts[4], // Time
                             parts[2], // Origin
@@ -869,7 +865,7 @@ public class FlightBooking extends javax.swing.JFrame {
             return;
         }
 
-        // FETCH DATA FROM TABLE
+        // FETCH DATA - Safe now because table has 9 columns and loader populates them all
         String airline = jTable1.getValueAt(selectedRow, 0).toString();
         String acType = jTable1.getValueAt(selectedRow, 1).toString();
         String day = jTable1.getValueAt(selectedRow, 2).toString();
@@ -890,6 +886,7 @@ public class FlightBooking extends javax.swing.JFrame {
             }
         });
         popup.setVisible(true);
+        dispose();
     }//GEN-LAST:event_button1ActionPerformed
 
     
@@ -927,7 +924,6 @@ public class FlightBooking extends javax.swing.JFrame {
     }//GEN-LAST:event_button2ActionPerformed
 
     private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed
-
         new UserDashboard(this.username).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_button3ActionPerformed

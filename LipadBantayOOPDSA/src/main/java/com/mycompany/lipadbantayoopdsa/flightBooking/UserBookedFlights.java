@@ -36,6 +36,10 @@ public class UserBookedFlights extends javax.swing.JFrame {
     private final String bookingsPath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
     private final String cancelledBookings = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/cancellation_requests.txt";
     
+    
+    private final String departureMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
+    private final String arrivalMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+    
     /**
      * Creates new form UserBookedFlights
      */
@@ -54,38 +58,82 @@ public class UserBookedFlights extends javax.swing.JFrame {
     }
     
     
+    
+    private String getRealTimeStatus(String flightNum) {
+        String[] files = {departureMaster, arrivalMaster};
+
+        for (String path : files) {
+            File file = new File(path);
+            if (!file.exists()) {
+                continue;
+            }
+
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    // Line Format: Airline-AcType-Origin-Dest-Freq-Time-FlightNo-Pax-Cargo-Status
+                    String[] data = line.split("-");
+                    // Check if Flight Number matches (Index 6)
+                    if (data.length >= 10 && data[6].trim().equalsIgnoreCase(flightNum.trim())) {
+                        return data[9].trim(); // Return the LIVE status (Index 9)
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null; // Return null if flight not found in master (use old status)
+    }
+    
+    
     private void applyColorRenderer() {
-        // Status is at index 0 based on your String[] array
-        jTable2.getColumnModel().getColumn(0).setCellRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+        // Define a single renderer to be used by ALL columns
+        javax.swing.table.DefaultTableCellRenderer rowRenderer = new javax.swing.table.DefaultTableCellRenderer() {
             @Override
             public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
                     boolean isSelected, boolean hasFocus, int row, int column) {
 
+                // Call super to get default formatting (font, borders, etc.)
                 java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                if (value != null) {
-                    String status = value.toString().toUpperCase();
-                    c.setFont(c.getFont().deriveFont(java.awt.Font.BOLD));
+                // 1. Get the Status from Column 0 of the current row
+                Object statusObj = table.getValueAt(row, 0);
+                String status = (statusObj != null) ? statusObj.toString().toUpperCase() : "";
 
+                // 2. Set Colors based on Status (Only if row is NOT selected)
+                if (!isSelected) {
                     switch (status) {
                         case "SCHEDULED":
-                            c.setForeground(new java.awt.Color(0, 153, 51)); // Dark Green
+                            c.setBackground(new Color(200, 255, 200));
+                            c.setForeground(Color.BLACK);
                             break;
                         case "DELAYED":
-                            c.setForeground(new java.awt.Color(255, 153, 0)); // Orange
+                            c.setBackground(new Color(255, 213, 128));
+                            c.setForeground(Color.BLACK);
                             break;
-                        case "CANCELLED":
                         case "CANCELED":
-                            c.setForeground(java.awt.Color.RED);
+                            c.setBackground(new Color(255, 128, 128));
+                            c.setForeground(Color.BLACK);
                             break;
                         default:
+                            c.setBackground(java.awt.Color.WHITE);
                             c.setForeground(java.awt.Color.BLACK);
                             break;
                     }
+                } else {
+                    // If selected, use the default blue selection color
+                    c.setBackground(table.getSelectionBackground());
+                    c.setForeground(table.getSelectionForeground());
                 }
+
                 return c;
             }
-        });
+        };
+
+        // 3. Apply this renderer to EVERY column in the table
+        for (int i = 0; i < jTable2.getColumnCount(); i++) {
+            jTable2.getColumnModel().getColumn(i).setCellRenderer(rowRenderer);
+        }
     }
     
     
@@ -121,16 +169,26 @@ public class UserBookedFlights extends javax.swing.JFrame {
                     String[] parts = trimmed.split(" - ");
 
                     if (parts.length >= 9) {
+                        String flightNum = parts[5];
+                        String oldStatus = parts[7];
+                        
+                        String liveStatus = getRealTimeStatus(flightNum);
+                        
+                        String statusToDisplay = (liveStatus != null) ? liveStatus : oldStatus;
+
+                        String seat = (parts.length > 9) ? parts[9] : "Any";
+                        
                         model.addRow(new Object[]{
-                            parts[7], // Status (Table Col 0)
-                            parts[0], // Airline (Table Col 1)
-                            parts[1], // Aircraft (Table Col 2) -> NEW
-                            parts[6], // Day (Table Col 3)
-                            parts[4], // Time (Table Col 4)
-                            parts[2], // Origin (Table Col 5)
-                            parts[3], // Destination (Table Col 6)
-                            parts[5], // Flight Number (Table Col 7)
-                            parts[8] // Date (Table Col 8)
+                            statusToDisplay, // Display UPDATED Status
+                            parts[0], // Airline
+                            parts[1], // Aircraft
+                            parts[6], // Day
+                            parts[4], // Time
+                            parts[2], // Origin
+                            parts[3], // Destination
+                            parts[5], // Flight Number
+                            parts[8], // Date
+                            seat // Seat
                         });
                     }
                 }
@@ -309,18 +367,25 @@ public class UserBookedFlights extends javax.swing.JFrame {
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Status", "Airline", "AcType", "Day", "Time", "Origin", "Destination", "Flight Number", "Date"
+                "Status", "Airline", "AcType", "Day", "Time", "Origin", "Destination", "Flight Number", "Date", "Seat"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, true, false, false, false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, true, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -381,6 +446,7 @@ public class UserBookedFlights extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void SearchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusGained

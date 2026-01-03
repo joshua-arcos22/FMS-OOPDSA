@@ -4,6 +4,14 @@
  */
 package com.mycompany.lipadbantayoopdsa.flightBooking;
 
+import com.mycompany.lipadbantayoopdsa.Aircraftseats.a320;
+import com.mycompany.lipadbantayoopdsa.Aircraftseats.a321;
+import com.mycompany.lipadbantayoopdsa.Aircraftseats.a330;
+import com.mycompany.lipadbantayoopdsa.Aircraftseats.a350;
+import com.mycompany.lipadbantayoopdsa.Aircraftseats.atr42;
+import com.mycompany.lipadbantayoopdsa.Aircraftseats.atr72;
+import com.mycompany.lipadbantayoopdsa.Aircraftseats.b777;
+import com.mycompany.lipadbantayoopdsa.Aircraftseats.q400;
 import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
 import java.io.*;
 import java.nio.file.Paths;
@@ -336,12 +344,12 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here
         int adults = (int) spnrAdult.getValue();
         int children = (int) spnrChildren.getValue();
         int infants = (int) spnrInfant.getValue();
 
         int totalPassengers = adults + children + infants;
+        int seatsNeeded = adults + children; // Infants don't get seats
 
         if (totalPassengers == 0) {
             JOptionPane.showMessageDialog(this, "Please select at least one passenger.");
@@ -353,17 +361,60 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
             return;
         }
 
-        // FORMAT: Airline - Origin - Dest - Time - FlightNo - Day - Status - Date
-        // We use " - " (space dash space) to match your split logic in the Table loaders
-        String record = String.format("%s - %s - %s - %s - %s - %s - %s - %s - %s",
+        // 1. Create the PARTIAL Record (Format: ... - Status - Date)
+        // We do NOT add the seat here yet.
+        String partialRecord = String.format("%s - %s - %s - %s - %s - %s - %s - %s - %s",
                 airline, aircraft, origin, dest, time, flightNum, day, status, bookingDate);
-        
-        
-        saveBookingToTxt(record);
-        JOptionPane.showMessageDialog(this, "Booking Confirmed for " + bookingDate + "!");
+
+        // 2. Pass this string to the aircraft window
+        openSeatSelection(seatsNeeded, partialRecord);
+
+        // 3. Close this popup. DO NOT SAVE HERE.
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void openSeatSelection(int seatsNeeded, String partialRecord) {
+        String type = this.aircraft.toLowerCase().trim(); // e.g., "q400" or "a320"
+
+        try {
+            switch (type) {
+                case "q400":
+                    new q400(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    break;
+                case "a320":
+                    new a320(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    break;
+                case "a321":
+                    new a321(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    break;
+                case "atr72":
+                    new atr72(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    break;
+                case "atr42":
+                    new atr42(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    break;
+                case "a330":
+                    new a330(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    break;
+                case "a350":
+                    new a350(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    break;
+                case "b777":
+                    new b777(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Seat map for " + type + " not found. Booking saved without seat.");
+                    // Fallback save if no seat map exists
+                    saveBookingToTxt(partialRecord + " - ANY");
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("Error opening seat map: " + e.getMessage());
+        }
+    }
+    
+    
+    
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
         // resets value 
