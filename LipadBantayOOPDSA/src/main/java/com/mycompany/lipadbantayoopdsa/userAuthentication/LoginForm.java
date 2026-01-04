@@ -9,6 +9,7 @@ import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayGuest;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayAdmin;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.nio.file.Paths;
 import javax.swing.*;
 import java.io.*;
@@ -17,7 +18,6 @@ import java.io.*;
  *
  * @author justine
  */
-
 
 public class LoginForm extends javax.swing.JFrame {
 
@@ -255,7 +255,33 @@ public class LoginForm extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void writeLoginLog(String username, String role) {
+        try {
+            // Path to the log file
+            String logFilePath = Paths.get(System.getProperty("user.dir"), 
+                    "src", "main", "java", "com", "mycompany", 
+                    "lipadbantayoopdsa", "Logs", "logs.txt").toString();
 
+            // Get current timestamp
+            String timestamp = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+            // Build log entry
+            String logEntry = String.format(
+                "[%s]%nEVENT  : LOGIN%nACTION : User Logged In%nACTOR  : %s%nROLE   : %s%n%n----------------------------------------%n%n",
+                timestamp, username, role
+            );
+
+            // Write to file (append mode)
+            try (PrintWriter writer = new PrintWriter(new FileWriter(logFilePath, true))) {
+                writer.println(logEntry);
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error writing login log: " + e.getMessage(), "Log Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     private void txtUsnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsnActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsnActionPerformed
@@ -273,6 +299,10 @@ public class LoginForm extends javax.swing.JFrame {
         String userRole = authenticateUser(username, password); // read from user_credentials.txt
 
         if (userRole != null) {
+            
+            // Log the user who signed in
+            writeLoginLog(username, userRole);
+            
             JFrame dashboard = null;
             switch (userRole) {
                 case "ADMIN":

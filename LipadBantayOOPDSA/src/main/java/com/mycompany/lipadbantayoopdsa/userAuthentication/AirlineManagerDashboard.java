@@ -3,6 +3,8 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayManagers;
 import com.mycompany.lipadbantayoopdsa.popupInterface.ManageBookingChoice;
 import com.mycompany.lipadbantayoopdsa.popupInterface.fareEditor_M;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
+import java.time.format.DateTimeFormatter;
 import java.io.*;
 import java.nio.file.Paths;
 import javax.swing.JOptionPane;
@@ -18,7 +20,8 @@ import javax.swing.JOptionPane;
 public class AirlineManagerDashboard extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AirlineManagerDashboard.class.getName());
-
+    
+    private String loggedInUsername;
     
     
     /**
@@ -238,9 +241,30 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
+        String logFilePath = Paths.get(System.getProperty("user.dir"),
+                                       "src", "main", "java", "com", "mycompany",
+                                       "lipadbantayoopdsa", "Logs",
+                                       "logs.txt").toString();
+
+        // Get current timestamp in the exact format
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+        String timestamp = now.format(formatter);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath, true))) {
+            writer.write(String.format("[%s]%n", timestamp));
+            writer.write("EVENT  : LOGOUT \n");
+            writer.write("ACTION : User Logged Out \n");
+            writer.write("ACTOR  : " + MANAGER.getText() + "\n");
+            writer.write("ROLE   : AIRLINE_MANAGER\n");
+            writer.write("\n----------------------------------------\n\n");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error writing logout log: " + e.getMessage(),
+                                          "File Error", JOptionPane.ERROR_MESSAGE);
+        }
+
         new AuthenticationForm().setVisible(true);
-        this.dispose(); // close current dashboard
+        this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnManageFltsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageFltsActionPerformed
@@ -272,6 +296,8 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
             AIRLINE.setText(data.airline);          
             FLPREFIX.setText(data.prefix);      
             }
+        
+        loggedInUsername = username;
     }
     
     private class ManagerData {

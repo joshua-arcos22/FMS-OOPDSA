@@ -6,6 +6,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayUsers;
 import com.mycompany.lipadbantayoopdsa.flightBooking.FlightPicker;
 import com.mycompany.lipadbantayoopdsa.flightBooking.UserBookedFlights;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.io.*;
 import java.nio.file.Paths;
 import javax.swing.*;
@@ -227,8 +228,33 @@ public class UserDashboard extends javax.swing.JFrame {
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
+        try {
+            String logFilePath = Paths.get(System.getProperty("user.dir"),
+                                           "src", "main", "java", "com", "mycompany",
+                                           "lipadbantayoopdsa", "Logs",
+                                           "logs.txt").toString();
+
+            PrintWriter logWriter = new PrintWriter(new FileWriter(logFilePath, true)); // append mode
+
+            String timestamp = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+            String logEntry = String.format(
+                "[%s]%nEVENT  : USER_LOGOUT%nACTION : User logged out%nACTOR  : %s%n%n----------------------------------------%n",
+                timestamp, loggedInUsername
+            );
+
+            logWriter.println(logEntry);
+            logWriter.close();
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error writing logout log: " + e.getMessage(),
+                                          "Logging Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        // 2. Open Authentication Form and close dashboard
         new AuthenticationForm().setVisible(true);
-        this.dispose(); // close current dashboard
+        this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
