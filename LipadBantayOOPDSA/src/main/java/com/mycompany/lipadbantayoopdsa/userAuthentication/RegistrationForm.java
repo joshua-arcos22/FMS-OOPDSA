@@ -6,6 +6,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  */
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.nio.file.Paths;
 import javax.swing.JOptionPane;
 import java.io.*;
@@ -215,7 +216,31 @@ public class RegistrationForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Auto-save failed: " + e.getMessage());
         }
     }
+    
+    private boolean checkExistingUsername(String username) {
+        String credFilePath = Paths.get(System.getProperty("user.dir"), 
+                                        "src", "main", "java", "com", "mycompany", 
+                                        "lipadbantayoopdsa", "userAuthentication", 
+                                        "user_credentials.txt").toString();
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(credFilePath))) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                // Skip empty lines
+                line = line.trim();
+                if(line.isEmpty() || !line.startsWith("USERNAME:")) continue;
+
+                String existingUsername = line.substring("USERNAME:".length()).trim();
+                if(existingUsername.equals(username)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            // File may not exist yet, ignore
+        }
+        return false;
+    }
+    
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         new AuthenticationForm().setVisible(true);
         this.dispose();
@@ -230,6 +255,11 @@ public class RegistrationForm extends javax.swing.JFrame {
 
         if (username.isEmpty() || password.isEmpty() || fullName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (checkExistingUsername(username)) {
+            JOptionPane.showMessageDialog(this, "Username already exists.", "Duplicate Username", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -259,6 +289,17 @@ public class RegistrationForm extends javax.swing.JFrame {
 
             String profileRecord = String.format("%s,%s,%s", username, fullName, "User");
             profileWriter.println(profileRecord);
+            
+            // Logging section
+            String timestamp = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+            String logEntry = String.format(
+                "[%s]%nEVENT  : USER_REGISTRATION%nACTION : New user registered%nACTOR  : SYSTEM%n%nDETAILS%n--------%nUsername  : %s%nFull Name : %s%nRole      : USER%n%n----------------------------------------%n%n",
+                timestamp, username, fullName
+            );
+            
+            logs.writeLog(logEntry); 
 
             JOptionPane.showMessageDialog(this, "Registration successful! You can now sign in.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
@@ -269,21 +310,7 @@ public class RegistrationForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error saving registration data: " + e.getMessage(), "File Write Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
-    
-    private boolean checkExistingUsername(String username) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("user_credentials.txt"))) {
-            String line;
-            while((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if(data.length > 0 && data[0].equals(username)) {
-                    return true;
-                }
-            }
-        } catch (IOException e) {
-            // File may not exist yet, ignore
-        }
-        return false;
-    }
+
 
     
     private void txtFNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFNActionPerformed

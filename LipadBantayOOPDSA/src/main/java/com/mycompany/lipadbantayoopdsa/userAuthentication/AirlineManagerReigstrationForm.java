@@ -6,6 +6,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  */
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.nio.file.Paths;
 import javax.swing.JOptionPane;
 import java.io.*;
@@ -265,6 +266,23 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Auto-save failed: " + e.getMessage());
         }
     }
+    private boolean checkExistingUsername(String username) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(
+                Paths.get(System.getProperty("user.dir"), 
+                          "src", "main", "java", "com", "mycompany", 
+                          "lipadbantayoopdsa", "userAuthentication", 
+                          "user_credentials.txt").toString()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("USERNAME: " + username)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            // File may not exist yet, ignore
+        }
+        return false;
+    }
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         new AuthenticationForm().setVisible(true);
@@ -282,6 +300,11 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
 
         if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || airLineName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (checkExistingUsername(username)) {
+            JOptionPane.showMessageDialog(this, "Username already exists.", "Duplicate Username", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -314,6 +337,27 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
             
             String profileRecord = String.format("%s,%s,%s,%s", username, fullName, airLineName, "Manager");
             profileWriter.println(profileRecord);
+            
+            String timestamp = java.time.LocalDateTime.now()
+                .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+            String logEntry = String.format( 
+                "[%s]%n" +
+                "EVENT  : AIRLINE_MANAGER_REGISTRATION%n" +
+                "ACTION : New airline manager registered%n" +
+                "ACTOR  : SYSTEM%n%n" +
+                "DETAILS%n" +
+                "--------%n" +
+                "Manager Name : %s%n" +
+                "Airline Name : %s%n" +
+                "Fl. Prefix   : %s%n" +
+                "Username     : %s%n" +
+                "Role         : AIRLINE_MANAGER%n%n" +
+                "----------------------------------------%n%n",  // extra newline for spacing between logs
+                timestamp, fullName, airLineName, airlinePrefix, username
+            );
+
+            logs.writeLog(logEntry);
 
             JOptionPane.showMessageDialog(this, "Registration successful! You can now sign in.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
@@ -325,21 +369,7 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error saving registration data: " + e.getMessage(), "File Write Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
-    
-    private boolean checkExistingUsername(String username) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("user_credentials.txt"))) {
-            String line;
-            while((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if(data.length > 0 && data[0].equals(username)) {
-                    return true;
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("File Does Not exist");
-        }
-        return false;
-    }
+
 
     
     private void txtFNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFNActionPerformed
