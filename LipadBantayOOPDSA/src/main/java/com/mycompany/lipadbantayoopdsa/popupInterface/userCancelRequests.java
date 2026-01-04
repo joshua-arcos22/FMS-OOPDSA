@@ -12,9 +12,9 @@ import java.awt.Color;
  *
  * @author Joshua
  */
-public class userTixManager extends javax.swing.JFrame {
+public class userCancelRequests extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(userTixManager.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(userCancelRequests.class.getName());
     
     
     private String currentAirlineName = "TEST";
@@ -22,67 +22,58 @@ public class userTixManager extends javax.swing.JFrame {
     /**
      * Creates new form userTixManager
      */
-    public userTixManager() {
+    public userCancelRequests() {
         initComponents();
-        loadBookings(); // <--- Add this line
+        loadRequests(); // <--- Add this
     }
     
-    public userTixManager(String airlineName, String prefix) {
+    public userCancelRequests(String airlineName, String prefix) {
         this.currentAirlineName = airlineName;
+        
         initComponents();
-        loadBookings();
+        loadRequests(); // <--- Add this
     }
+
     
     
-    
-    private void loadBookings() {
+    private void loadRequests() {
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Clear table
 
-        java.io.File file = new java.io.File(AdminOperations.Database_Bookings_Path);
+        java.io.File file = new java.io.File(AdminOperations.Database_CancelRequests_Path);
         if (!file.exists()) {
             return;
         }
 
         try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
             String line;
-            String currentUserAccount = "Unknown"; // Stores the name found in (parentheses)
-
             while ((line = br.readLine()) != null) {
                 String trimmed = line.trim();
-
-                // 1. Detect User Header: (joshua_123)
-                if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
-                    // Remove parens to get raw username
-                    currentUserAccount = trimmed.substring(1, trimmed.length() - 1);
+                if (trimmed.isEmpty()) {
                     continue;
                 }
 
-                // 2. Parse Booking Line
-                if (!trimmed.isEmpty() && trimmed.contains(" - ")) {
-                    String[] parts = trimmed.split(" - ");
+                // TRY SPLITTING BY PIPE FIRST (Your current code's expectation)
+                String[] parts = trimmed.split(" \\| ");
 
-                    // Check if it belongs to THIS airline and has enough data
-                    if (parts.length >= 16 && parts[0].equalsIgnoreCase(currentAirlineName)) {
+                // IF PIPE FAILS, TRY DASH (Your other file's format)
+                if (parts.length < 2) {
+                    parts = trimmed.split(" - ");
+                }
 
-                        // Map parts based on your provided format:
-                        // [5] FlightNo, [8] Date, [9] Seat, [10] Price, [11] Mode, [Last] Status
-                        String flightNo = parts[5];
-                        String date = parts[8];
-                        String seat = parts[9];
-                        String price = parts[10];
-                        String mode = parts[11];
-                        String status = parts[parts.length - 1];
+                // NOW CHECK LENGTH
+                if (parts.length >= 5) {
+                    // Extract Airline (Adjust index based on your specific file format)
+                    // If format: User | Airline | FlightNo | Date | ... | Status
+                    String airline = parts[1];
 
-                        // Add to Table (Name col gets the User Account)
+                    if (airline.trim().equalsIgnoreCase(currentAirlineName)) {
                         model.addRow(new Object[]{
-                            currentUserAccount,
-                            flightNo,
-                            date,
-                            seat,
-                            price,
-                            mode,
-                            status
+                            parts[0], // Name
+                            parts[1], // Airline
+                            parts[2], // Flight No
+                            parts[3], // Date
+                            parts[parts.length - 1] // Status (Last element is safest)
                         });
                     }
                 }
@@ -93,124 +84,191 @@ public class userTixManager extends javax.swing.JFrame {
     }
     
     
-    private void updateTicketStatus(String newStatus) {
+    private void approveCancellation() {
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please select a ticket to update.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a request to cancel.");
             return;
         }
 
-        // Get identifying info from the selected row
-        String targetUser = jTable1.getValueAt(selectedRow, 0).toString();   // Name/User
-        String targetFlight = jTable1.getValueAt(selectedRow, 1).toString(); // Flight No
-        String targetSeat = jTable1.getValueAt(selectedRow, 3).toString();   // Seat
+        // 1. Get Ticket Info
+        String targetUser = jTable1.getValueAt(selectedRow, 0).toString();
+        String targetFlight = jTable1.getValueAt(selectedRow, 2).toString();
 
+        // 2. Confirmation
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
+            "Are you sure you want to CANCEL this booking? \nThis will permanently delete the record.", 
+            "Confirm Cancellation", javax.swing.JOptionPane.YES_NO_OPTION);
+            
+        if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
+
+        // 3. DELETE FROM BOOKINGS.TXT
+        boolean bookingDeleted = deleteRecordFromBookings(targetUser, targetFlight);
+
+        // 4. DELETE FROM CANCELLATION_REQUESTS.TXT
+        boolean requestDeleted = deleteRecordFromRequests(targetUser, targetFlight);
+
+        if (bookingDeleted || requestDeleted) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Booking Cancelled and Records Deleted.");
+            loadRequests(); // Refresh
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: Could not find records to delete.");
+        }
+    }
+
+    // Helper: Deletes specific flight line under specific user in bookings.txt
+    private boolean deleteRecordFromBookings(String targetUser, String targetFlight) {
         java.io.File file = new java.io.File(AdminOperations.Database_Bookings_Path);
         java.util.List<String> allLines = new java.util.ArrayList<>();
-        boolean updateSuccess = false;
+        boolean found = false;
+        String currentUserSection = "";
 
-        try {
-            // Read all lines
-            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
-                String line;
-                String currentUserContext = "";
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String trimmed = line.trim();
 
-                while ((line = br.readLine()) != null) {
-                    String trimmed = line.trim();
+                // Check which user section we are in
+                if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
+                    currentUserSection = trimmed.substring(1, trimmed.length() - 1);
+                    allLines.add(line);
+                    continue;
+                }
 
-                    // Track which user section we are in
-                    if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
-                        currentUserContext = trimmed.substring(1, trimmed.length() - 1);
-                        allLines.add(line);
-                        continue;
-                    }
-
-                    // Check if this is the target line
-                    if (!trimmed.isEmpty() && trimmed.contains(" - ")) {
-                        String[] parts = trimmed.split(" - ");
-                        
-                        // Match User + Flight + Seat
-                        if (currentUserContext.equals(targetUser) && 
-                            parts.length >= 16 && 
-                            parts[5].equals(targetFlight) && 
-                            parts[9].equals(targetSeat)) {
-                            
-                            // UPDATE STATUS (The last element)
-                            parts[parts.length - 1] = newStatus;
-                            
-                            // Rebuild the line
-                            String newLine = String.join(" - ", parts);
-                            allLines.add(newLine);
-                            updateSuccess = true;
-                        } else {
-                            allLines.add(line); // Not the target, keep as is
-                        }
-                    } else {
-                        allLines.add(line); // Empty lines
-                    }
+                // Check if this line matches the Flight AND we are in the correct User Section
+                // Format: Airline - ... - FlightNo - ...
+                if (currentUserSection.equals(targetUser) && trimmed.contains(" - " + targetFlight + " - ")) {
+                    found = true; 
+                    // SKIP adding this line (effectively deleting it)
+                } else {
+                    allLines.add(line);
                 }
             }
+        } catch (java.io.IOException e) { e.printStackTrace(); return false; }
 
-            // Write back to file
-            if (updateSuccess) {
-                try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
-                    for (String s : allLines) {
-                        bw.write(s);
-                        bw.newLine();
-                    }
+        // Write Back
+        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
+            for (String s : allLines) {
+                bw.write(s);
+                bw.newLine();
+            }
+        } catch (java.io.IOException e) { e.printStackTrace(); return false; }
+        
+        return found;
+    }
+
+    // Helper: Deletes the line from cancellation_requests.txt
+    private boolean deleteRecordFromRequests(String targetUser, String targetFlight) {
+        java.io.File file = new java.io.File(AdminOperations.Database_CancelRequests_Path);
+        java.util.List<String> allLines = new java.util.ArrayList<>();
+        boolean found = false;
+
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Format: User | Airline | FlightNo ...
+                String[] parts = line.split(" \\| ");
+                
+                if (parts.length >= 3 && parts[0].equals(targetUser) && parts[2].equals(targetFlight)) {
+                    found = true; 
+                    // SKIP adding this line
+                } else {
+                    allLines.add(line);
                 }
-                javax.swing.JOptionPane.showMessageDialog(this, "Ticket Status Updated to: " + newStatus);
-                loadBookings(); // Refresh table
-            } 
+            }
+        } catch (java.io.IOException e) { e.printStackTrace(); return false; }
 
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
+        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
+            for (String s : allLines) {
+                bw.write(s);
+                bw.newLine();
+            }
+        } catch (java.io.IOException e) { e.printStackTrace(); return false; }
+        
+        return found;
     }
     
     
-    private void searchFlights() {
-        String query = SearchField.getText().toLowerCase().trim();
+    
+    private void declineCancellation() {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a request to decline.");
+            return;
+        }
+
+        String targetUser = jTable1.getValueAt(selectedRow, 0).toString();
+        String targetFlight = jTable1.getValueAt(selectedRow, 2).toString();
+
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
+            "Decline this cancellation request?", "Confirm Decline", javax.swing.JOptionPane.YES_NO_OPTION);
+            
+        if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
+
+        java.io.File file = new java.io.File(AdminOperations.Database_CancelRequests_Path);
+        java.util.List<String> allLines = new java.util.ArrayList<>();
         
-        // Reload all if search is empty
+        try {
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(" \\| ");
+                    
+                    // Match and Update Status to DECLINED
+                    if (parts.length >= 6 && parts[0].equals(targetUser) && parts[2].equals(targetFlight)) {
+                        parts[5] = "DECLINED"; 
+                        allLines.add(String.join(" | ", parts));
+                    } else {
+                        allLines.add(line);
+                    }
+                }
+            }
+            // Write Back
+            try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
+                for (String s : allLines) {
+                    bw.write(s);
+                    bw.newLine();
+                }
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, "Request Declined.");
+            loadRequests(); 
+            
+        } catch (java.io.IOException e) { e.printStackTrace(); }
+    }
+    
+    
+    
+    private void searchFlights() {
+        String query = SearchField1.getText().toLowerCase().trim();
+
+        // If empty or default text, reload all
         if (query.isEmpty() || query.equals("search for a flight")) {
-            loadBookings();
+            loadRequests();
             return;
         }
 
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Clear table
 
-        java.io.File file = new java.io.File("src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt");
-        if (!file.exists()) return;
+        java.io.File file = new java.io.File(AdminOperations.Database_CancelRequests_Path);
+        if (!file.exists()) {
+            return;
+        }
 
         try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
             String line;
-            String currentUserAccount = "Unknown"; // To track the header (username)
-
             while ((line = br.readLine()) != null) {
-                String trimmed = line.trim();
-                
-                // 1. Detect User Header (e.g., "(joshua_123)")
-                if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
-                    currentUserAccount = trimmed.substring(1, trimmed.length() - 1);
-                    continue;
-                }
+                // Format: User | Airline | FlightNo | Day | Origin to Dest | Status
+                String[] parts = line.split(" \\| ");
 
-                // 2. Parse Booking Line
-                if (!trimmed.isEmpty() && trimmed.contains(" - ")) {
-                    String[] parts = trimmed.split(" - ");
-                    
-                    // Check if it belongs to THIS airline
-                    if (parts.length >= 16 && parts[0].equalsIgnoreCase(currentAirlineName)) {
-                        
-                        // 3. SEARCH CHECK: Does the query match Name, Flight, Date, or Status?
+                if (parts.length >= 6) {
+                    String airline = parts[1];
+
+                    // 1. Must belong to CURRENT Airline
+                    if (airline.equalsIgnoreCase(currentAirlineName)) {
+
+                        // 2. Check if ANY field contains the query
                         boolean match = false;
-                        
-                        // Check Username
-                        if (currentUserAccount.toLowerCase().contains(query)) match = true;
-                        
-                        // Check other fields in the line
                         for (String part : parts) {
                             if (part.toLowerCase().contains(query)) {
                                 match = true;
@@ -219,15 +277,12 @@ public class userTixManager extends javax.swing.JFrame {
                         }
 
                         if (match) {
-                            // Add to Table
                             model.addRow(new Object[]{
-                                currentUserAccount,       // Name
-                                parts[5],                 // Flight No
-                                parts[8],                 // Date
-                                parts[9],                 // Seat
-                                parts[10],                // Price
-                                parts[11],                // Mode
-                                parts[parts.length - 1]   // Status
+                                parts[0], // Name
+                                parts[1], // Airline
+                                parts[2], // Flight No.
+                                parts[3], // Date
+                                parts[5] // Status
                             });
                         }
                     }
@@ -240,7 +295,6 @@ public class userTixManager extends javax.swing.JFrame {
     
     
     
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -254,12 +308,11 @@ public class userTixManager extends javax.swing.JFrame {
         TopContainer = new javax.swing.JPanel();
         Title = new javax.swing.JLabel();
         SearchContainer1 = new javax.swing.JPanel();
-        SearchField = new javax.swing.JTextField();
-        SearchButton = new javax.swing.JButton();
+        SearchField1 = new javax.swing.JTextField();
+        SearchButton1 = new javax.swing.JButton();
         BottomContainer = new javax.swing.JPanel();
         back = new javax.swing.JToggleButton();
         accept = new javax.swing.JToggleButton();
-        pending = new javax.swing.JToggleButton();
         decline = new javax.swing.JToggleButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -270,31 +323,31 @@ public class userTixManager extends javax.swing.JFrame {
 
         Title.setFont(new java.awt.Font("Santana-Black", 0, 36)); // NOI18N
         Title.setForeground(new java.awt.Color(255, 255, 255));
-        Title.setText("TICKET MANAGER");
+        Title.setText("CANCEL REQUESTS");
 
         SearchContainer1.setBackground(new java.awt.Color(255, 255, 255));
 
-        SearchField.setText("Search for a flight");
-        SearchField.addFocusListener(new java.awt.event.FocusAdapter() {
+        SearchField1.setText("Search for a flight");
+        SearchField1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                SearchFieldFocusGained(evt);
+                SearchField1FocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                SearchFieldFocusLost(evt);
+                SearchField1FocusLost(evt);
             }
         });
-        SearchField.addActionListener(new java.awt.event.ActionListener() {
+        SearchField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchFieldActionPerformed(evt);
+                SearchField1ActionPerformed(evt);
             }
         });
 
-        SearchButton.setBackground(new java.awt.Color(0, 102, 255));
-        SearchButton.setText("Search");
-        SearchButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        SearchButton.addActionListener(new java.awt.event.ActionListener() {
+        SearchButton1.setBackground(new java.awt.Color(0, 102, 255));
+        SearchButton1.setText("Search");
+        SearchButton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        SearchButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchButtonActionPerformed(evt);
+                SearchButton1ActionPerformed(evt);
             }
         });
 
@@ -304,17 +357,17 @@ public class userTixManager extends javax.swing.JFrame {
             SearchContainer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SearchContainer1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SearchField1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(SearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+                .addComponent(SearchButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
         );
         SearchContainer1Layout.setVerticalGroup(
             SearchContainer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SearchContainer1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(SearchField, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                .addComponent(SearchField1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
                 .addContainerGap())
-            .addComponent(SearchButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(SearchButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout TopContainerLayout = new javax.swing.GroupLayout(TopContainer);
@@ -323,16 +376,16 @@ public class userTixManager extends javax.swing.JFrame {
             TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TopContainerLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addComponent(Title, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
+                .addComponent(Title, javax.swing.GroupLayout.DEFAULT_SIZE, 919, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(SearchContainer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(62, 62, 62))
+                .addGap(58, 58, 58))
         );
         TopContainerLayout.setVerticalGroup(
             TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TopContainerLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addGroup(TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(TopContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(SearchContainer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Title))
                 .addContainerGap(39, Short.MAX_VALUE))
@@ -347,8 +400,8 @@ public class userTixManager extends javax.swing.JFrame {
             }
         });
 
-        accept.setBackground(new java.awt.Color(153, 255, 153));
-        accept.setText("ACCEPT");
+        accept.setBackground(new java.awt.Color(0, 102, 204));
+        accept.setText("CANCEL");
         accept.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         accept.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -356,16 +409,7 @@ public class userTixManager extends javax.swing.JFrame {
             }
         });
 
-        pending.setBackground(new java.awt.Color(255, 204, 153));
-        pending.setText("PENDING");
-        pending.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        pending.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pendingActionPerformed(evt);
-            }
-        });
-
-        decline.setBackground(new java.awt.Color(255, 102, 102));
+        decline.setBackground(new java.awt.Color(0, 102, 204));
         decline.setText("DECLINE");
         decline.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         decline.addActionListener(new java.awt.event.ActionListener() {
@@ -381,13 +425,11 @@ public class userTixManager extends javax.swing.JFrame {
             .addGroup(BottomContainerLayout.createSequentialGroup()
                 .addGap(61, 61, 61)
                 .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(253, 253, 253)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(accept, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(pending, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(decline, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(274, 274, 274))
         );
         BottomContainerLayout.setVerticalGroup(
             BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,27 +438,26 @@ public class userTixManager extends javax.swing.JFrame {
                 .addGroup(BottomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(accept, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pending, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(decline, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(59, 59, 59))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Name", "Flight No.", "Date", "Seat", "Price", "Mode", "Status "
+                "Name", "Airline", "Flight No.", "Date", "Status "
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -469,36 +510,32 @@ public class userTixManager extends javax.swing.JFrame {
     }//GEN-LAST:event_backActionPerformed
 
     private void acceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptActionPerformed
-        updateTicketStatus("ACCEPTED");
+        approveCancellation();
     }//GEN-LAST:event_acceptActionPerformed
 
-    private void pendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pendingActionPerformed
-        updateTicketStatus("PENDING");
-    }//GEN-LAST:event_pendingActionPerformed
-
     private void declineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_declineActionPerformed
-        updateTicketStatus("DECLINED");
+        declineCancellation();
     }//GEN-LAST:event_declineActionPerformed
 
-    private void SearchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusGained
+    private void SearchField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchField1FocusGained
         SearchField.setText("");
         SearchField.setForeground(Color.BLACK);
-    }//GEN-LAST:event_SearchFieldFocusGained
+    }//GEN-LAST:event_SearchField1FocusGained
 
-    private void SearchFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusLost
+    private void SearchField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchField1FocusLost
         if (SearchField.getText().trim().isEmpty()) {
             SearchField.setText("Search for a flight");
             SearchField.setForeground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_SearchFieldFocusLost
+    }//GEN-LAST:event_SearchField1FocusLost
 
-    private void SearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFieldActionPerformed
+    private void SearchField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchField1ActionPerformed
         searchFlights();
-    }//GEN-LAST:event_SearchFieldActionPerformed
+    }//GEN-LAST:event_SearchField1ActionPerformed
 
-    private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
+    private void SearchButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButton1ActionPerformed
         searchFlights();
-    }//GEN-LAST:event_SearchButtonActionPerformed
+    }//GEN-LAST:event_SearchButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -522,14 +559,23 @@ public class userTixManager extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new userTixManager().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new userCancelRequests().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BottomContainer;
     private javax.swing.JButton SearchButton;
+    private javax.swing.JButton SearchButton1;
+    private javax.swing.JButton SearchButton2;
+    private javax.swing.JButton SearchButton3;
+    private javax.swing.JPanel SearchContainer;
     private javax.swing.JPanel SearchContainer1;
+    private javax.swing.JPanel SearchContainer2;
+    private javax.swing.JPanel SearchContainer3;
     private javax.swing.JTextField SearchField;
+    private javax.swing.JTextField SearchField1;
+    private javax.swing.JTextField SearchField2;
+    private javax.swing.JTextField SearchField3;
     private javax.swing.JLabel Title;
     private javax.swing.JPanel TopContainer;
     private javax.swing.JToggleButton accept;
@@ -538,6 +584,5 @@ public class userTixManager extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JToggleButton pending;
     // End of variables declaration//GEN-END:variables
 }

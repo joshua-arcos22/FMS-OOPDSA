@@ -6,6 +6,7 @@ package com.mycompany.lipadbantayoopdsa.Aircraftseats;
 
 import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
 import com.mycompany.lipadbantayoopdsa.flightBooking.UserBookedFlights;
+import com.mycompany.lipadbantayoopdsa.flightBooking.paymentOptions;
 import java.awt.Component;
 import java.io.*;
 import java.util.*;
@@ -24,6 +25,7 @@ public class a330 extends javax.swing.JFrame {
     private String partialRecord;
     private String username;
     private int seatsNeeded;
+    private String price; 
     private final String bookingsPath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
     private List<String> takenSeats = new ArrayList<>();
 
@@ -33,11 +35,12 @@ public class a330 extends javax.swing.JFrame {
     }
 
    
-    public a330(String flightNum, int seatsNeeded, String partialRecord, String username) {
+    public a330(String flightNum, int seatsNeeded, String partialRecord, String username, String price) {
         this.flightNum = flightNum;
         this.seatsNeeded = seatsNeeded;
         this.partialRecord = partialRecord;
         this.username = username;
+        this.price = price;
 
         initComponents();
         loadTakenSeats();      // 1. Find what seats are gone
@@ -279,7 +282,6 @@ public class a330 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void back1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back1ActionPerformed
-        // "Confirm" Button Logic
         List<String> selectedSeats = new ArrayList<>();
         try {
             if (seatsNeeded >= 1) {
@@ -298,40 +300,29 @@ public class a330 extends javax.swing.JFrame {
                 selectedSeats.add(SeatCat4.getSelectedItem() + "" + SeatNum4.getSelectedItem());
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error reading selection.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Error reading selection.");
             return;
         }
 
+        // 2. Check Duplicates (Keep your existing logic)
         Set<String> uniqueCheck = new HashSet<>(selectedSeats);
         if (uniqueCheck.size() < selectedSeats.size()) {
-            JOptionPane.showMessageDialog(this, "You cannot assign the same seat to multiple passengers!");
+            javax.swing.JOptionPane.showMessageDialog(this, "You cannot assign the same seat to multiple passengers!");
             return;
         }
 
+        // 3. Construct the Data String
         String finalSeatString = String.join(",", selectedSeats);
-        String finalRecord = partialRecord + " - " + finalSeatString;
-        saveFinalBooking(finalRecord);
-        JOptionPane.showMessageDialog(this, "Flight Confirmed!\nSeats: " + finalSeatString);
 
-        // --- NAVIGATION FIX ---
-        // Parse partialRecord: Airline - AcType - Origin - Dest - Time - FNum - Day - Status - Date
-        try {
-            String[] parts = partialRecord.split(" - ");
-            if (parts.length >= 9) {
-                // Extract original search params to reopen the booking screen correctly
-                // NOTE: parts[2] is Origin like "RPLL(Manila)". 
-                String rOrigin = parts[2];
-                String rDest = parts[3];
-                String rDate = parts[8];
+        // Format: ... - Date - Seat - Price
+        // (I removed "PENDING" because the PaymentWindow usually confirms the booking)
+        String finalRecord = partialRecord + " - " + finalSeatString + " - " + this.price;
 
-                new FlightBooking(username, rOrigin, rDest, rDate).setVisible(true);
-            } else {
-                // Fallback if parsing fails
-                new UserBookedFlights(username).setVisible(true);
-            }
-        } catch (Exception e) {
-            new UserBookedFlights(username).setVisible(true);
-        }
+        paymentOptions payment = new paymentOptions(finalRecord, this.price, this.username);
+
+        payment.setVisible(true);
+
+        // 5. Close this window
         this.dispose();
     }//GEN-LAST:event_back1ActionPerformed
 

@@ -1,3 +1,2 @@
 (joshua_123)
-CEBUPAC - A320 - RPLK(Legazpi) - RPLL(Manila) - 1107 - 5J6516 - E - Scheduled - 01/04/2026 - B1,B2 - 3315.62 - OTC - Joshua - 09953156021 - joshucarcos@gmail.com - PEDNING 
-CEBUPAC - A320 - RPLK(Daraga) - RPLL(Manila) - 0517 - 5J2538 - E - Delayed - 01/04/2026 - B1 - 3315.62 - OTC - joshua - 09953156021 - joshucarcos@gmail.com - PENDING 
+CEBUPAC - A320 - RPLK(Legazpi) - RPLL(Manila) - 1107 - 5J6516 - E - Scheduled - 01/04/2026 - B1,B2 - 3315.62 - OTC - Joshua - 09953156021 - joshucarcos@gmail.com - ACCEPTED

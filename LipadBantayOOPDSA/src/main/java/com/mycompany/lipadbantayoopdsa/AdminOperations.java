@@ -12,6 +12,8 @@ public class AdminOperations {
     public static final String Database_TimeTable_Departure_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
     public static final String Database_TimeTable_Arrivals_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
     public static final String Database_TimeTable_Archive_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Archive_Timetable.txt";
+    public static final String Database_Bookings_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
+    public static final String Database_CancelRequests_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/cancellation_requests.txt";
             
             
     private boolean runwayCapable;

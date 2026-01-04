@@ -179,7 +179,7 @@ CEBUPAC-A320-RPVM(Mactan)-RPLC(Clark)-W/F-1315-5J4805-0-0-Scheduled
 CEBUPAC-A320-RPVP(Puerto Princesa)-RPLC(Clark)-ST/M/W/F-0039-5J6393-0-0-Scheduled
 CEBUPAC-A320-RPLI(Laoag)-RPLL(Manila)-E-1203-5J4229-0-0-Scheduled
 CEBUPAC-A320-RPLI(Laoag)-RPLL(Manila)-E-2013-5J2461-0-0-Scheduled
-CEBUPAC-A320-RPLK(Legazpi)-RPLL(Manila)-E-0517-5J2538-0-0-Scheduled
+CEBUPAC-A320-RPLK(Daraga)-RPLL(Manila)-E-0517-5J2538-0-0-Delayed
 CEBUPAC-A320-RPLK(Legazpi)-RPLL(Manila)-E-1107-5J6516-0-0-Scheduled
 CEBUPAC-A320-RPLK(Legazpi)-RPLL(Manila)-E-1442-5J5070-0-0-Scheduled
 CEBUPAC-A320-RPLK(Legazpi)-RPLL(Manila)-E-1812-5J4860-0-0-Scheduled
@@ -473,7 +473,7 @@ PAL-A320-RPMD(Davao)-RPVM(Mactan)-SU/M/TU/W/TH/F-0717-PR7882-0-0-Scheduled
 PAL-A320-RPVA(Tacloban)-RPVM(Mactan)-TH-1236-PR7213-0-0-Scheduled
 PAL-A320-RPVE(Caticlan)-RPVM(Mactan)-M/TU/W/TH/F-1110-PR6260-0-0-Scheduled
 PAL-A320-RPVP(Puerto Princesa)-RPVM(Mactan)-M/TU/TH/F-1525-PR1688-0-0-Scheduled
-PAL-A321-RPMD(Davao)-RPLL(Manila)-E-2001-PR6887-0-0-Scheduled
+PAL-A321-RPMD(Davao)-RPLL(Manila)-E-2001-PR6887-0-0-Canceled
 PAL-A321-RPMD(Davao)-RPLL(Manila)-M/W/F-0741-PR1996-0-0-Scheduled
 PAL-A321-RPMD(Davao)-RPLL(Manila)-ST-1041-PR9968-0-0-Scheduled
 PAL-A321-RPMD(Davao)-RPLL(Manila)-ST-1201-PR6536-0-0-Scheduled

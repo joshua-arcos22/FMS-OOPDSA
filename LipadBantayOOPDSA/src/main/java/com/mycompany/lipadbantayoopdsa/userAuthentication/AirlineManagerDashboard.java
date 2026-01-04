@@ -1,6 +1,7 @@
 package com.mycompany.lipadbantayoopdsa.userAuthentication;
 
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayManagers;
+import com.mycompany.lipadbantayoopdsa.popupInterface.ManageBookingChoice;
 import com.mycompany.lipadbantayoopdsa.popupInterface.fareEditor_M;
 import java.io.*;
 import java.nio.file.Paths;
@@ -65,8 +66,6 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
         airlineNameText = new javax.swing.JLabel();
@@ -78,20 +77,8 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
         AIRLINE = new javax.swing.JLabel();
         FLPREFIX = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        btnManageFlts2 = new javax.swing.JButton();
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        btnFateManager = new javax.swing.JButton();
+        btnBookingsManager = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -145,12 +132,21 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
             .addGap(0, 46, Short.MAX_VALUE)
         );
 
-        btnManageFlts2.setBackground(new java.awt.Color(0, 153, 204));
-        btnManageFlts2.setForeground(new java.awt.Color(255, 255, 255));
-        btnManageFlts2.setText("Edit Fare");
-        btnManageFlts2.addActionListener(new java.awt.event.ActionListener() {
+        btnFateManager.setBackground(new java.awt.Color(0, 153, 204));
+        btnFateManager.setForeground(new java.awt.Color(255, 255, 255));
+        btnFateManager.setText("Edit Fare");
+        btnFateManager.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManageFlts2ActionPerformed(evt);
+                btnFateManagerActionPerformed(evt);
+            }
+        });
+
+        btnBookingsManager.setBackground(new java.awt.Color(0, 153, 204));
+        btnBookingsManager.setForeground(new java.awt.Color(255, 255, 255));
+        btnBookingsManager.setText("Manage Bookings");
+        btnBookingsManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBookingsManagerActionPerformed(evt);
             }
         });
 
@@ -158,34 +154,38 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(187, 187, 187)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(airlineNameText)
-                                    .addComponent(iataCodeText)
-                                    .addComponent(flPrefixText))
-                                .addGap(45, 45, 45)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(FLPREFIX)
-                                    .addComponent(AIRLINE)
-                                    .addComponent(MANAGER)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnManageFlts, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnManageFlts2, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(airlineNameText)
+                            .addComponent(iataCodeText)
+                            .addComponent(flPrefixText))
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(FLPREFIX)
+                            .addComponent(AIRLINE)
+                            .addComponent(MANAGER)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(217, 217, 217)
                         .addComponent(title))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(300, 300, 300)
-                        .addComponent(btnLogout)))
-                .addContainerGap(199, Short.MAX_VALUE))
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnLogout))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(108, 108, 108)
+                        .addComponent(btnManageFlts, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnFateManager, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnBookingsManager)))
+                .addContainerGap(118, Short.MAX_VALUE))
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnBookingsManager, btnFateManager, btnManageFlts});
+
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -213,11 +213,14 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
                 .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnManageFlts, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnManageFlts2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnFateManager, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBookingsManager))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnLogout)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBookingsManager, btnFateManager, btnManageFlts});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -246,11 +249,17 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnManageFltsActionPerformed
 
-    private void btnManageFlts2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageFlts2ActionPerformed
+    private void btnFateManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFateManagerActionPerformed
         fareEditor_M display = new fareEditor_M(AIRLINE.getText().toString(), FLPREFIX.getText().toString());
         display.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnManageFlts2ActionPerformed
+    }//GEN-LAST:event_btnFateManagerActionPerformed
+
+    private void btnBookingsManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBookingsManagerActionPerformed
+         ManageBookingChoice display = new ManageBookingChoice(AIRLINE.getText().toString(), FLPREFIX.getText().toString());
+         display.setVisible(true);
+         dispose();
+    }//GEN-LAST:event_btnBookingsManagerActionPerformed
     
     public AirlineManagerDashboard(String username) {
         initComponents(); 
@@ -404,15 +413,14 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel FLPREFIX;
     private javax.swing.JLabel MANAGER;
     private javax.swing.JLabel airlineNameText;
+    private javax.swing.JButton btnBookingsManager;
+    private javax.swing.JButton btnFateManager;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnManageFlts;
-    private javax.swing.JButton btnManageFlts2;
     private javax.swing.JLabel flPrefixText;
     private javax.swing.JLabel iataCodeText;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
 }
