@@ -375,32 +375,32 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
 
     private void openSeatSelection(int seatsNeeded, String partialRecord) {
         String type = this.aircraft.toLowerCase().trim(); // e.g., "q400" or "a320"
-
+        String price = String.valueOf(calculatedPrice);
         try {
             switch (type) {
                 case "q400":
-                    new q400(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    new q400(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
                     break;
                 case "a320":
-                    new a320(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    new a320(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
                     break;
                 case "a321":
-                    new a321(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    new a321(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
                     break;
                 case "atr72":
-                    new atr72(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    new atr72(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
                     break;
                 case "atr42":
-                    new atr42(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    new atr42(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
                     break;
                 case "a330":
-                    new a330(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    new a330(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
                     break;
                 case "a350":
-                    new a350(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    new a350(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
                     break;
                 case "b777":
-                    new b777(flightNum, seatsNeeded, partialRecord, username).setVisible(true);
+                    new b777(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
                     break;
                 default:
                     JOptionPane.showMessageDialog(this, "Seat map for " + type + " not found. Booking saved without seat.");

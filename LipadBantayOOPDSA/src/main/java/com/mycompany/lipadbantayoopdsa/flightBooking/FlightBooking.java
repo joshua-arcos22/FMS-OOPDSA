@@ -65,8 +65,6 @@ public class FlightBooking extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         panel1 = new java.awt.Panel();
         label1 = new java.awt.Label();
-        SearchField = new javax.swing.JTextField();
-        SearchButton = new javax.swing.JButton();
         button1 = new java.awt.Button();
         button2 = new java.awt.Button();
         button3 = new java.awt.Button();
@@ -87,30 +85,6 @@ public class FlightBooking extends javax.swing.JFrame {
         label1.setForeground(new java.awt.Color(255, 255, 255));
         label1.setText("Book Your Journey");
 
-        SearchField.setText("Search for a flight");
-        SearchField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                SearchFieldFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                SearchFieldFocusLost(evt);
-            }
-        });
-        SearchField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchFieldActionPerformed(evt);
-            }
-        });
-
-        SearchButton.setBackground(new java.awt.Color(0, 102, 255));
-        SearchButton.setText("Search");
-        SearchButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        SearchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
@@ -118,20 +92,12 @@ public class FlightBooking extends javax.swing.JFrame {
             .addGroup(panel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
-                .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(SearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                .addGap(41, 41, 41))
+                .addContainerGap(546, Short.MAX_VALUE))
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(SearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 28, Short.MAX_VALUE))
         );
 
@@ -556,97 +522,6 @@ public class FlightBooking extends javax.swing.JFrame {
         }
     }
     
-    private void saveBookingToTxt(String record) {
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
-        File file = new File(filePath);
-        List<String> allLines = new ArrayList<>();
-        String userHeader = "(" + this.username + ")";
-        boolean sectionFound = false;
-
-        try {
-            if (file.exists()) {
-                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        allLines.add(line);
-                    }
-                }
-            }
-
-            // Search for the (Username)
-            for (int i = 0; i < allLines.size(); i++) {
-                if (allLines.get(i).trim().equals(userHeader)) {
-                    allLines.add(i + 1, record); // Insert detail right after the header
-                    sectionFound = true;
-                    break;
-                }
-            }
-
-            // If user has no section yet, create it
-            if (!sectionFound) {
-                allLines.add(userHeader);
-                allLines.add(record);
-            }
-
-            // Save back to file
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-                for (String line : allLines) {
-                    bw.write(line);
-                    bw.newLine();
-                }
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving to database.");
-        }
-    }
-    
-    private void removeBookingFromTxt(String record) {
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
-        File file = new File(filePath);
-        List<String> allLines = new ArrayList<>();
-        String userHeader = "(" + this.username + ")";
-
-        try {
-            // Read everything first
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                boolean inMySection = false;
-                boolean alreadyRemoved = false;
-
-                while ((line = br.readLine()) != null) {
-                    String trimmed = line.trim();
-
-                    // Track if we are inside the correct user's section
-                    if (trimmed.equals(userHeader)) {
-                        inMySection = true;
-                        allLines.add(line);
-                        continue;
-                    } else if (trimmed.startsWith("(") && !trimmed.equals(userHeader)) {
-                        inMySection = false;
-                    }
-
-                    // If this is the line to delete, skip adding it to the list
-                    if (inMySection && trimmed.equals(record.trim()) && !alreadyRemoved) {
-                        alreadyRemoved = true; 
-                        continue; // Skip this line (deletes it)
-                    }
-
-                    allLines.add(line);
-                }
-            }
-
-            // Overwrite the file with the remaining lines
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-                for (String l : allLines) {
-                    bw.write(l);
-                    bw.newLine();
-                }
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error updating file during cancellation.");
-        }
-    }
-    
     private void loadUserBookings() {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
@@ -688,118 +563,9 @@ public class FlightBooking extends javax.swing.JFrame {
         }
     }
     
-    private void searchFlights() {
-        String searchQuery = SearchField.getText().toLowerCase().trim();
-
-        // If search is empty or has the placeholder, reset to show all flights
-        if (searchQuery.isEmpty() || searchQuery.equals("search for a flight")) {
-            loadFlightsToTableDeparture();
-            return;
-        }
-
-        // Call the filter method
-        loadAndFilterFlightsToTableDeparture(searchQuery);
-    }
-
-    private void loadAndFilterFlightsToTableDeparture(String searchQuery) {
- 
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-
-        // Point to the Departure Master (matching your loadFlightsToTableDeparture method)
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
-        File file = new File(filePath);
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String trimmedLine = line.trim();
-                if (trimmedLine.isEmpty()) {
-                    continue;
-                }
-
-                String[] rowData = trimmedLine.split("-");
-
-                if (rowData.length >= 6) {
-                    String flightNum = (rowData.length > 6) ? rowData[6] : "ID-ERR";
-                    String[] row = {
-                        rowData[0], // Airline
-                        rowData[4], // Day
-                        rowData[5], // Time
-                        rowData[2], // Origin
-                        rowData[3], // Destination
-                        flightNum // Flight Number
-                    };
-
-                    if (matchesSearchQuery(row, searchQuery)) {
-                        model.addRow(row);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadAndFilterFlightsToTableArrival(String searchQuery) {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
-        File file = new File(filePath);
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            List<String[]> rows = new ArrayList<>();
-
-            while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] rowData = line.split("-");
-
-                    if (rowData.length >= 7) {
-                        String[] row = {
-                            rowData[0], // Airline
-                            rowData[4], // Day
-                            rowData[5], // Time
-                            rowData[2], // Origin
-                            rowData[3], // Destination
-                            rowData[6] // Flight Number (The 7th element is index 6)
-                        };
-                        rows.add(row);
-                    }
-                }
-            }
-            
-            br.close();
-
-            Collections.sort(rows, (row1, row2) -> {
-                int dayComparison = row1[1].compareTo(row2[1]);
-                if (dayComparison == 0) {
-                    return row1[2].compareTo(row2[2]);
-                }
-                return dayComparison;
-            });
-
-            // Add sorted and filtered data to the table
-            for (String[] row : rows) {
-                model.addRow(row);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    
 
     // Utility method to check if the search query matches any part of the row
-    private boolean matchesSearchQuery(String[] row, String searchQuery) {
-        for (String field : row) {
-            if (field.toLowerCase().contains(searchQuery)) {
-                return true; // If any field contains the search query
-            }
-        }
-        return false; // No match found in this row
-    }
     private void saveCancellationRequest(String requestData) {
       try {
         String projectPath = System.getProperty("user.dir");
@@ -886,7 +652,7 @@ public class FlightBooking extends javax.swing.JFrame {
             }
         });
         popup.setVisible(true);
-        dispose();
+        
     }//GEN-LAST:event_button1ActionPerformed
 
     
@@ -928,32 +694,6 @@ public class FlightBooking extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_button3ActionPerformed
 
-    private void SearchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusGained
-        // TODO add your handling code here:
-
-        SearchField.setText("");
-        SearchField.setForeground(Color.BLACK);
-    }//GEN-LAST:event_SearchFieldFocusGained
-
-    private void SearchFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusLost
-        // TODO add your handling code here:
-
-        if (SearchField.getText().trim().isEmpty()) {
-            SearchField.setText("Search for a flight");
-            SearchField.setForeground(Color.LIGHT_GRAY);
-        }
-    }//GEN-LAST:event_SearchFieldFocusLost
-
-    private void SearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFieldActionPerformed
-        // TODO add your handling code here:
-        searchFlights();
-    }//GEN-LAST:event_SearchFieldActionPerformed
-
-    private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
-        // TODO add your handling code here:
-        searchFlights();
-    }//GEN-LAST:event_SearchButtonActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -983,8 +723,6 @@ public class FlightBooking extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton SearchButton;
-    private javax.swing.JTextField SearchField;
     private java.awt.Button button1;
     private java.awt.Button button2;
     private java.awt.Button button3;

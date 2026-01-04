@@ -188,7 +188,8 @@ public class UserBookedFlights extends javax.swing.JFrame {
                             parts[3], // Destination
                             parts[5], // Flight Number
                             parts[8], // Date
-                            seat // Seat
+                            seat, // Seat
+                            parts[15]
                         });
                     }
                 }
@@ -367,25 +368,18 @@ public class UserBookedFlights extends javax.swing.JFrame {
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Status", "Airline", "AcType", "Day", "Time", "Origin", "Destination", "Flight Number", "Date", "Seat"
+                "Ft. Status", "Airline", "AcType", "Day", "Time", "Origin", "Destination", "Flight Number", "Date", "Seat", "Pym. Status"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class
-            };
             boolean[] canEdit = new boolean [] {
-                false, false, true, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -422,7 +416,7 @@ public class UserBookedFlights extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -482,21 +476,21 @@ public class UserBookedFlights extends javax.swing.JFrame {
             return;
         }
 
-        String flightNum = jTable2.getValueAt(selectedRow, 5).toString();
+        String flightNum = jTable2.getValueAt(selectedRow, 7).toString();
 
         if (isCancellationPending(flightNum)) {
             JOptionPane.showMessageDialog(this, "A request is already pending for this flight.");
             return;
         }
 
-        String airline = jTable2.getValueAt(selectedRow, 0).toString();
-        String day = jTable2.getValueAt(selectedRow, 1).toString();
+        String airline = jTable2.getValueAt(selectedRow, 1).toString();
+        String day = jTable2.getValueAt(selectedRow, 8).toString();
 
         String request = String.format("%s | %s | %s | %s | REQUESTED | PENDING",
                 this.username, airline, flightNum, day);
 
         saveCancellationRequest(request);
-        JOptionPane.showMessageDialog(this, "Cancellation request sent to Admin.");
+        JOptionPane.showMessageDialog(this, "Cancellation request sent to Airline.");
     }//GEN-LAST:event_button2ActionPerformed
 
     
