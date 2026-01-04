@@ -8,6 +8,7 @@ import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.distanceCalculator;
 import com.mycompany.lipadbantayoopdsa.AircraftFinder;
 import com.mycompany.lipadbantayoopdsa.ArrivalTimetableGenerator;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 
 import java.util.*;
 import java.io.*;
@@ -879,7 +880,42 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
         }
     }
     
-    
+    private void logFlightEdit(String actor, String flightNumber, String airlineName, String acType,
+                               String originFull, String destFull, String time, String frequency,
+                               String pax, String cargo, String status) {
+     try (PrintWriter logWriter = new PrintWriter(new FileWriter("flight_edits_log.txt", true))) {
+         String timestamp = java.time.LocalDateTime.now()
+                 .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+         String logEntry = String.format(
+             "[%s]%n" +
+             "EVENT  : FLIGHT_EDIT%n" +
+             "ACTION : Flight details updated%n" +
+             "ACTOR  : %s%n%n" +
+             "DETAILS%n" +
+             "--------%n" +
+             "Flight Number       : %s%n" +
+             "Airline Name        : %s%n" +
+             "Aircraft Type       : %s%n" +
+             "Origin Airport      : %s%n" +
+             "Destination Airport : %s%n" +
+             "Time                : %s%n" +
+             "Frequency           : %s%n" +
+             "PAX Capacity        : %s%n" +
+             "Cargo Capacity      : %s%n" +
+             "Status              : %s%n%n" +
+             "----------------------------------------%n%n",
+             timestamp, actor, flightNumber, airlineName, acType, originFull, destFull,
+             time, frequency, pax, cargo, status
+         );
+
+         logs.writeLog(logEntry);
+
+     } catch (IOException e) {
+         JOptionPane.showMessageDialog(this, "Error logging flight edit: " + e.getMessage(),
+                                       "Log Error", JOptionPane.ERROR_MESSAGE);
+     }
+ }
     
     
     
@@ -1041,6 +1077,21 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
                         Ac_Type,
                         originFull,
                         destFull
+                );
+                
+                // --- 3. LOG THE EDIT
+                    logFlightEdit(
+                    "SYSTEM",               
+                    Flight_Number,
+                    Airline_Name,
+                    Ac_Type,
+                    originFull,
+                    destFull,
+                    Time,
+                    getFrequencyString(),
+                    paxInput,
+                    cargoInput,
+                    statusInput
                 );
                 // ------------------------------------------
 
