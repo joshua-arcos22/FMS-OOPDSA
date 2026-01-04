@@ -69,15 +69,13 @@
                                   <Component id="lblPW" linkSize="3" max="32767" attributes="0"/>
                                   <Component id="lblUsn" linkSize="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="lblEmail" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblFN" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtEmail" linkSize="1" alignment="1" min="-2" pref="260" max="-2" attributes="0"/>
                               <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                                  <Component id="pwdReg" linkSize="1" min="-2" pref="261" max="-2" attributes="0"/>
-                                  <Component id="txtRegUsn" linkSize="1" min="-2" pref="261" max="-2" attributes="0"/>
+                                  <Component id="pwdReg" linkSize="1" alignment="1" min="-2" pref="261" max="-2" attributes="0"/>
+                                  <Component id="txtRegUsn" linkSize="1" alignment="1" min="-2" pref="261" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txtFN" linkSize="1" alignment="1" min="-2" pref="260" max="-2" attributes="0"/>
                           </Group>
@@ -101,29 +99,21 @@
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtFN" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblFN" linkSize="4" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtEmail" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblEmail" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="txtRegUsn" linkSize="2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="pwdReg" linkSize="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="lblUsn" linkSize="4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblPW" linkSize="4" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="txtFN" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblFN" linkSize="4" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblUsn" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtRegUsn" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="10" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPW" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="pwdReg" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
                   <Component id="btnRegister" min="-2" pref="50" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnBack" min="-2" max="-2" attributes="0"/>
@@ -198,30 +188,12 @@
             <Property name="text" type="java.lang.String" value="Full Name:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblEmail">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" red="0" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Email:"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JTextField" name="txtFN">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="cc" red="cc" type="rgb"/>
             </Property>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtEmail">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtEmailActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnBack">
           <Properties>
@@ -264,7 +236,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="52" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="50" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>

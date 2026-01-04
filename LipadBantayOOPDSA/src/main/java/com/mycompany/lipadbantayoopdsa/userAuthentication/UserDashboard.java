@@ -4,7 +4,6 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayUsers;
-import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
 import com.mycompany.lipadbantayoopdsa.flightBooking.FlightPicker;
 import com.mycompany.lipadbantayoopdsa.flightBooking.UserBookedFlights;
 import java.io.*;
@@ -45,7 +44,7 @@ public class UserDashboard extends javax.swing.JFrame {
             
             String[] parts = line.split(",");
            
-            if (parts.length == 4 && parts[0].trim().equals(username)) {
+            if (parts.length >= 2 && parts[0].trim().equals(username)) {
 
              
                 lblTitle.setText("Welcome, " + parts[1].trim() + "!");

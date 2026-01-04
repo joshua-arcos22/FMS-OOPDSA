@@ -42,9 +42,7 @@ public class RegistrationForm extends javax.swing.JFrame {
         lblPW = new javax.swing.JLabel();
         pwdReg = new javax.swing.JPasswordField();
         lblFN = new javax.swing.JLabel();
-        lblEmail = new javax.swing.JLabel();
         txtFN = new javax.swing.JTextField();
-        txtEmail = new javax.swing.JTextField();
         btnBack = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -80,17 +78,7 @@ public class RegistrationForm extends javax.swing.JFrame {
         lblFN.setBackground(new java.awt.Color(0, 0, 0));
         lblFN.setText("Full Name:");
 
-        lblEmail.setBackground(new java.awt.Color(0, 0, 0));
-        lblEmail.setText("Email:");
-
         txtFN.setBackground(new java.awt.Color(204, 204, 204));
-
-        txtEmail.setBackground(new java.awt.Color(204, 204, 204));
-        txtEmail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailActionPerformed(evt);
-            }
-        });
 
         btnBack.setText("Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -120,7 +108,7 @@ public class RegistrationForm extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 52, Short.MAX_VALUE)
+            .addGap(0, 50, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -145,14 +133,12 @@ public class RegistrationForm extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(lblPW, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lblUsn))
-                            .addComponent(lblEmail)
                             .addComponent(lblFN))
                         .addGap(38, 38, 38)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(pwdReg, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtRegUsn, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(pwdReg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtRegUsn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtFN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(170, 170, 170))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -162,9 +148,9 @@ public class RegistrationForm extends javax.swing.JFrame {
                         .addGap(271, 271, 271))))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {pwdReg, txtEmail, txtFN, txtRegUsn});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {pwdReg, txtFN, txtRegUsn});
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblEmail, lblFN, lblPW, lblUsn});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblFN, lblPW, lblUsn});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,24 +159,18 @@ public class RegistrationForm extends javax.swing.JFrame {
                 .addGap(34, 34, 34)
                 .addComponent(jLabel1)
                 .addGap(40, 40, 40)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtFN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblFN, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblEmail))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtRegUsn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pwdReg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblUsn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblPW)))
-                .addGap(45, 45, 45)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFN, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUsn)
+                    .addComponent(txtRegUsn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPW)
+                    .addComponent(pwdReg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(73, 73, 73)
                 .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnBack)
@@ -199,9 +179,9 @@ public class RegistrationForm extends javax.swing.JFrame {
                 .addGap(29, 29, 29))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {pwdReg, txtEmail, txtFN, txtRegUsn});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {pwdReg, txtFN, txtRegUsn});
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblEmail, lblFN, lblPW, lblUsn});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblFN, lblPW, lblUsn});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -222,11 +202,10 @@ public class RegistrationForm extends javax.swing.JFrame {
         String username = txtRegUsn.getText().trim();
         String password = String.valueOf(pwdReg.getPassword()).trim();
         String fullName = txtFN.getText().trim();
-        String email = txtEmail.getText().trim();
         String role = "USER";
 
         // Only save if all fields are filled
-        if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || email.isEmpty()) {
+        if (username.isEmpty() || password.isEmpty() || fullName.isEmpty()) {
             return;
         }
 
@@ -243,14 +222,13 @@ public class RegistrationForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-    // Read user input
+        // Read user input
         String username = txtRegUsn.getText().trim();
         String password = String.valueOf(pwdReg.getPassword());
         String fullName = txtFN.getText().trim();
-        String email = txtEmail.getText().trim();
         String role = "USER";
 
-        if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || email.isEmpty()) {
+        if (username.isEmpty() || password.isEmpty() || fullName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -267,26 +245,23 @@ public class RegistrationForm extends javax.swing.JFrame {
                                            "user_profiles.txt").toString();
 
         try (
-            PrintWriter credWriter = new PrintWriter(new FileWriter(credFilePath, true));  // append mode
+            PrintWriter credWriter = new PrintWriter(new FileWriter(credFilePath, true));
             PrintWriter profileWriter = new PrintWriter(new FileWriter(profileFilePath, true))
         ) {
-            // Write credentials with full info
+            // Write credentials
             String credRecord = 
                     "FULLNAME: " + fullName + System.lineSeparator() +
-                    "EMAIL: " + email + System.lineSeparator() +
                     "USERNAME: " + username + System.lineSeparator() +
                     "PASSWORD: " + password + System.lineSeparator() +
                     "ROLE: " + role + System.lineSeparator() +
                     "----------------------------";
             credWriter.println(credRecord);
 
-            
-            String profileRecord = String.format("%s,%s,%s,%s", username, fullName, email, "User");
+            String profileRecord = String.format("%s,%s,%s", username, fullName, "User");
             profileWriter.println(profileRecord);
 
             JOptionPane.showMessageDialog(this, "Registration successful! You can now sign in.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            // Go back to login form
             new LoginForm().setVisible(true);
             this.dispose();
 
@@ -329,12 +304,6 @@ public class RegistrationForm extends javax.swing.JFrame {
         autoSave();
     }//GEN-LAST:event_pwdRegActionPerformed
 
-    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
-        // TODO add your handling code here:
-        
-        autoSave();
-    }//GEN-LAST:event_txtEmailActionPerformed
-
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         AirlineManagerReigstrationForm display = new AirlineManagerReigstrationForm();
         display.setVisible(true);
@@ -373,12 +342,10 @@ public class RegistrationForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblFN;
     private javax.swing.JLabel lblPW;
     private javax.swing.JLabel lblUsn;
     private javax.swing.JPasswordField pwdReg;
-    private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtFN;
     private javax.swing.JTextField txtRegUsn;
     // End of variables declaration//GEN-END:variables
