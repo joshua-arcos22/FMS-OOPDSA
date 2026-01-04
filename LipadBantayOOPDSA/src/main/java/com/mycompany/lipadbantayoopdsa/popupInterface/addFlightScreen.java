@@ -8,6 +8,7 @@ import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.distanceCalculator;
 import com.mycompany.lipadbantayoopdsa.AircraftFinder;
 import com.mycompany.lipadbantayoopdsa.ArrivalTimetableGenerator;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 
 
 import java.util.*;
@@ -822,6 +823,43 @@ public class addFlightScreen extends javax.swing.JFrame {
         }
     }
     
+        private void logFlightEdit(String actor, String flightNumber, String airlineName, String acType,
+                                   String originFull, String destFull, String time, String frequency,
+                                   String pax, String cargo, String status) {
+          try (PrintWriter logWriter = new PrintWriter(new FileWriter("flight_edits_log.txt", true))) {
+              String timestamp = java.time.LocalDateTime.now()
+                      .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+              String logEntry = String.format(
+                  "[%s]%n" +
+                  "EVENT  : FLIGHT_UPDATE%n" +
+                  "ACTION : Flight details updated%n" +
+                  "ACTOR  : %s%n%n" +
+                  "DETAILS%n" +
+                  "--------%n" +
+                  "Flight Number       : %s%n" +
+                  "Airline Name        : %s%n" +
+                  "Aircraft Type       : %s%n" +
+                  "Origin Airport      : %s%n" +
+                  "Destination Airport : %s%n" +
+                  "Time                : %s%n" +
+                  "Frequency           : %s%n" +
+                  "PAX Capacity        : %s%n" +
+                  "Cargo Capacity      : %s%n" +
+                  "Status              : %s%n%n" +
+                  "----------------------------------------%n%n",
+                  timestamp, actor, flightNumber, airlineName, acType, originFull, destFull,
+                  time, frequency, pax, cargo, status
+              );
+
+              logs.writeLog(logEntry);
+
+          } catch (IOException e) {
+              JOptionPane.showMessageDialog(this, "Error logging flight edit: " + e.getMessage(),
+                                            "Log Error", JOptionPane.ERROR_MESSAGE);
+          }
+      }
+    
     
     
     
@@ -990,6 +1028,35 @@ public class addFlightScreen extends javax.swing.JFrame {
                         originFull,
                         destFull
                 );
+                
+                // 3. Log added flight
+                
+                String timestamp = java.time.LocalDateTime.now()
+                        .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+                String logEntry = String.format(
+                    "[%s]%n" +
+                    "EVENT  : FLIGHT_ADDITION%n" +
+                    "ACTION : New flight added%n" +
+                    "ACTOR  : ADMIN%n%n" +
+                    "DETAILS%n" +
+                    "--------%n" +
+                    "Flight No     : %s%n" +
+                    "Airline       : %s%n" +
+                    "Aircraft      : %s%n" +
+                    "Origin        : %s%n" +
+                    "Destination   : %s%n" +
+                    "Time          : %s%n" +
+                    "Frequency     : %s%n" +
+                    "PAX           : %s%n" +
+                    "Cargo         : %s%n" +
+                    "Status        : %s%n%n" +  // Blank line for spacing between logs
+                    "----------------------------------------%n%n",  // Another blank line
+                    timestamp, Flight_Number, Airline_Name, Ac_Type, Origin_Airport, Destination_Airport,
+                    Time, Frequency, paxInput, cargoInput, statusInput
+                );
+
+                logs.writeLog(logEntry);
 
                 javax.swing.JOptionPane.showMessageDialog(this, "Flight Added Successfully!");
                 ArrivalTimetableGenerator.generate();
