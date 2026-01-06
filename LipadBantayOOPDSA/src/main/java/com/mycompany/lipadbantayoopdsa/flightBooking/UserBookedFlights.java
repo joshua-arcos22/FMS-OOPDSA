@@ -168,28 +168,27 @@ public class UserBookedFlights extends javax.swing.JFrame {
                     // FORMAT: Airline - Aircraft - Origin - Dest - Time - FNo - Day - Status - Date
                     String[] parts = trimmed.split(" - ");
 
-                    if (parts.length >= 9) {
+                    if (parts.length >= 17) {
                         String flightNum = parts[5];
-                        String oldStatus = parts[7];
-                        
+                        String oldStatus = parts[parts.length - 1];
                         String liveStatus = getRealTimeStatus(flightNum);
                         
                         String statusToDisplay = (liveStatus != null) ? liveStatus : oldStatus;
 
-                        String seat = (parts.length > 9) ? parts[9] : "Any";
+                        String seat = parts[9];
                         
                         model.addRow(new Object[]{
-                            statusToDisplay, // Display UPDATED Status
-                            parts[0], // Airline
-                            parts[1], // Aircraft
-                            parts[6], // Day
-                            parts[4], // Time
-                            parts[2], // Origin
-                            parts[3], // Destination
-                            parts[5], // Flight Number
-                            parts[8], // Date
-                            seat, // Seat
-                            parts[15]
+                            statusToDisplay,
+                            parts[0],
+                            parts[1],
+                            parts[6],
+                            parts[4],
+                            parts[2],
+                            parts[3],
+                            parts[5],
+                            parts[8],
+                            seat,
+                            oldStatus // Or Payment Status column
                         });
                     }
                 }

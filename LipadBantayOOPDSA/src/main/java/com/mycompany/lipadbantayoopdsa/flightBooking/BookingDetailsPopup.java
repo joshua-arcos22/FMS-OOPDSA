@@ -377,44 +377,50 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void openSeatSelection(int seatsNeeded, String partialRecord) {
-        String type = this.aircraft.toLowerCase().trim(); // e.g., "q400" or "a320"
-        
-       String price = String.format("%.2f", this.currentTotalFare);
-       
+        String type = this.aircraft.toLowerCase().trim();
+
+        // --- MODIFIED: Combine Luggage and Price ---
+        // This forces the format: ... - SEAT - LUGGAGE - PRICE ...
+        // when the aircraft window saves the file.
+        int luggageVal = (int) spnrLuggage.getValue();
+        String price = String.format("%.2f", this.currentTotalFare);
+
+        // The Payload becomes: "10 - 4565.63"
+        String pricePayload = luggageVal + " - " + price;
+
         try {
             switch (type) {
+                // Pass 'pricePayload' instead of just 'price'
                 case "q400":
-                    new q400(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
+                    new q400(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
                     break;
                 case "a320":
-                    new a320(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
+                    new a320(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
                     break;
                 case "a321":
-                    new a321(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
+                    new a321(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
                     break;
                 case "atr72":
-                    new atr72(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
+                    new atr72(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
                     break;
                 case "atr42":
-                    new atr42(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
+                    new atr42(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
                     break;
                 case "a330":
-                    new a330(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
+                    new a330(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
                     break;
                 case "a350":
-                    new a350(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
+                    new a350(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
                     break;
                 case "b777":
-                    new b777(flightNum, seatsNeeded, partialRecord, username, price).setVisible(true);
+                    new b777(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
                     break;
                 default:
-                    JOptionPane.showMessageDialog(this, "Seat map for " + type + " not found. Booking saved without seat.");
-                    // Fallback save if no seat map exists
-                    saveBookingToTxt(partialRecord + " - ANY");
+                    JOptionPane.showMessageDialog(this, "Seat map not found.");
                     break;
             }
         } catch (Exception e) {
-            System.out.println("Error opening seat map: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
     
