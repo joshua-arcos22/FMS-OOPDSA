@@ -1078,36 +1078,46 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
                         originFull,
                         destFull
                 );
-                
-                // --- 3. LOG THE EDIT
-                    logFlightEdit(
-                    "SYSTEM",               
-                    Flight_Number,
-                    Airline_Name,
-                    Ac_Type,
-                    originFull,
-                    destFull,
-                    Time,
-                    getFrequencyString(),
-                    paxInput,
-                    cargoInput,
-                    statusInput
+
+                // --- 3. LOG THE EDIT ---
+                String timestamp = java.time.LocalDateTime.now()
+                        .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+                String logEntry = String.format(
+                    "[%s]%n" +
+                    "EVENT  : FLIGHT_EDIT%n" +
+                    "ACTION : Flight details updated%n" +
+                    "ACTOR  : ADMIN%n%n" +
+                    "DETAILS%n" +
+                    "--------%n" +
+                    "Flight No     : %s%n" +
+                    "Airline       : %s%n" +
+                    "Aircraft      : %s%n" +
+                    "Origin        : %s%n" +
+                    "Destination   : %s%n" +
+                    "Time          : %s%n" +
+                    "Frequency     : %s%n" +
+                    "PAX           : %s%n" +
+                    "Cargo         : %s%n" +
+                    "Status        : %s%n%n" +  // Blank line for spacing between logs
+                    "----------------------------------------%n%n",  // Another blank line
+                    timestamp, Flight_Number, Airline_Name, Ac_Type, originFull, destFull,
+                    Time, Frequency, paxInput, cargoInput, statusInput
                 );
-                // ------------------------------------------
+
+                logs.writeLog(logEntry); // Save the log like your other admin actions
 
                 javax.swing.JOptionPane.showMessageDialog(this, "Flight Updated Successfully!");
                 ArrivalTimetableGenerator.generate();
                 dispose();
+
             } catch (IOException e) {
                 System.out.println("Error Saving Flight");
             }
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please fix the errors in red.", "Validation Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "Please fix the errors in red.", 
+                "Validation Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-    
-        
-        
-    
     }//GEN-LAST:event_btn_addFlightActionPerformed
 
     
