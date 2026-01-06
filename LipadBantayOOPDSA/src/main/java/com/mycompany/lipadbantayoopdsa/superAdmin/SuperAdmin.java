@@ -220,7 +220,7 @@ public class SuperAdmin extends javax.swing.JFrame {
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
         jButton3.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        jButton3.setLabel("Add Super Admin");
+        jButton3.setText("Add Admin Account");
         jButton3.addActionListener(this::jButton3ActionPerformed);
 
         jButton4.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N

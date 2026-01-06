@@ -48,7 +48,7 @@ public class AddSuperadmin extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("Register New Super Admin Account");
+        jLabel1.setText("Register New Admin Account");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -183,7 +183,7 @@ public class AddSuperadmin extends javax.swing.JFrame {
             bw.write("FULLNAME: " + fullName); bw.newLine();
             bw.write("USERNAME: " + username); bw.newLine();
             bw.write("PASSWORD: " + password); bw.newLine();
-            bw.write("ROLE: SUPER_ADMIN"); bw.newLine();
+            bw.write("ROLE: ADMIN"); bw.newLine();
             bw.write("STATUS: ACTIVE"); bw.newLine();
             bw.write("----------------------------"); bw.newLine();
 
