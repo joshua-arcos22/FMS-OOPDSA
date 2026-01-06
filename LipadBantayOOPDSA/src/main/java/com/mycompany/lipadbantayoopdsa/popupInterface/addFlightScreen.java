@@ -1067,9 +1067,6 @@ public class addFlightScreen extends javax.swing.JFrame {
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Please fix the errors in red.", "Validation Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-        
-        
-    
     }//GEN-LAST:event_btn_addFlightActionPerformed
 
     

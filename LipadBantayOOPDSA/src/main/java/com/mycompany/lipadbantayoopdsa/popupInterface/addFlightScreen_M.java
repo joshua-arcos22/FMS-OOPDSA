@@ -8,6 +8,7 @@ import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.distanceCalculator;
 import com.mycompany.lipadbantayoopdsa.AircraftFinder;
 import com.mycompany.lipadbantayoopdsa.ArrivalTimetableGenerator;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 
 
 import java.util.*;
@@ -756,7 +757,7 @@ public class addFlightScreen_M extends javax.swing.JFrame {
     }
     
     
-    private void verifyAndAddRoute(String aircraft, String origin, String destination) {
+    private void verifyAndAddRoute(String airlineName, String aircraft, String origin, String destination) {
         // 1. Build the correct file path
         String projectRoot = System.getProperty("user.dir");
         String filename = "Routes_" + Airline_Name.trim().toUpperCase() + ".txt";
@@ -821,13 +822,12 @@ public class addFlightScreen_M extends javax.swing.JFrame {
     
     
     private void btn_addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFlightActionPerformed
-
         // 1. GET RAW INPUTS
         String selectedAc = ac_drpdwn.getSelectedItem().toString().trim();
         // Airline Name is locked to 'Airline_Name' variable from constructor
         String flightNumInput = flnField.getText().trim().toUpperCase();
         String timeInput = timeField.getText().trim();
-        String paxInput = "0"; // Managers init with 0 for new flights (or get from UI if you enabled it)
+        String paxInput = "0"; // Managers init with 0 for new flights (or get from UI if you enable it)
         String cargoInput = "0"; // Managers init with 0
         String statusInput = "Scheduled"; // Default status
 
@@ -835,10 +835,10 @@ public class addFlightScreen_M extends javax.swing.JFrame {
         boolean Flt_No_Valid = true;
         boolean time_Valid = true;
         boolean runway_Valid = true;
-        boolean pax_Valid = true; // Implicitly true if 0, but good to check limits if you enable input
+        boolean pax_Valid = true;
         boolean cargo_Valid = true;
 
-        // --- A. FLIGHT NUMBER VALIDATION (Manager Specific) ---
+        // --- A. FLIGHT NUMBER VALIDATION ---
         if (flightNumInput.isEmpty()) {
             errorFLTNO.setText("Required");
             errorFLTNO.setForeground(Color.red);
@@ -851,7 +851,6 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             errorFLTNO.setText("Invalid Length");
             errorFLTNO.setForeground(Color.red);
             Flt_No_Valid = false;
-            // MANAGER PREFIX CHECK
         } else if (!flightNumInput.substring(0, 2).equalsIgnoreCase(FLNO_prefix)) {
             errorFLTNO.setText("Must Start w/ " + FLNO_prefix);
             errorFLTNO.setForeground(Color.red);
@@ -883,8 +882,7 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             }
         }
 
-        // --- C. AIRCRAFT LIMITS (Safety Check) ---
-        // Even if Pax is 0, we check runway limits here mostly.
+        // --- C. AIRCRAFT LIMITS ---
         try {
             File acFile = new File(AdminOperations.Database_Aircarfts_Path);
             Scanner reader = new Scanner(acFile);
@@ -893,9 +891,8 @@ public class addFlightScreen_M extends javax.swing.JFrame {
 
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
+                if (line.trim().isEmpty()) continue;
+
                 String[] parts = line.split("-");
                 if (parts[0].equalsIgnoreCase(selectedAc)) {
                     maxPax = Integer.parseInt(parts[2]);
@@ -905,16 +902,24 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             }
             reader.close();
 
-            // If you ever enable Pax input for Manager Add screen, this validation is ready:
-            /*
-        if (Integer.parseInt(paxInput) > maxPax) { errorPAX.setText("Limit: " + maxPax); pax_Valid = false; }
-        if (Integer.parseInt(cargoInput) > maxCargo) { errorCARGO.setText("Limit: " + maxCargo); cargo_Valid = false; }
-             */
+            // Pax and Cargo validation (even if manager inputs 0, keeps validation structure)
+            if (!paxInput.matches("\\d+")) {
+                pax_Valid = false;
+            } else if (Integer.parseInt(paxInput) > maxPax) {
+                pax_Valid = false;
+            }
+
+            if (!cargoInput.matches("\\d+")) {
+                cargo_Valid = false;
+            } else if (Integer.parseInt(cargoInput) > maxCargo) {
+                cargo_Valid = false;
+            }
+
         } catch (Exception e) {
             System.out.println("AC Database Error");
         }
 
-        // --- D. RUNWAY CHECK ---
+        // --- D. RUNWAY VALIDATION ---
         if (originRWYLn.getForeground() == Color.red || destRWYLn.getForeground() == Color.red || acRWYLn.getForeground() == Color.red) {
             runway_Valid = false;
         }
@@ -924,15 +929,13 @@ public class addFlightScreen_M extends javax.swing.JFrame {
 
             this.Ac_Type = selectedAc;
 
-            // --- 1. CAPTURE BOTH SHORT AND FULL NAMES ---
-            // Short Code (e.g., "RPVM") for Timetable
+            // Short Codes
             this.Origin_Airport = origin_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
             this.Destination_Airport = destination_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
 
-            // Full Name (e.g., "RPVM(Cebu)") for Route File
+            // Full Names
             String originFull = origin_drpdwn.getSelectedItem().toString().trim();
             String destFull = destination_drpdwn.getSelectedItem().toString().trim();
-            // ---------------------------------------------
 
             this.Frequency = getFrequencyString();
 
@@ -942,26 +945,48 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             );
 
             try {
-                // 1. Add to Timetable
                 ops.Admin_AddFlight();
+                verifyAndAddRoute(Airline_Name, Ac_Type, originFull, destFull);
 
-                // 2. Add to Pricing File (With Full Names)
-                // Note: verifyAndAddRoute in this class uses 'this.Airline_Name' internally
-                verifyAndAddRoute(Ac_Type, originFull, destFull);
+                // --- ARCHIVE-STYLE LOGGING ---
+                String timestamp = java.time.LocalDateTime.now()
+                        .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+                String logEntry = String.format(
+                        "[%s]%n" +
+                        "EVENT  : FLIGHT_ADDITION%n" +
+                        "ACTION : New flight added%n" +
+                        "ACTOR  : ADMIN%n%n" +
+                        "DETAILS%n" +
+                        "--------%n" +
+                        "Flight No     : %s%n" +
+                        "Airline       : %s%n" +
+                        "Aircraft      : %s%n" +
+                        "Origin        : %s%n" +
+                        "Destination   : %s%n" +
+                        "Time          : %s%n" +
+                        "Frequency     : %s%n" +
+                        "PAX           : %s%n" +
+                        "Cargo         : %s%n" +
+                        "Status        : %s%n%n" +
+                        "----------------------------------------%n%n",
+                        timestamp, Flight_Number, Airline_Name, Ac_Type, Origin_Airport, Destination_Airport,
+                        Time, Frequency, paxInput, cargoInput, statusInput
+                );
+
+                logs.writeLog(logEntry);
 
                 javax.swing.JOptionPane.showMessageDialog(this, "Flight Added Successfully!");
                 ArrivalTimetableGenerator.generate();
                 dispose();
+
             } catch (IOException e) {
                 logger.log(java.util.logging.Level.SEVERE, null, e);
             }
+
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Please fix the errors in red.", "Validation Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-    
-        
-        
-    
     }//GEN-LAST:event_btn_addFlightActionPerformed
 
     
