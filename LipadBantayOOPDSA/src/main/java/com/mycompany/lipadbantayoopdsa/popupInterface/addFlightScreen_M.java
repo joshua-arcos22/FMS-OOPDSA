@@ -888,11 +888,11 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             Scanner reader = new Scanner(acFile);
             int maxPax = 0;
             int maxCargo = 0;
-
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
-                if (line.trim().isEmpty()) continue;
-
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
                 String[] parts = line.split("-");
                 if (parts[0].equalsIgnoreCase(selectedAc)) {
                     maxPax = Integer.parseInt(parts[2]);
@@ -902,17 +902,28 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             }
             reader.close();
 
-            // Pax and Cargo validation (even if manager inputs 0, keeps validation structure)
             if (!paxInput.matches("\\d+")) {
+                errorPAX.setText("Invalid");
+                errorPAX.setForeground(Color.red);
                 pax_Valid = false;
             } else if (Integer.parseInt(paxInput) > maxPax) {
+                errorPAX.setText("Limit: " + maxPax);
+                errorPAX.setForeground(Color.red);
                 pax_Valid = false;
+            } else {
+                errorPAX.setText(" ");
             }
 
             if (!cargoInput.matches("\\d+")) {
+                errorCARGO.setText("Invalid");
+                errorPAX.setForeground(Color.red);
                 cargo_Valid = false;
             } else if (Integer.parseInt(cargoInput) > maxCargo) {
+                errorCARGO.setText("Limit: " + maxCargo);
+                errorCARGO.setForeground(Color.red);
                 cargo_Valid = false;
+            } else {
+                errorCARGO.setText(" ");
             }
 
         } catch (Exception e) {

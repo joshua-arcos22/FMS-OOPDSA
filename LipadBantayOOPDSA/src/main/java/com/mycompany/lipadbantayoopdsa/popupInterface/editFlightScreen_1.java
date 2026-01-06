@@ -1015,6 +1015,7 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
             // Check Pax
             if (!paxInput.matches("\\d+")) {
                 errorPAX.setText("Invalid");
+                errorPAX.setForeground(Color.red);
                 pax_Valid = false;
             } else if (Integer.parseInt(paxInput) > maxPax) {
                 errorPAX.setText("Limit: " + maxPax);
@@ -1027,6 +1028,7 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
             // Check Cargo
             if (!cargoInput.matches("\\d+")) {
                 errorCARGO.setText("Invalid");
+                errorPAX.setForeground(Color.red);
                 cargo_Valid = false;
             } else if (Integer.parseInt(cargoInput) > maxCargo) {
                 errorCARGO.setText("Limit: " + maxCargo);

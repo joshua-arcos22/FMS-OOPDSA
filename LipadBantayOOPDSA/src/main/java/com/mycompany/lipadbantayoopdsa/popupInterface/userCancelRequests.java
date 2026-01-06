@@ -30,7 +30,7 @@ public class userCancelRequests extends javax.swing.JFrame {
     
     public userCancelRequests(String airlineName, String prefix) {
         this.currentAirlineName = airlineName;
-        
+        this.currentAirlinePrefix = prefix;
         initComponents();
         loadRequests(); // <--- Add this
     }
@@ -92,45 +92,75 @@ public class userCancelRequests extends javax.swing.JFrame {
             return;
         }
 
-        // 1. Get Ticket Info
+        // 1. Get Identifiers from Table
         String targetUser = jTable1.getValueAt(selectedRow, 0).toString();
         String targetFlight = jTable1.getValueAt(selectedRow, 2).toString();
 
-        // 2. Confirmation
+        // 2. Confirmation Dialog
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to CANCEL this booking? \nThis will permanently delete the record.", 
+            "Are you sure you want to CANCEL this booking? \nThis will permanently delete the record and free up seats.", 
             "Confirm Cancellation", javax.swing.JOptionPane.YES_NO_OPTION);
-
+            
         if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
 
-        // 3. DELETE FROM BOOKINGS.TXT
-        boolean bookingDeleted = deleteRecordFromBookings(targetUser, targetFlight);
+        // 3. RETRIEVE INFO (Pax/Luggage) from bookings.txt before deleting
+        java.io.File bookingFile = new java.io.File(AdminOperations.Database_Bookings_Path);
+        int paxToRemove = 0;
+        int luggageToRemove = 0;
+        boolean foundInfo = false;
 
-        // 4. DELETE FROM CANCELLATION_REQUESTS.TXT
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(bookingFile))) {
+            String line;
+            String currentUserContext = "";
+            while ((line = br.readLine()) != null) {
+                String trimmed = line.trim();
+                
+                // Handle User Header (e.g., (joshua_123))
+                if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
+                    currentUserContext = trimmed.substring(1, trimmed.length() - 1);
+                    continue;
+                }
+                
+                // Find the specific flight line for this user
+                if (currentUserContext.equals(targetUser) && trimmed.contains(" - " + targetFlight + " - ")) {
+                    String[] parts = trimmed.split(" - ");
+
+                    // NEW FORMAT: Check Index 10 for Luggage
+                    if (parts.length >= 11) {
+                        try {
+                            // Pax is NOT at index 9 anymore? 
+                            // Wait, your format is: Date(8) - Seats(9) - Luggage(10)
+                            // We need Pax count. Pax count is derived from Seats(9).
+
+                            String seatString = parts[9].trim();
+                            paxToRemove = seatString.split(",").length; // Count seats
+
+                            luggageToRemove = Integer.parseInt(parts[10].trim()); // Luggage
+
+                            foundInfo = true;
+                            break;
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+            }
+        } catch (java.io.IOException e) { e.printStackTrace(); }
+
+        // 4. Update Master File (Subtract) if info was found
+        if (foundInfo) {
+            updateMasterFile(targetFlight, paxToRemove, luggageToRemove);
+        } else {
+            // Optional warning if you want to know if logic failed
+            System.out.println("Warning: Could not find booking details to update capacity.");
+        }
+
+        // 5. DELETE RECORDS (Existing Logic)
+        boolean bookingDeleted = deleteRecordFromBookings(targetUser, targetFlight);
         boolean requestDeleted = deleteRecordFromRequests(targetUser, targetFlight);
 
         if (bookingDeleted || requestDeleted) {
-            // --- LOGGING ---
-            String timestamp = java.time.LocalDateTime.now()
-                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
-
-            String logEntry = String.format(
-                "[%s]%n" +
-                "EVENT  : BOOKING_CANCELLATION%n" +
-                "ACTION : Booking cancelled and records deleted%n" +
-                "ACTOR  : ADMIN%n%n" +
-                "DETAILS%n" +
-                "--------%n" +
-                "User       : %s%n" +
-                "Flight No  : %s%n%n" +
-                "----------------------------------------%n%n",
-                timestamp, targetUser, targetFlight
-            );
-
-            logs.writeLog(logEntry);
-
-            javax.swing.JOptionPane.showMessageDialog(this, "Booking Cancelled and Records Deleted.");
-            loadRequests(); // Refresh
+            javax.swing.JOptionPane.showMessageDialog(this, "Booking Cancelled. Seats/Luggage returned to inventory.");
+            loadRequests(); // Refresh Table
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Error: Could not find records to delete.");
         }
@@ -284,7 +314,6 @@ public class userCancelRequests extends javax.swing.JFrame {
     private void searchFlights() {
         String query = SearchField1.getText().toLowerCase().trim();
 
-        // If empty or default text, reload all
         if (query.isEmpty() || query.equals("search for a flight")) {
             loadRequests();
             return;
@@ -334,6 +363,77 @@ public class userCancelRequests extends javax.swing.JFrame {
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    
+    private boolean updateMasterFile(String flightNum, int paxToSubtract, int luggageToSubtract) {
+        java.io.File file = new java.io.File(AdminOperations.Database_TimeTable_Departure_Path);
+        if (!file.exists()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: Master Timetable not found.");
+            return false;
+        }
+
+        java.util.List<String> allLines = new java.util.ArrayList<>();
+        boolean updated = false;
+
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("-");
+                
+                // Check Flight Number (Index 6)
+                if (parts.length >= 10 && parts[6].trim().equalsIgnoreCase(flightNum)) {
+                    try {
+                        int currentPax = Integer.parseInt(parts[7].trim());
+                        int currentCargo = Integer.parseInt(parts[8].trim());
+
+                        // --- SUBTRACT VALUES ---
+                        int newPax = currentPax - paxToSubtract;
+                        int newLuggage = currentCargo - luggageToSubtract;
+
+                        // --- SAFETY MEASURE: PREVENT NEGATIVES ---
+                        if (newPax < 0) {
+                            newPax = 0; 
+                        }
+                        if (newLuggage < 0) {
+                            newLuggage = 0;
+                        }
+                        // ------------------------------------------
+
+                        // Update array
+                        parts[7] = String.valueOf(newPax);
+                        parts[8] = String.valueOf(newLuggage);
+                        
+                        String newLine = String.join("-", parts);
+                        allLines.add(newLine);
+                        updated = true;
+
+                    } catch (NumberFormatException e) {
+                        allLines.add(line);
+                    }
+                } else {
+                    allLines.add(line);
+                }
+            }
+        } catch (java.io.IOException e) { 
+            e.printStackTrace(); 
+            return false; 
+        }
+
+        // Write changes back
+        if (updated) {
+            try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
+                for (String s : allLines) {
+                    bw.write(s);
+                    bw.newLine();
+                }
+                return true;
+            } catch (java.io.IOException e) { 
+                e.printStackTrace(); 
+                return false; 
+            }
+        }
+        return false;
     }
     
     
@@ -561,14 +661,17 @@ public class userCancelRequests extends javax.swing.JFrame {
     }//GEN-LAST:event_declineActionPerformed
 
     private void SearchField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchField1FocusGained
-        SearchField.setText("");
-        SearchField.setForeground(Color.BLACK);
+        // FIX: Use SearchField1 instead of SearchField
+        if (SearchField1.getText().equals("Search for a flight")) {
+            SearchField1.setText("");
+            SearchField1.setForeground(Color.BLACK);
+        }
     }//GEN-LAST:event_SearchField1FocusGained
 
     private void SearchField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchField1FocusLost
-        if (SearchField.getText().trim().isEmpty()) {
-            SearchField.setText("Search for a flight");
-            SearchField.setForeground(Color.LIGHT_GRAY);
+        if (SearchField1.getText().trim().isEmpty()) {
+            SearchField1.setText("Search for a flight");
+            SearchField1.setForeground(Color.LIGHT_GRAY);
         }
     }//GEN-LAST:event_SearchField1FocusLost
 
