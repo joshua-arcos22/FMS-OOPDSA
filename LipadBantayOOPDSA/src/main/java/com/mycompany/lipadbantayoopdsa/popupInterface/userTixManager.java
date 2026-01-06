@@ -6,6 +6,7 @@ package com.mycompany.lipadbantayoopdsa.popupInterface;
 
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
 
 /**
@@ -128,20 +129,44 @@ public class userTixManager extends javax.swing.JFrame {
                     // Check if this is the target line
                     if (!trimmed.isEmpty() && trimmed.contains(" - ")) {
                         String[] parts = trimmed.split(" - ");
-                        
+
                         // Match User + Flight + Seat
-                        if (currentUserContext.equals(targetUser) && 
-                            parts.length >= 16 && 
-                            parts[5].equals(targetFlight) && 
+                        if (currentUserContext.equals(targetUser) &&
+                            parts.length >= 16 &&
+                            parts[5].equals(targetFlight) &&
                             parts[9].equals(targetSeat)) {
-                            
+
                             // UPDATE STATUS (The last element)
                             parts[parts.length - 1] = newStatus;
-                            
+
                             // Rebuild the line
                             String newLine = String.join(" - ", parts);
                             allLines.add(newLine);
                             updateSuccess = true;
+
+                            // -----------------------
+                            // LOG THE STATUS CHANGE
+                            // -----------------------
+                            String timestamp = java.time.LocalDateTime.now()
+                                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+                            String logEntry = String.format(
+                                "[%s]%n" +
+                                "EVENT  : TICKET_STATUS_UPDATE%n" +
+                                "ACTION : Ticket status changed%n" +
+                                "ACTOR  : ADMIN%n%n" +
+                                "DETAILS%n" +
+                                "--------%n" +
+                                "User          : %s%n" +
+                                "Flight No     : %s%n" +
+                                "Seat          : %s%n" +
+                                "New Status    : %s%n%n" +
+                                "----------------------------------------%n%n",
+                                timestamp, targetUser, targetFlight, targetSeat, newStatus
+                            );
+
+                            logs.writeLog(logEntry); // Assuming 'logs' is your logging instance
+
                         } else {
                             allLines.add(line); // Not the target, keep as is
                         }
@@ -161,7 +186,9 @@ public class userTixManager extends javax.swing.JFrame {
                 }
                 javax.swing.JOptionPane.showMessageDialog(this, "Ticket Status Updated to: " + newStatus);
                 loadBookings(); // Refresh table
-            } 
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "No matching ticket found to update.");
+            }
 
         } catch (java.io.IOException e) {
             e.printStackTrace();
