@@ -11,6 +11,7 @@ import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunction;
 import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunctionA;
 import com.mycompany.lipadbantayoopdsa.popupInterface.archiveScreen;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
@@ -937,6 +938,44 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                 // 2. DELETE from Active Files (Departure & Arrival)
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Departure_Path, flightNumber);
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Arrivals_Path, flightNumber);
+
+                // ================= MASTER LOG (ARCHIVE) =================
+                java.time.format.DateTimeFormatter dtf =
+                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+                String timestamp = java.time.LocalDateTime.now().format(dtf);
+
+                String airline = FlightTable.getValueAt(selectedRow, 0).toString();
+                String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
+                String origin = FlightTable.getValueAt(selectedRow, 2).toString();
+                String destination = FlightTable.getValueAt(selectedRow, 3).toString();
+                String time = FlightTable.getValueAt(selectedRow, 4).toString();
+                String frequency = FlightTable.getValueAt(selectedRow, 5).toString();
+                String pax = FlightTable.getValueAt(selectedRow, 6).toString();
+                String cargo = FlightTable.getValueAt(selectedRow, 7).toString();
+
+                StringBuilder logEntry = new StringBuilder();
+
+                logEntry.append("[").append(timestamp).append("]\n");
+                logEntry.append("EVENT  : FLIGHT_ARCHIVE\n");
+                logEntry.append("ACTION : Flight moved to archive\n");
+                logEntry.append("ACTOR  : SYSTEM\n\n");
+
+                logEntry.append("DETAILS\n");
+                logEntry.append("--------\n");
+                logEntry.append("Flight Number       : ").append(flightNumber).append("\n");
+                logEntry.append("Airline Name        : ").append(airline).append("\n");
+                logEntry.append("Aircraft Type       : ").append(aircraft).append("\n");
+                logEntry.append("Origin Airport      : ").append(origin).append("\n");
+                logEntry.append("Destination Airport : ").append(destination).append("\n");
+                logEntry.append("Time                : ").append(time).append("\n");
+                logEntry.append("Frequency           : ").append(frequency).append("\n");
+                logEntry.append("PAX Capacity        : ").append(pax).append("\n");
+                logEntry.append("Cargo Capacity      : ").append(cargo).append("\n");
+                logEntry.append("Status              : Archived\n\n");
+                logEntry.append("----------------------------------------\n\n");
+
+                com.mycompany.lipadbantayoopdsa.Logs.logs.writeLog(logEntry.toString());
+                // ========================================================
 
                 // 3. Refresh Table
                 loadFlightsToTableDeparture();

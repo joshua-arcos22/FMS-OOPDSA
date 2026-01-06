@@ -15,6 +15,7 @@ import com.mycompany.lipadbantayoopdsa.popupInterface.archiveScreen;
 import com.mycompany.lipadbantayoopdsa.popupInterface.archiveScreen_M;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_M;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
@@ -923,7 +924,6 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     }//GEN-LAST:event_editFlightActionPerformed
 
     private void deleteFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFlightActionPerformed
-
         int selectedRow = FlightTable.getSelectedRow();
 
         if (selectedRow == -1) {
@@ -940,7 +940,17 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         );
 
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+            // Grab all flight details from the table
             String flightNumber = FlightTable.getValueAt(selectedRow, 8).toString();
+            String airlineName = FlightTable.getValueAt(selectedRow, 0).toString();
+            String aircraftType = FlightTable.getValueAt(selectedRow, 1).toString();
+            String origin = FlightTable.getValueAt(selectedRow, 2).toString();
+            String destination = FlightTable.getValueAt(selectedRow, 3).toString();
+            String time = FlightTable.getValueAt(selectedRow, 4).toString();
+            String frequency = FlightTable.getValueAt(selectedRow, 5).toString();
+            String pax = FlightTable.getValueAt(selectedRow, 6).toString();
+            String cargo = FlightTable.getValueAt(selectedRow, 7).toString();
+            String status = FlightTable.getValueAt(selectedRow, 9).toString(); // Adjust if needed
 
             try {
                 // 1. COPY to Archive File
@@ -950,8 +960,38 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Departure_Path, flightNumber);
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Arrivals_Path, flightNumber);
 
-                // 3. Refresh Table
+                // 3. REFRESH TABLE
                 loadFlightsToTableDeparture();
+
+                // 4. LOG ARCHIVE ACTION
+                String timestamp = java.time.LocalDateTime.now()
+                        .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+                
+                String archivedStatus = "ARCHIVED";
+
+                String logEntry = String.format(
+                    "[%s]%n" +
+                    "EVENT  : FLIGHT_ARCHIVE%n" +
+                    "ACTION : Flight archived%n" +
+                    "ACTOR  : FLIGHT MANAGER%n%n" +
+                    "DETAILS%n" +
+                    "--------%n" +
+                    "Flight No     : %s%n" +
+                    "Airline       : %s%n" +
+                    "Aircraft      : %s%n" +
+                    "Origin        : %s%n" +
+                    "Destination   : %s%n" +
+                    "Time          : %s%n" +
+                    "Frequency     : %s%n" +
+                    "PAX           : %s%n" +
+                    "Cargo         : %s%n" +
+                    "Status        : %s%n%n" +
+                    "----------------------------------------%n%n",
+                    timestamp, flightNumber, airlineName, aircraftType, origin, destination,
+                    time, frequency, pax, cargo, archivedStatus
+                );
+
+                logs.writeLog(logEntry);
 
                 javax.swing.JOptionPane.showMessageDialog(this, "Flight archived successfully.");
 
