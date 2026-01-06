@@ -1,8 +1,8 @@
-ATR72-RPLC(Clark)-RPNS(Del Carmen)-1500
-ATR72-RPLC(Clark)-RPVE(Caticlan)-1500
-ATR72-RPLC(Clark)-RPVV(Busuanga)-1500
-ATR72-RPLL(Manila)-RPVM(Mactan)-1500
-ATR72-RPLL(Manila)-RPVV(Busuanga)-1500
-ATR72-RPVM(Mactan)-RPLL(Manila)-1500
-ATR72-RPVM(Mactan)-RPNS(Del Carmen)-1500
-ATR72-RPVM(Mactan)-RPVV(Busuanga)-1500
+ATR72-RPLC(Clark)-RPNS(Siargao)-1500
+ATR72-RPLC(Clark)-RPVE(Boracay)-1500
+ATR72-RPLC(Clark)-RPVV(Coron)-1500
+ATR72-RPLL(Manila)-RPVM(Cebu)-1500
+ATR72-RPLL(Manila)-RPVV(Coron)-1500
+ATR72-RPVM(Cebu)-RPLL(Manila)-1500
+ATR72-RPVM(Cebu)-RPNS(Siargao)-1500
+ATR72-RPVM(Cebu)-RPVV(Coron)-1500

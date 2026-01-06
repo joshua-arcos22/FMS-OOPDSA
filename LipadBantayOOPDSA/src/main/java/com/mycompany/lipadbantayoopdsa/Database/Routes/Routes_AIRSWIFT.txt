@@ -1,5 +1,5 @@
 ATR72-RPEN(El Nido)-RPLL(Manila)-1500
-ATR72-RPEN(El Nido)-RPSP(Panglao)-1500
-ATR72-RPEN(El Nido)-RPVE(Caticlan)-1500
-ATR72-RPEN(El Nido)-RPVM(Mactan)-1500
-ATR72-RPEN(El Nido)-RPVV(Busuanga)-1500
+ATR72-RPEN(El Nido)-RPSP(Bohol)-1500
+ATR72-RPEN(El Nido)-RPVE(Boracay)-1500
+ATR72-RPEN(El Nido)-RPVM(Cebu)-1500
+ATR72-RPEN(El Nido)-RPVV(Coron)-1500

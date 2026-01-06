@@ -1,17 +1,17 @@
-A320-RPLC(Clark)-RPVE(Caticlan)-1500
+A320-RPLC(Clark)-RPVE(Boracay)-1500
 A320-RPLL(Manila)-RPMY(Cagayan de Oro)-1500
-A320-RPLL(Manila)-RPSP(Panglao)-1500
+A320-RPLL(Manila)-RPSP(Bohol)-1500
 A320-RPLL(Manila)-RPVA(Tacloban)-1500
 A320-RPLL(Manila)-RPVB(Bacolod)-1500
-A320-RPLL(Manila)-RPVE(Caticlan)-1500
+A320-RPLL(Manila)-RPVE(Boracay)-1500
 A320-RPLL(Manila)-RPVI(Iloilo)-1500
 A320-RPLL(Manila)-RPVK(Kalibo)-1500
-A320-RPLL(Manila)-RPVM(Mactan)-1500
+A320-RPLL(Manila)-RPVM(Cebu)-1500
 A320-RPLL(Manila)-RPVP(Puerto Princesa)-1500
 A320-RPLL(Manila)-RPVR(Roxas)-1500
-A320-RPVM(Mactan)-RPLL(Manila)-1500
-A320-RPVM(Mactan)-RPMD(Davao)-1500
-A320-RPVM(Mactan)-RPVE(Caticlan)-1500
-A320-RPLC(Mabalacat)-RPMG(Dipolog)-1500
-A320-RPLC(Mabalacat)-RPLK(Daraga)-1600
-A320-RPLK(Daraga)-RPMR(General Santos)-1500
+A320-RPVM(Cebu)-RPLL(Manila)-1500
+A320-RPVM(Cebu)-RPMD(Davao)-1500
+A320-RPVM(Cebu)-RPVE(Boracay)-1500
+A320-RPLC(Clark)-RPMG(Dipolog)-1500
+A320-RPLC(Clark)-RPLK(Legazpi)-1600
+A320-RPLK(Legazpi)-RPMR(General Santos)-1500
