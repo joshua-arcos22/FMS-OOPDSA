@@ -36,20 +36,23 @@ public class LoginForm extends javax.swing.JFrame {
  * Returns the role string (ADMIN/AIRLINE_MANAGER/USER) or null if authentication fails.
  */
     private String authenticateUser(String username, String password) {
-        String filePath = Paths.get(System.getProperty("user.dir"), 
-                                        "src", "main", "java", "com", "mycompany", 
-                                        "lipadbantayoopdsa", "userAuthentication", 
-                                        "user_credentials.txt").toString();
+        String filePath = Paths.get(System.getProperty("user.dir"),
+                "src", "main", "java", "com", "mycompany",
+                "lipadbantayoopdsa", "userAuthentication",
+                "user_credentials.txt").toString();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             String fileUsername = null;
             String filePassword = null;
             String fileRole = null;
+            String fileStatus = "ACCEPTED"; // Default for old accounts
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                if (line.isEmpty()) continue;
+                if (line.isEmpty()) {
+                    continue;
+                }
 
                 if (line.startsWith("USERNAME:")) {
                     fileUsername = line.substring("USERNAME:".length()).trim();
@@ -57,29 +60,39 @@ public class LoginForm extends javax.swing.JFrame {
                     filePassword = line.substring("PASSWORD:".length()).trim();
                 } else if (line.startsWith("ROLE:")) {
                     fileRole = line.substring("ROLE:".length()).trim();
+                } else if (line.startsWith("STATUS:")) {
+                    fileStatus = line.substring("STATUS:".length()).trim();
                 } else if (line.startsWith("----------------------------")) {
+
+                    // Check credentials at end of block
                     if (fileUsername != null && filePassword != null && fileRole != null) {
                         if (fileUsername.equals(username) && filePassword.equals(password)) {
+
+                            // 1. Check for PENDING
+                            if ("PENDING".equalsIgnoreCase(fileStatus)) {
+                                return "STATUS_PENDING";
+                            }
+
+                            // 2. Check for DISABLED (or Declined)
+                            if ("DISABLED".equalsIgnoreCase(fileStatus) || "DECLINED".equalsIgnoreCase(fileStatus)) {
+                                return "STATUS_DISABLED";
+                            }
+
+                            // 3. Otherwise, return the actual Role (Active)
                             return fileRole;
                         }
                     }
+                    // Reset
                     fileUsername = null;
                     filePassword = null;
                     fileRole = null;
+                    fileStatus = "ACCEPTED";
                 }
             }
-
-            
-            if (fileUsername != null && filePassword != null && fileRole != null) {
-                if (fileUsername.equals(username) && filePassword.equals(password)) {
-                    return fileRole;
-                }
-            }
-
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(this, "Error: user_credentials.txt not found. Place it in the main project folder.", "File Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error: user_credentials.txt not found.", "File Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error reading user database: " + e.getMessage(), "File Read Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error reading database.", "Read Error", JOptionPane.ERROR_MESSAGE);
         }
 
         return null; // Not found
@@ -287,7 +300,6 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUsnActionPerformed
 
     private void btnSignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignInActionPerformed
-        // TODO add your handling code here:
         String username = txtUsn.getText().trim();
         String password = String.valueOf(pwPW.getPassword());
 
@@ -296,15 +308,31 @@ public class LoginForm extends javax.swing.JFrame {
             return;
         }
 
-        String userRole = authenticateUser(username, password); // read from user_credentials.txt
+        String authResult = authenticateUser(username, password);
 
-        if (userRole != null) {
-            
+        if (authResult != null) {
+
+            // --- HANDLE STATUS MESSAGES ---
+            if (authResult.equals("STATUS_PENDING")) {
+                JOptionPane.showMessageDialog(this,
+                        "Your account is still being validated.",
+                        "Account Pending", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            if (authResult.equals("STATUS_DISABLED")) {
+                JOptionPane.showMessageDialog(this,
+                        "Your account is disabled. Contact supervisor.",
+                        "Account Disabled", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // --- PROCEED IF ACTIVE ---
             // Log the user who signed in
-            writeLoginLog(username, userRole);
-            
+            writeLoginLog(username, authResult);
+
             JFrame dashboard = null;
-            switch (userRole) {
+            switch (authResult) {
                 case "ADMIN":
                     dashboard = new MainFlightDisplayAdmin();
                     break;
@@ -315,12 +343,15 @@ public class LoginForm extends javax.swing.JFrame {
                     dashboard = new UserDashboard(username);
                     break;
                 default:
-                    JOptionPane.showMessageDialog(this, "Unknown user role.", "Login Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Unknown user role: " + authResult, "Login Error", JOptionPane.ERROR_MESSAGE);
                     return;
             }
 
-            dashboard.setVisible(true);
-            this.dispose(); // close login form
+            if (dashboard != null) {
+                dashboard.setVisible(true);
+                this.dispose(); // close login form
+            }
+
         } else {
             JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Error", JOptionPane.ERROR_MESSAGE);
         }

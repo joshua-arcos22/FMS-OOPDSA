@@ -284,6 +284,7 @@ public class RegistrationForm extends javax.swing.JFrame {
                     "USERNAME: " + username + System.lineSeparator() +
                     "PASSWORD: " + password + System.lineSeparator() +
                     "ROLE: " + role + System.lineSeparator() +
+                    "STATUS: ACTIVE" + System.lineSeparator() +
                     "----------------------------";
             credWriter.println(credRecord);
 
@@ -295,8 +296,8 @@ public class RegistrationForm extends javax.swing.JFrame {
                     .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
 
             String logEntry = String.format(
-                "[%s]%nEVENT  : USER_REGISTRATION%nACTION : New user registered%nACTOR  : SYSTEM%n%nDETAILS%n--------%nUsername  : %s%nFull Name : %s%nRole      : USER%n%n----------------------------------------%n%n",
-                timestamp, username, fullName
+                    "[%s]%nEVENT  : USER_REGISTRATION%nACTION : New user registered%nACTOR  : SYSTEM%n%nDETAILS%n--------%nUsername  : %s%nFull Name : %s%nRole      : USER%nStatus    : ACTIVE%n%n----------------------------------------%n%n",
+                    timestamp, username, fullName
             );
             
             logs.writeLog(logEntry); 

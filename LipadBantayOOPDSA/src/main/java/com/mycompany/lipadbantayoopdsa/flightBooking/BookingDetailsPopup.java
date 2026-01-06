@@ -29,6 +29,7 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
     
     private String airline, aircraft, day, time, origin, dest, flightNum, username, status, bookingDate;
     private Double calculatedPrice;
+    private double currentTotalFare = 0.0; // <--- ADD THIS VARIABLE
     private final double baseFare = 2500.00;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BookingDetailsPopup.class.getName());
 
@@ -86,6 +87,8 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
         double luggageSub = luggage * luggageRate;
         double total = adultSub + childSub + luggageSub;
 
+        this.currentTotalFare = total;
+        
         int totalBooked = adults + children + infants;
         int remaining = 5 - totalBooked;
         lblRemainingSeats.setText("Seats Available: " + remaining);
@@ -375,7 +378,9 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
 
     private void openSeatSelection(int seatsNeeded, String partialRecord) {
         String type = this.aircraft.toLowerCase().trim(); // e.g., "q400" or "a320"
-        String price = String.valueOf(calculatedPrice);
+        
+       String price = String.format("%.2f", this.currentTotalFare);
+       
         try {
             switch (type) {
                 case "q400":

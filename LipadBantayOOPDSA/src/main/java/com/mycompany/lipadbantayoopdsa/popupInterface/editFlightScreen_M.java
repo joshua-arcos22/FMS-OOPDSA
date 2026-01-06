@@ -357,7 +357,7 @@ public class editFlightScreen_M extends javax.swing.JFrame {
 
         flnField.setBackground(new java.awt.Color(0, 153, 204));
         flnField.setForeground(new java.awt.Color(255, 255, 255));
-        flnField.setText("6767");
+        flnField.setText("FL1234");
         flnField.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         btn_back.setText("BACK");

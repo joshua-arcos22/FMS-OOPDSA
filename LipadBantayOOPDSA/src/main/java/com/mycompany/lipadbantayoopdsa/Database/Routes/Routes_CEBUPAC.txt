@@ -69,3 +69,4 @@ A330-RPLL(Manila)-RPMR(General Santos)-1500
 A330-RPLL(Manila)-RPVM(Mactan)-1500
 ATR72-RPLK(Daraga)-RPLL(Manila)-1500
 A320-RPLL(Manila)-RPLK(Daraga)-0.00
+A320-RPLK(Daraga)-RPMD(Davao)-1000

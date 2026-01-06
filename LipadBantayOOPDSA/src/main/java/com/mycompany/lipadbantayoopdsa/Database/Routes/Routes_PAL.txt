@@ -61,3 +61,4 @@ Q400-RPVM(Mactan)-RPVF(Catarman)-1500
 Q400-RPVM(Mactan)-RPVP(Puerto Princesa)-1500
 Q400-RPVM(Mactan)-RPVV(Busuanga)-1500
 Q400-RPVM(Mactan)-RPVW(Borongan)-1500
+A320-RPLL(Manila)-RPLK(Daraga)-0.00

@@ -196,6 +196,8 @@ public class userTixManager extends javax.swing.JFrame {
     }
     
     
+    
+    
     private void searchFlights() {
         String query = SearchField.getText().toLowerCase().trim();
         
@@ -265,7 +267,70 @@ public class userTixManager extends javax.swing.JFrame {
         }
     }
     
-    
+    private boolean updateMasterFile(String flightNum, int paxToAdd, int luggageToAdd) {
+        java.io.File file = new java.io.File(masterPath);
+        if (!file.exists()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: Master Timetable file not found.");
+            return false;
+        }
+
+        java.util.List<String> allLines = new java.util.ArrayList<>();
+        boolean updated = false;
+
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Line Format: Airline-AcType-Origin-Dest-Freq-Time-FlightNo-Pax-Cargo-Status
+                String[] parts = line.split("-");
+                
+                // Index 6 is Flight Number (e.g., AL1123)
+                if (parts.length >= 10 && parts[6].trim().equalsIgnoreCase(flightNum)) {
+                    try {
+                        // Parse current values (Index 7 is Pax, Index 8 is Luggage)
+                        int currentPax = Integer.parseInt(parts[7].trim());
+                        int currentLuggage = Integer.parseInt(parts[8].trim());
+
+                        // Add new values
+                        int newPax = currentPax + paxToAdd;
+                        int newLuggage = currentLuggage + luggageToAdd;
+
+                        // Update the array
+                        parts[7] = String.valueOf(newPax);
+                        parts[8] = String.valueOf(newLuggage);
+                        
+                        // Reconstruct the line
+                        String newLine = String.join("-", parts);
+                        allLines.add(newLine);
+                        updated = true;
+
+                    } catch (NumberFormatException e) {
+                        allLines.add(line); // Skip if number parsing fails
+                    }
+                } else {
+                    allLines.add(line); // Keep other flights unchanged
+                }
+            }
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // Write changes back to the file
+        if (updated) {
+            try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
+                for (String s : allLines) {
+                    bw.write(s);
+                    bw.newLine();
+                }
+                return true;
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        
+        return false; // Flight not found
+    }
     
 
     /**
@@ -496,7 +561,65 @@ public class userTixManager extends javax.swing.JFrame {
     }//GEN-LAST:event_backActionPerformed
 
     private void acceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptActionPerformed
-        updateTicketStatus("ACCEPTED");
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a ticket to accept.");
+            return;
+        }
+
+        // 1. Get Ticket Identifiers from the table
+        String targetUser = jTable1.getValueAt(selectedRow, 0).toString();   // Name/User
+        String targetFlight = jTable1.getValueAt(selectedRow, 1).toString(); // Flight No
+        String targetSeat = jTable1.getValueAt(selectedRow, 3).toString();   // Seat
+
+        // 2. Retrieve Pax and Luggage counts from bookings.txt
+        // We need to read the file because the table doesn't show Luggage.
+        java.io.File bookingFile = new java.io.File("src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt");
+        int paxToAdd = 0;
+        int luggageToAdd = 0;
+        boolean foundBookingData = false;
+
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(bookingFile))) {
+            String line;
+            String currentUserContext = "";
+            while ((line = br.readLine()) != null) {
+                String trimmed = line.trim();
+                if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
+                    currentUserContext = trimmed.substring(1, trimmed.length() - 1);
+                    continue;
+                }
+
+                // Find the specific line matching User, Flight, and Seat
+                if (currentUserContext.equals(targetUser)
+                        && trimmed.contains(" - " + targetFlight + " - ")
+                        && trimmed.contains(" - " + targetSeat + " - ")) {
+
+                    String[] parts = trimmed.split(" - ");
+                    // Based on your save format, Pax is at index 9 and Luggage at index 10
+                    if (parts.length >= 11) {
+                        paxToAdd = Integer.parseInt(parts[9]);
+                        luggageToAdd = Integer.parseInt(parts[10]);
+                        foundBookingData = true;
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (!foundBookingData) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: Could not retrieve booking details.");
+            return;
+        }
+
+        // 3. Update the Master File with the retrieved values
+        if (updateMasterFile(targetFlight, paxToAdd, luggageToAdd)) {
+            // 4. If successful, change status to ACCEPTED
+            updateTicketStatus("ACCEPTED");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: Could not update flight capacity. Flight might not exist in Master file.");
+        }
     }//GEN-LAST:event_acceptActionPerformed
 
     private void pendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pendingActionPerformed

@@ -331,6 +331,7 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
                     "PASSWORD: " + password + System.lineSeparator() +
                     "PREFIX: " + airlinePrefix + System.lineSeparator() +
                     "ROLE: " + role + System.lineSeparator() +
+                    "STATUS: PENDING" + System.lineSeparator() +   
                     "----------------------------";
             credWriter.println(credRecord);
 
@@ -353,13 +354,14 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
                 "Fl. Prefix   : %s%n" +
                 "Username     : %s%n" +
                 "Role         : AIRLINE_MANAGER%n%n" +
+                "Status       : PENDING%n%n" +
                 "----------------------------------------%n%n",  // extra newline for spacing between logs
                 timestamp, fullName, airLineName, airlinePrefix, username
             );
 
             logs.writeLog(logEntry);
 
-            JOptionPane.showMessageDialog(this, "Registration successful! You can now sign in.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Registration successful! Request will be sent, Please wait for the account to be accepted.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
             // Go back to login form
             new LoginForm().setVisible(true);

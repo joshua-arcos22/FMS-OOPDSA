@@ -1,0 +1,359 @@
+[2026-01-04 | 21:05:43]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J8934
+Airline Name        : CEBUPAC
+Aircraft Type       : A320
+Origin Airport      : RPLK(Daraga)
+Destination Airport : RPMD(Davao)
+Time                : 1230
+Frequency           : TH/TH
+PAX Capacity        : 0
+Cargo Capacity      : 0
+Status              : Scheduled
+
+----------------------------------------
+
+[2026-01-05 | 19:40:02]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : PR6767
+Airline       : PAL
+Aircraft      : A320
+Origin        : RPLL
+Destination   : RPLK
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 12:59:26]
+EVENT  : AIRLINE_MANAGER_REGISTRATION
+ACTION : New airline manager registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Manager Name : Joshua Arcos
+Airline Name : AEL
+Fl. Prefix   : AL
+Username     : AEL_joshua
+Role         : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 13:13:19]
+EVENT  : AIRLINE_MANAGER_REGISTRATION
+ACTION : New airline manager registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Manager Name : Joshua Arcos
+Airline Name : AEL
+Fl. Prefix   : AL
+Username     : AEL_joshua
+Role         : AIRLINE_MANAGER
+
+Status       : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 13:26:53]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:29:26]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:30:45]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 13:31:05]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:32:52]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 13:33:03]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:33:28]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 13:33:36]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:33:59]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 13:34:08]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:35:07]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:35:34]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 13:35:41]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:36:43]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:37:28]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 13:37:34]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:37:43]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AL1123
+Airline Name        : AEL
+Aircraft Type       : A320
+Origin Airport      : RPLL(Manila)
+Destination Airport : RPLK(Daraga)
+Time                : 1230
+Frequency           : W/TH/W/TH
+PAX Capacity        : 0
+Cargo Capacity      : 0
+Status              : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 13:41:21]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:41:39]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 13:42:45]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:44:20]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 13:44:35]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:45:08]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 13:45:14]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:52:56]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:53:00]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 13:53:06]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:53:17]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 13:53:24]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 13:54:47]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 13:54:53]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 14:49:01]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 14:49:06]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+

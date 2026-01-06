@@ -4,6 +4,8 @@
  */
 package com.mycompany.lipadbantayoopdsa.popupInterface;
 
+import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
+
 /**
  *
  * @author Joshua
@@ -165,6 +167,8 @@ public class ManageBookingChoice extends javax.swing.JFrame {
     }//GEN-LAST:event_TicketRequestActionPerformed
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
+        AirlineManagerDashboard display = new AirlineManagerDashboard(currentAirlines, currentAirlinesPrefix);
+        display.setVisible(true);
         dispose();
     }//GEN-LAST:event_backActionPerformed
 
