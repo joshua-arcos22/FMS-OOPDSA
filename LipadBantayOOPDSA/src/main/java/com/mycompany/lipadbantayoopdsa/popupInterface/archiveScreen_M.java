@@ -13,6 +13,7 @@ import com.mycompany.lipadbantayoopdsa.MainFlightDisplayAdmin;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayManagers;
 import com.mycompany.lipadbantayoopdsa.distanceCalculator;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
@@ -180,7 +181,6 @@ public class archiveScreen_M extends javax.swing.JFrame {
             }
         });
 
-        FlightTable.setBackground(new java.awt.Color(255, 255, 255));
         FlightTable.setForeground(new java.awt.Color(0, 102, 204));
         FlightTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -291,14 +291,15 @@ public class archiveScreen_M extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(TopContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Combo_Origin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Combo_Aircraft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Combo_Destination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(resetFilters)
-                    .addComponent(applyFilters)
-                    .addComponent(Airline, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Airline, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Combo_Status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Combo_Origin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Combo_Aircraft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Combo_Destination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(resetFilters)
+                        .addComponent(applyFilters)))
                 .addGap(3, 3, 3)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -655,31 +656,73 @@ public class archiveScreen_M extends javax.swing.JFrame {
     }//GEN-LAST:event_resetFiltersActionPerformed
 
     private void deleteFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFlightActionPerformed
-            // PERMANENT DELETE BUTTON
-            int selectedRow = FlightTable.getSelectedRow();
+        // PERMANENT DELETE BUTTON
+        int selectedRow = FlightTable.getSelectedRow();
 
-            if (selectedRow == -1 || selectedRow == 0) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Select a flight to permanently delete.");
-                return;
-            }
+        if (selectedRow == -1 || selectedRow == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Select a flight to permanently delete.");
+            return;
+        }
 
-            int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
-                    "Are you sure? This will PERMANENTLY delete the record.", "Delete Forever",
-                    javax.swing.JOptionPane.YES_NO_OPTION);
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Are you sure? This will PERMANENTLY delete the record.",
+                "Delete Forever",
+                javax.swing.JOptionPane.YES_NO_OPTION);
 
-            if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-                String flightNum = FlightTable.getValueAt(selectedRow, 8).toString();
-                try {
-                    // Delete from Archive File
-                    deleteLineFromFile(AdminOperations.Database_TimeTable_Archive_Path, flightNum);
-                    loadArchiveData(); // Refresh table
-                    javax.swing.JOptionPane.showMessageDialog(this, "Flight deleted permanently.");
-                } catch (IOException e) {
-                    System.out.println("Error deleting: " + e.getMessage());
-                }
+        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+
+            // READ TABLE VALUES FIRST
+            String flightNumber = FlightTable.getValueAt(selectedRow, 8).toString();
+            String airline = FlightTable.getValueAt(selectedRow, 0).toString();
+            String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
+            String origin = FlightTable.getValueAt(selectedRow, 2).toString();
+            String destination = FlightTable.getValueAt(selectedRow, 3).toString();
+            String time = FlightTable.getValueAt(selectedRow, 4).toString();
+            String frequency = FlightTable.getValueAt(selectedRow, 5).toString();
+            String pax = FlightTable.getValueAt(selectedRow, 6).toString();
+            String cargo = FlightTable.getValueAt(selectedRow, 7).toString();
+
+            try {
+                // DELETE FROM ARCHIVE FILE
+                deleteLineFromFile(AdminOperations.Database_TimeTable_Archive_Path, flightNumber);
+
+                // ================= MASTER LOG (PERMANENT DELETE) =================
+                java.time.format.DateTimeFormatter dtf =
+                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+                String timestamp = java.time.LocalDateTime.now().format(dtf);
+
+                StringBuilder logEntry = new StringBuilder();
+
+                logEntry.append("[").append(timestamp).append("]\n");
+                logEntry.append("EVENT  : FLIGHT_DELETE\n");
+                logEntry.append("ACTION : Flight permanently deleted\n");
+                logEntry.append("ACTOR  : SYSTEM\n\n");
+
+                logEntry.append("DETAILS\n");
+                logEntry.append("--------\n");
+                logEntry.append("Flight Number       : ").append(flightNumber).append("\n");
+                logEntry.append("Airline Name        : ").append(airline).append("\n");
+                logEntry.append("Aircraft Type       : ").append(aircraft).append("\n");
+                logEntry.append("Origin Airport      : ").append(origin).append("\n");
+                logEntry.append("Destination Airport : ").append(destination).append("\n");
+                logEntry.append("Time                : ").append(time).append("\n");
+                logEntry.append("Frequency           : ").append(frequency).append("\n");
+                logEntry.append("PAX Capacity        : ").append(pax).append("\n");
+                logEntry.append("Cargo Capacity      : ").append(cargo).append("\n");
+                logEntry.append("Status              : Permanently Deleted\n\n");
+                logEntry.append("----------------------------------------\n\n");
+
+                com.mycompany.lipadbantayoopdsa.Logs.logs.writeLog(logEntry.toString());
+                // ================================================================
+
+                loadArchiveData(); // Refresh table
+                javax.swing.JOptionPane.showMessageDialog(this, "Flight deleted permanently.");
+
+            } catch (IOException e) {
+                System.out.println("Error deleting: " + e.getMessage());
             }
         }
-    
+    }
     // Helper to move string from Archive -> Departure
     private void restoreLineToMain(String flightNum) throws IOException {
         File archiveFile = new File(AdminOperations.Database_TimeTable_Archive_Path);
@@ -743,21 +786,61 @@ public class archiveScreen_M extends javax.swing.JFrame {
         }
 
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
-                "Restore this flight to the Active Schedule?", "Confirm Unarchive",
+                "Restore this flight to the Active Schedule?",
+                "Confirm Unarchive",
                 javax.swing.JOptionPane.YES_NO_OPTION);
 
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-            String flightNum = FlightTable.getValueAt(selectedRow, 8).toString();
+
+            // READ TABLE VALUES FIRST
+            String flightNumber = FlightTable.getValueAt(selectedRow, 8).toString();
+            String airline = FlightTable.getValueAt(selectedRow, 0).toString();
+            String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
+            String origin = FlightTable.getValueAt(selectedRow, 2).toString();
+            String destination = FlightTable.getValueAt(selectedRow, 3).toString();
+            String time = FlightTable.getValueAt(selectedRow, 4).toString();
+            String frequency = FlightTable.getValueAt(selectedRow, 5).toString();
+            String pax = FlightTable.getValueAt(selectedRow, 6).toString();
+            String cargo = FlightTable.getValueAt(selectedRow, 7).toString();
 
             try {
-                // A. Find line in Archive and Write to Departure Master
-                restoreLineToMain(flightNum);
+                // A. Restore to Main Database
+                restoreLineToMain(flightNumber);
 
                 // B. Delete from Archive
-                deleteLineFromFile(AdminOperations.Database_TimeTable_Archive_Path, flightNum);
+                deleteLineFromFile(AdminOperations.Database_TimeTable_Archive_Path, flightNumber);
 
-                // C. Regenerate Arrivals (since we just added a departure)
+                // C. Regenerate Arrivals
                 ArrivalTimetableGenerator.generate();
+
+                // ================= MASTER LOG (RESTORE) =================
+                java.time.format.DateTimeFormatter dtf =
+                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+                String timestamp = java.time.LocalDateTime.now().format(dtf);
+
+                StringBuilder logEntry = new StringBuilder();
+
+                logEntry.append("[").append(timestamp).append("]\n");
+                logEntry.append("EVENT  : FLIGHT_RESTORE\n");
+                logEntry.append("ACTION : Flight restored to active schedule\n");
+                logEntry.append("ACTOR  : SYSTEM\n\n");
+
+                logEntry.append("DETAILS\n");
+                logEntry.append("--------\n");
+                logEntry.append("Flight Number       : ").append(flightNumber).append("\n");
+                logEntry.append("Airline Name        : ").append(airline).append("\n");
+                logEntry.append("Aircraft Type       : ").append(aircraft).append("\n");
+                logEntry.append("Origin Airport      : ").append(origin).append("\n");
+                logEntry.append("Destination Airport : ").append(destination).append("\n");
+                logEntry.append("Time                : ").append(time).append("\n");
+                logEntry.append("Frequency           : ").append(frequency).append("\n");
+                logEntry.append("PAX Capacity        : ").append(pax).append("\n");
+                logEntry.append("Cargo Capacity      : ").append(cargo).append("\n");
+                logEntry.append("Status              : Restored\n\n");
+                logEntry.append("----------------------------------------\n\n");
+
+                com.mycompany.lipadbantayoopdsa.Logs.logs.writeLog(logEntry.toString());
+                // =========================================================
 
                 // D. Refresh View
                 loadArchiveData();

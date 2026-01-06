@@ -49,14 +49,16 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="TopContainer" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="Combo_Status" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="Combo_Origin" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="Combo_Aircraft" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="Combo_Destination" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="resetFilters" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="applyFilters" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="Airline" alignment="0" min="-2" pref="19" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="Combo_Status" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="Combo_Origin" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="Combo_Aircraft" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="Combo_Destination" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="resetFilters" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="applyFilters" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
               <Component id="jScrollPane2" pref="457" max="32767" attributes="0"/>
@@ -259,9 +261,6 @@
       <SubComponents>
         <Component class="javax.swing.JTable" name="FlightTable">
           <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-            </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="66" red="0" type="rgb"/>
             </Property>

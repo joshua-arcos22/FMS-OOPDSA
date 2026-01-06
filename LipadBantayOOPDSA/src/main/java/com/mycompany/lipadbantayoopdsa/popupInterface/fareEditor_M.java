@@ -7,6 +7,7 @@ package com.mycompany.lipadbantayoopdsa.popupInterface;
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.distanceCalculator;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
@@ -643,7 +644,6 @@ public class fareEditor_M extends javax.swing.JFrame {
     }//GEN-LAST:event_resetFiltersActionPerformed
 
     private void editFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFlightActionPerformed
-
         int selectedRow = FlightTable.getSelectedRow();
 
         // Check if empty row or no selection
@@ -652,23 +652,54 @@ public class fareEditor_M extends javax.swing.JFrame {
             return;
         }
 
-        // Get data needed to identify the line in the text file
+        // READ CURRENT VALUES
         String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
         String origin = FlightTable.getValueAt(selectedRow, 2).toString();
         String destination = FlightTable.getValueAt(selectedRow, 3).toString();
         String currentBaseFare = FlightTable.getValueAt(selectedRow, 5).toString();
 
-        // Open a simple input dialog to update the Base Fare
-        // (Or create a dedicated popup frame if you prefer)
+        // Input dialog for new Base Fare
         String newBaseFare = javax.swing.JOptionPane.showInputDialog(this,
                 "Edit Base Fare for " + origin + " to " + destination,
                 currentBaseFare);
 
         if (newBaseFare != null && !newBaseFare.isEmpty()) {
             try {
-                Double.parseDouble(newBaseFare); // Validate it's a number
+                Double.parseDouble(newBaseFare); // Validate number
+
+                // UPDATE FILE
                 updateRouteFile(aircraft, origin, destination, newBaseFare);
+
+                // ================= MASTER LOG (EDIT) =================
+                java.time.format.DateTimeFormatter dtf =
+                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+                String timestamp = java.time.LocalDateTime.now().format(dtf);
+
+                StringBuilder logEntry = new StringBuilder();
+
+                logEntry.append("[").append(timestamp).append("]\n");
+                logEntry.append("EVENT  : ROUTE_EDIT\n");
+                logEntry.append("ACTION : Base fare updated\n");
+                logEntry.append("ACTOR  : SYSTEM\n\n");
+
+                logEntry.append("DETAILS\n");
+                logEntry.append("--------\n");
+                logEntry.append("Aircraft Type       : ").append(aircraft).append("\n");
+                logEntry.append("Origin Airport      : ").append(origin).append("\n");
+                logEntry.append("Destination Airport : ").append(destination).append("\n\n");
+
+                logEntry.append("CHANGES\n");
+                logEntry.append("--------\n");
+                logEntry.append("Base Fare (Before)  : ").append(currentBaseFare).append("\n");
+                logEntry.append("Base Fare (After)   : ").append(newBaseFare).append("\n\n");
+
+                logEntry.append("----------------------------------------\n\n");
+
+                com.mycompany.lipadbantayoopdsa.Logs.logs.writeLog(logEntry.toString());
+                // =====================================================
+
                 loadArchiveData(); // Refresh table
+
             } catch (NumberFormatException e) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Invalid Fare Amount");
             }
@@ -697,6 +728,9 @@ public class fareEditor_M extends javax.swing.JFrame {
                 return;
             }
 
+            // Keep BEFORE value
+            double oldRate = currentRatePerKm;
+
             // 3. Update the text file
             boolean success = updateAirlineRateInDatabase(newRate);
 
@@ -704,16 +738,44 @@ public class fareEditor_M extends javax.swing.JFrame {
                 // 4. Update the memory variable
                 this.currentRatePerKm = newRate;
 
+                // ================= MASTER LOG (RATE EDIT) =================
+                java.time.format.DateTimeFormatter dtf =
+                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+                String timestamp = java.time.LocalDateTime.now().format(dtf);
+
+                StringBuilder logEntry = new StringBuilder();
+
+                logEntry.append("[").append(timestamp).append("]\n");
+                logEntry.append("EVENT  : AIRLINE_RATE_EDIT\n");
+                logEntry.append("ACTION : Rate per Km updated\n");
+                logEntry.append("ACTOR  : SYSTEM\n\n");
+
+                logEntry.append("DETAILS\n");
+                logEntry.append("--------\n");
+                logEntry.append("Airline Name        : ").append(currentAirlineName).append("\n\n");
+
+                logEntry.append("CHANGES\n");
+                logEntry.append("--------\n");
+                logEntry.append("Rate per Km (Before): PHP ").append(oldRate).append("\n");
+                logEntry.append("Rate per Km (After) : PHP ").append(newRate).append("\n\n");
+
+                logEntry.append("----------------------------------------\n\n");
+
+                com.mycompany.lipadbantayoopdsa.Logs.logs.writeLog(logEntry.toString());
+                // ==========================================================
+
                 // 5. Refresh the table calculations
                 loadArchiveData();
 
-                javax.swing.JOptionPane.showMessageDialog(this, "Rate updated successfully to PHP " + newRate);
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Rate updated successfully to PHP " + newRate);
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "Error updating database file.");
             }
 
         } catch (NumberFormatException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Invalid number format. Please enter a valid decimal (e.g., 2.50).");
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Invalid number format. Please enter a valid decimal (e.g., 2.50).");
         }
     }//GEN-LAST:event_farekmeditorActionPerformed
 
