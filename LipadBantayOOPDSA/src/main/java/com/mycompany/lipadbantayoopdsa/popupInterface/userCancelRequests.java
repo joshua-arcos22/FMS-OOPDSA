@@ -6,6 +6,7 @@ package com.mycompany.lipadbantayoopdsa.popupInterface;
 
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
+import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
 
 /**
@@ -99,7 +100,7 @@ public class userCancelRequests extends javax.swing.JFrame {
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
             "Are you sure you want to CANCEL this booking? \nThis will permanently delete the record.", 
             "Confirm Cancellation", javax.swing.JOptionPane.YES_NO_OPTION);
-            
+
         if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
 
         // 3. DELETE FROM BOOKINGS.TXT
@@ -109,6 +110,25 @@ public class userCancelRequests extends javax.swing.JFrame {
         boolean requestDeleted = deleteRecordFromRequests(targetUser, targetFlight);
 
         if (bookingDeleted || requestDeleted) {
+            // --- LOGGING ---
+            String timestamp = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+            String logEntry = String.format(
+                "[%s]%n" +
+                "EVENT  : BOOKING_CANCELLATION%n" +
+                "ACTION : Booking cancelled and records deleted%n" +
+                "ACTOR  : ADMIN%n%n" +
+                "DETAILS%n" +
+                "--------%n" +
+                "User       : %s%n" +
+                "Flight No  : %s%n%n" +
+                "----------------------------------------%n%n",
+                timestamp, targetUser, targetFlight
+            );
+
+            logs.writeLog(logEntry);
+
             javax.swing.JOptionPane.showMessageDialog(this, "Booking Cancelled and Records Deleted.");
             loadRequests(); // Refresh
         } else {
@@ -202,18 +222,17 @@ public class userCancelRequests extends javax.swing.JFrame {
 
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
             "Decline this cancellation request?", "Confirm Decline", javax.swing.JOptionPane.YES_NO_OPTION);
-            
         if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
 
         java.io.File file = new java.io.File(AdminOperations.Database_CancelRequests_Path);
         java.util.List<String> allLines = new java.util.ArrayList<>();
-        
+
         try {
             try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.split(" \\| ");
-                    
+
                     // Match and Update Status to DECLINED
                     if (parts.length >= 6 && parts[0].equals(targetUser) && parts[2].equals(targetFlight)) {
                         parts[5] = "DECLINED"; 
@@ -223,17 +242,41 @@ public class userCancelRequests extends javax.swing.JFrame {
                     }
                 }
             }
-            // Write Back
+
+            // Write back updated file
             try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
                 for (String s : allLines) {
                     bw.write(s);
                     bw.newLine();
                 }
             }
+
+            // --- LOGGING ---
+            String timestamp = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+            String logEntry = String.format(
+                "[%s]%n" +
+                "EVENT  : CANCELLATION_REQUEST%n" +
+                "ACTION : Declined%n" +
+                "ACTOR  : ADMIN%n%n" +
+                "DETAILS%n" +
+                "--------%n" +
+                "User       : %s%n" +
+                "Flight No  : %s%n" +
+                "Status     : DECLINED%n%n" +
+                "----------------------------------------%n%n",
+                timestamp, targetUser, targetFlight
+            );
+
+            logs.writeLog(logEntry);
+
             javax.swing.JOptionPane.showMessageDialog(this, "Request Declined.");
             loadRequests(); 
-            
-        } catch (java.io.IOException e) { e.printStackTrace(); }
+
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
     }
     
     
