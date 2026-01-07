@@ -67,7 +67,14 @@ A321-RPVM(Cebu)-RPVP(Puerto Princesa)-1500
 A330-RPLL(Manila)-RPMD(Davao)-1500
 A330-RPLL(Manila)-RPMR(General Santos)-1500
 A330-RPLL(Manila)-RPVM(Cebu)-1500
-ATR72-RPLK(Legazpi)-RPLL(Manila)-1500
-A320-RPLL(Manila)-RPLK(Legazpi)-0.00
+ATR72-RPLK(Legazpi)-RPLL(Manila)-1400.00
 A320-RPLK(Legazpi)-RPMD(Davao)-1000
 ATR42-RPMN(Tawi Tawi)-RPVU(Tablas)-0.00
+ATR72-RPLL(Manila)-RPLK(Legazpi)-1500
+A321-RPMZ(Zamboanga)-RPLK(Legazpi)-2400
+A321-RPMN(Tawi Tawi)-RPLK(Legazpi)-1500
+A320-RPMZ(Zamboanga)-RPLK(Legazpi)-0.00
+Q400-RPMN(Tawi Tawi)-RPLL(Manila)-0.00
+A330-RPMN(Tawi Tawi)-RPLL(Manila)-0.00
+ATR42-RPUN(Naga City)-RPLK(Legazpi)-0.00
+Q400-RPUN(Naga City)-RPLL(Manila)-0.00

@@ -1,0 +1,5 @@
+Q400-RPLL(Manila)-RPLK(Legazpi)-1500
+A320-RPLL(Manila)-RPLK(Legazpi)-1500
+ATR72-RPVS(Antique)-RPSP(Bohol)-0.00
+Q400-RPVM(Cebu)-RPUB(Baguio)-0.00
+Q400-RPLK(Legazpi)-RPVM(Cebu City)-2500

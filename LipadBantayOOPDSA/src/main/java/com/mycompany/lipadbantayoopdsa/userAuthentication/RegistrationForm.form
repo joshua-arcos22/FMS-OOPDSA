@@ -72,10 +72,10 @@
                               <Component id="lblFN" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="pwdReg" linkSize="1" alignment="1" min="-2" pref="261" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="txtRegUsn" linkSize="1" alignment="1" min="-2" pref="261" max="-2" attributes="0"/>
                               <Component id="txtFN" linkSize="1" alignment="1" min="-2" pref="260" max="-2" attributes="0"/>
+                              <Component id="pwdReg" linkSize="1" min="-2" pref="261" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="170" max="-2" attributes="0"/>
                       </Group>

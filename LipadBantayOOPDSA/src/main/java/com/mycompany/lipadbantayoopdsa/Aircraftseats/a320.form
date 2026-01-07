@@ -208,7 +208,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="back" min="-2" pref="84" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
-                      <Component id="back1" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="confirm" min="-2" pref="110" max="-2" attributes="0"/>
                       <EmptySpace pref="149" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -219,7 +219,7 @@
                       <EmptySpace pref="40" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="back" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="back1" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
+                          <Component id="confirm" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                   </Group>
@@ -241,7 +241,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="backActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="back1">
+            <Component class="javax.swing.JButton" name="confirm">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="99" green="ff" red="99" type="rgb"/>
@@ -252,7 +252,7 @@
                 <Property name="text" type="java.lang.String" value="confirm"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="back1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="confirmActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

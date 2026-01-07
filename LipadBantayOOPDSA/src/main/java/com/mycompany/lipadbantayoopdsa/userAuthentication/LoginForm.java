@@ -4,13 +4,12 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-import com.mycompany.lipadbantayoopdsa.MainFlightDisplayAdmin;
+import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayGuest;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayAdmin;
-import com.mycompany.lipadbantayoopdsa.Logs.logs;
-import java.nio.file.Paths;
+import java.time.*;
 import javax.swing.*;
 import java.io.*;
 
@@ -36,12 +35,10 @@ public class LoginForm extends javax.swing.JFrame {
  * Returns the role string (ADMIN/AIRLINE_MANAGER/USER) or null if authentication fails.
  */
     private String authenticateUser(String username, String password) {
-        String filePath = Paths.get(System.getProperty("user.dir"),
-                "src", "main", "java", "com", "mycompany",
-                "lipadbantayoopdsa", "userAuthentication",
-                "user_credentials.txt").toString();
+        
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(AdminOperations.Database_UserCredentials_Path))) {
+            
             String line;
             String fileUsername = null;
             String filePassword = null;
@@ -64,25 +61,25 @@ public class LoginForm extends javax.swing.JFrame {
                     fileStatus = line.substring("STATUS:".length()).trim();
                 } else if (line.startsWith("----------------------------")) {
 
-                    // Check credentials at end of block
+                   
                     if (fileUsername != null && filePassword != null && fileRole != null) {
                         if (fileUsername.equals(username) && filePassword.equals(password)) {
 
-                            // 1. Check for PENDING
+                            
                             if ("PENDING".equalsIgnoreCase(fileStatus)) {
                                 return "STATUS_PENDING";
                             }
 
-                            // 2. Check for DISABLED (or Declined)
+                           
                             if ("DISABLED".equalsIgnoreCase(fileStatus) || "DECLINED".equalsIgnoreCase(fileStatus)) {
                                 return "STATUS_DISABLED";
                             }
 
-                            // 3. Otherwise, return the actual Role (Active)
+                           
                             return fileRole;
                         }
                     }
-                    // Reset
+                    
                     fileUsername = null;
                     filePassword = null;
                     fileRole = null;
@@ -90,12 +87,12 @@ public class LoginForm extends javax.swing.JFrame {
                 }
             }
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(this, "Error: user_credentials.txt not found.", "File Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error in loading the User Credential list");
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error reading database.", "Read Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error reading database");
         }
 
-        return null; // Not found
+        return null; 
     }
 
     
@@ -270,31 +267,26 @@ public class LoginForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     private void writeLoginLog(String username, String role) {
-        try {
-            // Path to the log file
-            String logFilePath = Paths.get(System.getProperty("user.dir"), 
-                    "src", "main", "java", "com", "mycompany", 
-                    "lipadbantayoopdsa", "Logs", "logs.txt").toString();
+        
+        String timestamp = LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
 
-            // Get current timestamp
-            String timestamp = java.time.LocalDateTime.now()
-                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
-
-            // Build log entry
+            
             String logEntry = String.format(
                 "[%s]%nEVENT  : LOGIN%nACTION : User Logged In%nACTOR  : %s%nROLE   : %s%n%n----------------------------------------%n%n",
                 timestamp, username, role
             );
 
-            // Write to file (append mode)
-            try (PrintWriter writer = new PrintWriter(new FileWriter(logFilePath, true))) {
-                writer.println(logEntry);
+           
+            try(PrintWriter writer = new PrintWriter(new FileWriter(AdminOperations.Database_logs_Path, true))) {
+                                writer.println(logEntry);
+            } catch (IOException e){
+                System.out.println("Error in loading the File");
             }
 
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error writing login log: " + e.getMessage(), "Log Error", JOptionPane.ERROR_MESSAGE);
-        }
+       
     }
+    
+    
     private void txtUsnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsnActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsnActionPerformed
@@ -312,7 +304,7 @@ public class LoginForm extends javax.swing.JFrame {
 
         if (authResult != null) {
 
-            // --- HANDLE STATUS MESSAGES ---
+            
             if (authResult.equals("STATUS_PENDING")) {
                 JOptionPane.showMessageDialog(this,
                         "Your account is still being validated.",
@@ -327,8 +319,7 @@ public class LoginForm extends javax.swing.JFrame {
                 return;
             }
 
-            // --- PROCEED IF ACTIVE ---
-            // Log the user who signed in
+            
             writeLoginLog(username, authResult);
 
             JFrame dashboard = null;
@@ -349,7 +340,7 @@ public class LoginForm extends javax.swing.JFrame {
 
             if (dashboard != null) {
                 dashboard.setVisible(true);
-                this.dispose(); // close login form
+                this.dispose(); 
             }
 
         } else {
@@ -358,7 +349,7 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSignInActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
+   
         new AuthenticationForm().setVisible(true);
         this.dispose(); 
     }//GEN-LAST:event_btnBackActionPerformed

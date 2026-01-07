@@ -3,10 +3,10 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayUsers;
 import com.mycompany.lipadbantayoopdsa.flightBooking.FlightPicker;
 import com.mycompany.lipadbantayoopdsa.flightBooking.UserBookedFlights;
-import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.io.*;
 import java.nio.file.Paths;
 import javax.swing.*;
@@ -26,19 +26,14 @@ public class UserDashboard extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.loggedInUsername = username;
-        loadUserProfile(username);
-        // import booking data for loadBookings
-        // loadBookings(username);
-
+        loadUserProfile(username); 
     }
-    // class loader not working
+   
     private void loadUserProfile(String username) {
-    String filePath = Paths.get(System.getProperty("user.dir"), 
-                                           "src", "main", "java", "com", "mycompany", 
-                                           "lipadbantayoopdsa", "userAuthentication", 
-                                           "user_profiles.txt").toString();
+ 
     
-    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+    try(BufferedReader reader = new BufferedReader(new FileReader(AdminOperations.Database_UserProfiles_Path))) {
+        
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.trim().isEmpty() || line.trim().startsWith("#")) continue;
@@ -58,7 +53,7 @@ public class UserDashboard extends javax.swing.JFrame {
             }
         }
     } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "Error loading profile data: " + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
+        System.out.println("Error in Loading the list of Users");
     }
 }
     /**
@@ -228,14 +223,7 @@ public class UserDashboard extends javax.swing.JFrame {
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
-        try {
-            String logFilePath = Paths.get(System.getProperty("user.dir"),
-                                           "src", "main", "java", "com", "mycompany",
-                                           "lipadbantayoopdsa", "Logs",
-                                           "logs.txt").toString();
-
-            PrintWriter logWriter = new PrintWriter(new FileWriter(logFilePath, true)); // append mode
-
+        try (PrintWriter logWriter = new PrintWriter(new FileWriter(AdminOperations.Database_logs_Path, true))) {
             String timestamp = java.time.LocalDateTime.now()
                     .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
 
@@ -248,11 +236,10 @@ public class UserDashboard extends javax.swing.JFrame {
             logWriter.close();
 
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error writing logout log: " + e.getMessage(),
-                                          "Logging Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error writing logout log");
         }
 
-        // 2. Open Authentication Form and close dashboard
+        
         new AuthenticationForm().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed

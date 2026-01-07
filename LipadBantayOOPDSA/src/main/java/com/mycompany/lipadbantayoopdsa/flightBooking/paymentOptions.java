@@ -37,11 +37,17 @@ public class paymentOptions extends javax.swing.JFrame {
     
     public paymentOptions(String fullRecord, String price, String username) {
         this.pendingRecord = fullRecord;
-        this.price = price;
         this.username = username;
+        
+        if (price.contains(" - ")) {
+            String[] parts = price.split(" - ");
+            this.price = parts[parts.length - 1]; 
+        } else {
+            this.price = price;
+        }
 
         initComponents();
-        amount.setText("Total Amount: PHP " + price);
+        amount.setText("Total Amount: PHP " + this.price);
     }
 
     /**

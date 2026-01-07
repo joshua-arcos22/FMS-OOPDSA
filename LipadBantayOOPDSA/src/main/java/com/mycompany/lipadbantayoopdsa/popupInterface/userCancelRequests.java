@@ -8,6 +8,12 @@ import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
 import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.*;
+import javax.swing.*;
+
 
 /**
  *
@@ -25,62 +31,49 @@ public class userCancelRequests extends javax.swing.JFrame {
      */
     public userCancelRequests() {
         initComponents();
-        loadRequests(); // <--- Add this
+        loadRequests(); 
     }
     
     public userCancelRequests(String airlineName, String prefix) {
         this.currentAirlineName = airlineName;
         this.currentAirlinePrefix = prefix;
         initComponents();
-        loadRequests(); // <--- Add this
+        loadRequests(); 
     }
 
     
     
     private void loadRequests() {
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0); // Clear table
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
 
-        java.io.File file = new java.io.File(AdminOperations.Database_CancelRequests_Path);
+        File file = new File(AdminOperations.Database_CancelRequests_Path);
         if (!file.exists()) {
             return;
         }
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String trimmed = line.trim();
-                if (trimmed.isEmpty()) {
-                    continue;
-                }
+                // Format: User | Airline | Flight | Date | Seat | Status1 | Status2
+                String[] parts = line.split(" \\| ");
 
-                // TRY SPLITTING BY PIPE FIRST (Your current code's expectation)
-                String[] parts = trimmed.split(" \\| ");
-
-                // IF PIPE FAILS, TRY DASH (Your other file's format)
-                if (parts.length < 2) {
-                    parts = trimmed.split(" - ");
-                }
-
-                // NOW CHECK LENGTH
-                if (parts.length >= 5) {
-                    // Extract Airline (Adjust index based on your specific file format)
-                    // If format: User | Airline | FlightNo | Date | ... | Status
+                if (parts.length >= 7) {
                     String airline = parts[1];
-
                     if (airline.trim().equalsIgnoreCase(currentAirlineName)) {
                         model.addRow(new Object[]{
-                            parts[0], // Name
+                            parts[0], // User
                             parts[1], // Airline
                             parts[2], // Flight No
                             parts[3], // Date
-                            parts[parts.length - 1] // Status (Last element is safest)
+                            parts[4], // Seat (A1,B1)
+                            parts[6] // Status (PENDING)
                         });
                     }
                 }
             }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Error reading requests file");
         }
     }
     
@@ -92,221 +85,231 @@ public class userCancelRequests extends javax.swing.JFrame {
             return;
         }
 
-        // 1. Get Identifiers from Table
         String targetUser = jTable1.getValueAt(selectedRow, 0).toString();
         String targetFlight = jTable1.getValueAt(selectedRow, 2).toString();
+        String targetSeat = jTable1.getValueAt(selectedRow, 4).toString();
 
-        // 2. Confirmation Dialog
-        int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to CANCEL this booking? \nThis will permanently delete the record and free up seats.", 
-            "Confirm Cancellation", javax.swing.JOptionPane.YES_NO_OPTION);
-            
-        if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Confirm cancellation for " + targetUser + " on flight " + targetFlight + " (Seat: " + targetSeat + ")?",
+                "Confirm", javax.swing.JOptionPane.YES_NO_OPTION);
 
-        // 3. RETRIEVE INFO (Pax/Luggage) from bookings.txt before deleting
-        java.io.File bookingFile = new java.io.File(AdminOperations.Database_Bookings_Path);
-        int paxToRemove = 0;
-        int luggageToRemove = 0;
-        boolean foundInfo = false;
-
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(bookingFile))) {
-            String line;
-            String currentUserContext = "";
-            while ((line = br.readLine()) != null) {
-                String trimmed = line.trim();
-                
-                // Handle User Header (e.g., (joshua_123))
-                if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
-                    currentUserContext = trimmed.substring(1, trimmed.length() - 1);
-                    continue;
-                }
-                
-                // Find the specific flight line for this user
-                if (currentUserContext.equals(targetUser) && trimmed.contains(" - " + targetFlight + " - ")) {
-                    String[] parts = trimmed.split(" - ");
-
-                    // NEW FORMAT: Check Index 10 for Luggage
-                    if (parts.length >= 11) {
-                        try {
-                            // Pax is NOT at index 9 anymore? 
-                            // Wait, your format is: Date(8) - Seats(9) - Luggage(10)
-                            // We need Pax count. Pax count is derived from Seats(9).
-
-                            String seatString = parts[9].trim();
-                            paxToRemove = seatString.split(",").length; // Count seats
-
-                            luggageToRemove = Integer.parseInt(parts[10].trim()); // Luggage
-
-                            foundInfo = true;
-                            break;
-                        } catch (Exception e) {
-                        }
-                    }
-                }
-            }
-        } catch (java.io.IOException e) { e.printStackTrace(); }
-
-        // 4. Update Master File (Subtract) if info was found
-        if (foundInfo) {
-            updateMasterFile(targetFlight, paxToRemove, luggageToRemove);
-        } else {
-            // Optional warning if you want to know if logic failed
-            System.out.println("Warning: Could not find booking details to update capacity.");
+        if (confirm != javax.swing.JOptionPane.YES_OPTION) {
+            return;
         }
 
-        // 5. DELETE RECORDS (Existing Logic)
-        boolean bookingDeleted = deleteRecordFromBookings(targetUser, targetFlight);
-        boolean requestDeleted = deleteRecordFromRequests(targetUser, targetFlight);
+        
+        int seatsToCancelCount = targetSeat.split(",").length;
+
+        
+        updateMasterFile(targetFlight, seatsToCancelCount, 0);
+
+        boolean bookingDeleted = deleteRecordFromBookings(targetUser, targetFlight, targetSeat);
+        boolean requestDeleted = deleteRecordFromRequests(targetUser, targetFlight, targetSeat);
 
         if (bookingDeleted || requestDeleted) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Booking Cancelled. Seats/Luggage returned to inventory.");
-            loadRequests(); // Refresh Table
+            javax.swing.JOptionPane.showMessageDialog(this, "Cancellation Processed.");
+            loadRequests();
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error: Could not find records to delete.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: Could not find matching records.");
         }
     }
+    
+    
 
-    // Helper: Deletes specific flight line under specific user in bookings.txt
-    private boolean deleteRecordFromBookings(String targetUser, String targetFlight) {
-        java.io.File file = new java.io.File(AdminOperations.Database_Bookings_Path);
-        java.util.List<String> allLines = new java.util.ArrayList<>();
+    private boolean deleteRecordFromBookings(String targetUser, String targetFlight, String targetSeat) {
+        File file = new File(AdminOperations.Database_Bookings_Path);
+        List<String> allLines = new ArrayList<>();
         boolean found = false;
         String currentUserSection = "";
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String trimmed = line.trim();
 
-                // Check which user section we are in
                 if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
                     currentUserSection = trimmed.substring(1, trimmed.length() - 1);
                     allLines.add(line);
                     continue;
                 }
 
-                // Check if this line matches the Flight AND we are in the correct User Section
-                // Format: Airline - ... - FlightNo - ...
-                if (currentUserSection.equals(targetUser) && trimmed.contains(" - " + targetFlight + " - ")) {
-                    found = true; 
-                    // SKIP adding this line (effectively deleting it)
+                if (trimmed.contains(" - ")) {
+                    String[] parts = trimmed.split(" - ");
+
+                    boolean matchUser = currentUserSection.trim().equalsIgnoreCase(targetUser.trim());
+                   
+                    boolean matchFlight = parts.length >= 6 && parts[5].trim().equalsIgnoreCase(targetFlight.trim());
+
+                    if (matchUser && matchFlight) {
+                        
+                        if (targetSeat.equalsIgnoreCase("N/A")) {
+                            found = true;
+                            continue;
+                        }
+
+                     
+                        if (parts.length >= 10) {
+                            String currentSeats = parts[9];
+                            String[] bookingSeats = currentSeats.split(",");
+                            List<String> seatsToKeep = new ArrayList<>();
+                            String[] seatsToRemove = targetSeat.split(",");
+
+                            boolean modified = false;
+
+                            for (String s : bookingSeats) {
+                                boolean isTarget = false;
+                                for (String remove : seatsToRemove) {
+                                    if (s.trim().equalsIgnoreCase(remove.trim())) {
+                                        isTarget = true;
+                                        found = true;
+                                        modified = true;
+                                        break;
+                                    }
+                                }
+                                if (!isTarget) {
+                                    seatsToKeep.add(s.trim());
+                                }
+                            }
+
+                            if (modified) {
+                                if (seatsToKeep.isEmpty()) {
+                                   
+                                    continue;
+                                } else {
+                                    
+                                    parts[9] = String.join(",", seatsToKeep);
+                                    allLines.add(String.join(" - ", parts));
+                                }
+                            } else {
+                              
+                                allLines.add(line);
+                            }
+                        } else {
+                            allLines.add(line);
+                        }
+                    } else {
+                        allLines.add(line);
+                    }
                 } else {
                     allLines.add(line);
                 }
             }
-        } catch (java.io.IOException e) { e.printStackTrace(); return false; }
+        } catch (IOException e) {
+            return false;
+        }
 
-        // Write Back
-        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
-            for (String s : allLines) {
-                bw.write(s);
-                bw.newLine();
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                for (String s : allLines) {
+                    bw.write(s);
+                    bw.newLine();
+                }
+                return true;
+            } catch (IOException e) {
+                return false;
             }
-        } catch (java.io.IOException e) { e.printStackTrace(); return false; }
-        
-        return found;
+        }
+        return false;
     }
+    
+    
 
-    // Helper: Deletes the line from cancellation_requests.txt
-    private boolean deleteRecordFromRequests(String targetUser, String targetFlight) {
-        java.io.File file = new java.io.File(AdminOperations.Database_CancelRequests_Path);
-        java.util.List<String> allLines = new java.util.ArrayList<>();
+    private boolean deleteRecordFromRequests(String targetUser, String targetFlight, String targetSeat) {
+        File file = new File(AdminOperations.Database_CancelRequests_Path);
+        List<String> allLines = new ArrayList<>();
         boolean found = false;
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Format: User | Airline | FlightNo ...
+                // User | Airline | Flight | Date | Seat | Status1 | Status2
                 String[] parts = line.split(" \\| ");
-                
-                if (parts.length >= 3 && parts[0].equals(targetUser) && parts[2].equals(targetFlight)) {
-                    found = true; 
-                    // SKIP adding this line
+
+                boolean matchUser = false;
+                boolean matchFlight = false;
+                boolean matchSeat = false;
+
+                if (parts.length >= 3) {
+                    matchUser = parts[0].trim().equalsIgnoreCase(targetUser.trim());
+                    matchFlight = parts[2].trim().equalsIgnoreCase(targetFlight.trim());
+
+                    if (parts.length >= 5) {
+                       
+                        matchSeat = parts[4].trim().equalsIgnoreCase(targetSeat.trim());
+                    } else {
+                        matchSeat = targetSeat.equalsIgnoreCase("N/A");
+                    }
+                }
+
+                if (matchUser && matchFlight && matchSeat) {
+                    found = true;
                 } else {
                     allLines.add(line);
                 }
             }
-        } catch (java.io.IOException e) { e.printStackTrace(); return false; }
+        } catch (IOException e) {
+            return false;
+        }
 
-        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
-            for (String s : allLines) {
-                bw.write(s);
-                bw.newLine();
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                for (String s : allLines) {
+                    bw.write(s);
+                    bw.newLine();
+                }
+                return true;
+            } catch (IOException e) {
+                return false;
             }
-        } catch (java.io.IOException e) { e.printStackTrace(); return false; }
-        
-        return found;
+        }
+        return false;
     }
+    
     
     
     
     private void declineCancellation() {
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please select a request to decline.");
             return;
         }
 
         String targetUser = jTable1.getValueAt(selectedRow, 0).toString();
         String targetFlight = jTable1.getValueAt(selectedRow, 2).toString();
+        String targetSeat = jTable1.getValueAt(selectedRow, 4).toString();
 
-        int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
-            "Decline this cancellation request?", "Confirm Decline", javax.swing.JOptionPane.YES_NO_OPTION);
-        if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Decline cancellation? This removes the request but KEEPS the booking.",
+                "Confirm Decline", javax.swing.JOptionPane.YES_NO_OPTION);
 
-        java.io.File file = new java.io.File(AdminOperations.Database_CancelRequests_Path);
-        java.util.List<String> allLines = new java.util.ArrayList<>();
-
-        try {
-            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    String[] parts = line.split(" \\| ");
-
-                    // Match and Update Status to DECLINED
-                    if (parts.length >= 6 && parts[0].equals(targetUser) && parts[2].equals(targetFlight)) {
-                        parts[5] = "DECLINED"; 
-                        allLines.add(String.join(" | ", parts));
-                    } else {
-                        allLines.add(line);
-                    }
-                }
-            }
-
-            // Write back updated file
-            try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
-                for (String s : allLines) {
-                    bw.write(s);
-                    bw.newLine();
-                }
-            }
-
-            // --- LOGGING ---
-            String timestamp = java.time.LocalDateTime.now()
-                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
-
-            String logEntry = String.format(
-                "[%s]%n" +
-                "EVENT  : CANCELLATION_REQUEST%n" +
-                "ACTION : Declined%n" +
-                "ACTOR  : ADMIN%n%n" +
-                "DETAILS%n" +
-                "--------%n" +
-                "User       : %s%n" +
-                "Flight No  : %s%n" +
-                "Status     : DECLINED%n%n" +
-                "----------------------------------------%n%n",
-                timestamp, targetUser, targetFlight
-            );
-
-            logs.writeLog(logEntry);
-
-            javax.swing.JOptionPane.showMessageDialog(this, "Request Declined.");
-            loadRequests(); 
-
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+        if (confirm != javax.swing.JOptionPane.YES_OPTION) {
+            return;
         }
+
+        deleteRecordFromRequests(targetUser, targetFlight, targetSeat);
+
+        String timestamp = java.time.LocalDateTime.now()
+                .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+        String logEntry = String.format(
+                "[%s]%n"
+                + "EVENT  : CANCELLATION_REQUEST%n"
+                + "ACTION : Declined%n"
+                + "ACTOR  : ADMIN%n%n"
+                + "DETAILS%n"
+                + "--------%n"
+                + "User        : %s%n"
+                + "Flight No   : %s%n"
+                + "Seat        : %s%n"
+                + "Status      : DECLINED%n%n"
+                + "----------------------------------------%n%n",
+                timestamp, targetUser, targetFlight, targetSeat
+        );
+
+        logs.writeLog(logEntry);
+
+        javax.swing.JOptionPane.showMessageDialog(this, "Request Declined.");
+        loadRequests();
     }
     
     
@@ -319,27 +322,24 @@ public class userCancelRequests extends javax.swing.JFrame {
             return;
         }
 
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0); // Clear table
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
 
-        java.io.File file = new java.io.File(AdminOperations.Database_CancelRequests_Path);
+        File file = new File(AdminOperations.Database_CancelRequests_Path);
         if (!file.exists()) {
             return;
         }
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Format: User | Airline | FlightNo | Day | Origin to Dest | Status
                 String[] parts = line.split(" \\| ");
 
-                if (parts.length >= 6) {
+                if (parts.length >= 7) {
                     String airline = parts[1];
 
-                    // 1. Must belong to CURRENT Airline
                     if (airline.equalsIgnoreCase(currentAirlineName)) {
 
-                        // 2. Check if ANY field contains the query
                         boolean match = false;
                         for (String part : parts) {
                             if (part.toLowerCase().contains(query)) {
@@ -350,24 +350,25 @@ public class userCancelRequests extends javax.swing.JFrame {
 
                         if (match) {
                             model.addRow(new Object[]{
-                                parts[0], // Name
-                                parts[1], // Airline
-                                parts[2], // Flight No.
-                                parts[3], // Date
-                                parts[5] // Status
+                                parts[0],
+                                parts[1],
+                                parts[2],
+                                parts[3],
+                                parts[5],
+                                parts[6]
                             });
                         }
                     }
                 }
             }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Error in Reading File");
         }
     }
     
     
     private boolean updateMasterFile(String flightNum, int paxToSubtract, int luggageToSubtract) {
-        java.io.File file = new java.io.File(AdminOperations.Database_TimeTable_Departure_Path);
+         File file = new  File(AdminOperations.Database_TimeTable_Departure_Path);
         if (!file.exists()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error: Master Timetable not found.");
             return false;
@@ -376,31 +377,30 @@ public class userCancelRequests extends javax.swing.JFrame {
         java.util.List<String> allLines = new java.util.ArrayList<>();
         boolean updated = false;
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
-            String line;
+        try(BufferedReader br = new BufferedReader(new FileReader(file))){
+                        String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("-");
                 
-                // Check Flight Number (Index 6)
+                
                 if (parts.length >= 10 && parts[6].trim().equalsIgnoreCase(flightNum)) {
                     try {
                         int currentPax = Integer.parseInt(parts[7].trim());
                         int currentCargo = Integer.parseInt(parts[8].trim());
 
-                        // --- SUBTRACT VALUES ---
+                       
                         int newPax = currentPax - paxToSubtract;
                         int newLuggage = currentCargo - luggageToSubtract;
 
-                        // --- SAFETY MEASURE: PREVENT NEGATIVES ---
+                        
                         if (newPax < 0) {
                             newPax = 0; 
                         }
                         if (newLuggage < 0) {
                             newLuggage = 0;
                         }
-                        // ------------------------------------------
-
-                        // Update array
+                       
+                       
                         parts[7] = String.valueOf(newPax);
                         parts[8] = String.valueOf(newLuggage);
                         
@@ -415,21 +415,23 @@ public class userCancelRequests extends javax.swing.JFrame {
                     allLines.add(line);
                 }
             }
-        } catch (java.io.IOException e) { 
-            e.printStackTrace(); 
+        } catch ( IOException e) { 
+            System.out.println("Error in Reading File");
             return false; 
         }
 
-        // Write changes back
+      
         if (updated) {
-            try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                
                 for (String s : allLines) {
                     bw.write(s);
                     bw.newLine();
                 }
                 return true;
-            } catch (java.io.IOException e) { 
-                e.printStackTrace(); 
+            } catch ( IOException e) { 
+                System.out.println("Error in Writing File");
+ 
                 return false; 
             }
         }

@@ -62,3 +62,7 @@ Q400-RPVM(Cebu)-RPVP(Puerto Princesa)-1500
 Q400-RPVM(Cebu)-RPVV(Coron)-1500
 Q400-RPVM(Cebu)-RPVW(Borongan)-1500
 A320-RPLL(Manila)-RPLK(Legazpi)-0.00
+A320-RPLK(Legazpi)-RPMZ(Zamboanga)-0.00
+ATR42-RPLK(Legazpi)-RPMN(Tawi Tawi)-0.00
+Q400-RPLK(Legazpi)-RPMN(Tawi Tawi)-0.00
+ATR72-RPLK(Legazpi)-RPMN(Tawi Tawi)-0.00

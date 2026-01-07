@@ -4,13 +4,14 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
-import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
+
+import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.nio.file.Paths;
 import javax.swing.JOptionPane;
 import java.io.*;
-import java.util.*;
+import javax.swing.SwingConstants;
+
 /**
  *
  * @author justine
@@ -261,17 +262,15 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
         }
 
         try (PrintWriter writer = new PrintWriter(new FileWriter("user_credentials.txt", true))) {
+            
             writer.println(username + "," + password + "," + role);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Auto-save failed: " + e.getMessage());
         }
     }
     private boolean checkExistingUsername(String username) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(
-                Paths.get(System.getProperty("user.dir"), 
-                          "src", "main", "java", "com", "mycompany", 
-                          "lipadbantayoopdsa", "userAuthentication", 
-                          "user_credentials.txt").toString()))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(AdminOperations.Database_UserCredentials_Path))){
+            
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("USERNAME: " + username)) {
@@ -279,7 +278,7 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            // File may not exist yet, ignore
+            System.out.println("Error in loadin File");
         }
         return false;
     }
@@ -290,7 +289,6 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-    
         String username = txtRegUsn1.getText().trim();
         String password = String.valueOf(this.password.getPassword());
         String fullName = managerName.getText().trim();
@@ -302,73 +300,62 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         if (checkExistingUsername(username)) {
             JOptionPane.showMessageDialog(this, "Username already exists.", "Duplicate Username", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         
-        String credFilePath = Paths.get(System.getProperty("user.dir"), 
-                                        "src", "main", "java", "com", "mycompany", 
-                                        "lipadbantayoopdsa", "userAuthentication", 
-                                        "user_credentials.txt").toString();
+        try (PrintWriter credWriter = new PrintWriter(new FileWriter(AdminOperations.Database_UserCredentials_Path, true)); 
+                PrintWriter profileWriter = new PrintWriter(new FileWriter(AdminOperations.Database_UserProfiles_Path, true))) {
 
-        String profileFilePath = Paths.get(System.getProperty("user.dir"), 
-                                           "src", "main", "java", "com", "mycompany", 
-                                           "lipadbantayoopdsa", "userAuthentication", 
-                                           "user_profiles.txt").toString();
-
-        try (
-            PrintWriter credWriter = new PrintWriter(new FileWriter(credFilePath, true));  // append mode
-            PrintWriter profileWriter = new PrintWriter(new FileWriter(profileFilePath, true))
-        ) {
-            
-            String credRecord = 
-                    "MANAGER: " + fullName + System.lineSeparator() +
-                    "AIRLINE: " + airLineName + System.lineSeparator() +
-                    "USERNAME: " + username + System.lineSeparator() +
-                    "PASSWORD: " + password + System.lineSeparator() +
-                    "PREFIX: " + airlinePrefix + System.lineSeparator() +
-                    "ROLE: " + role + System.lineSeparator() +
-                    "STATUS: PENDING" + System.lineSeparator() +   
-                    "----------------------------";
+           
+            String credRecord
+                    = "MANAGER: " + fullName + System.lineSeparator()
+                    + "AIRLINE: " + airLineName + System.lineSeparator()
+                    + "USERNAME: " + username + System.lineSeparator()
+                    + "PASSWORD: " + password + System.lineSeparator()
+                    + "PREFIX: " + airlinePrefix + System.lineSeparator()
+                    + "ROLE: " + role + System.lineSeparator()
+                    + "STATUS: PENDING" + System.lineSeparator()
+                    + "----------------------------";
             credWriter.println(credRecord);
 
-            
+            // 2. Write Profile
             String profileRecord = String.format("%s,%s,%s,%s", username, fullName, airLineName, "Manager");
             profileWriter.println(profileRecord);
-            
-            String timestamp = java.time.LocalDateTime.now()
-                .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
 
-            String logEntry = String.format( 
-                "[%s]%n" +
-                "EVENT  : AIRLINE_MANAGER_REGISTRATION%n" +
-                "ACTION : New airline manager registered%n" +
-                "ACTOR  : SYSTEM%n%n" +
-                "DETAILS%n" +
-                "--------%n" +
-                "Manager Name : %s%n" +
-                "Airline Name : %s%n" +
-                "Fl. Prefix   : %s%n" +
-                "Username     : %s%n" +
-                "Role         : AIRLINE_MANAGER%n%n" +
-                "Status       : PENDING%n%n" +
-                "----------------------------------------%n%n",  // extra newline for spacing between logs
-                timestamp, fullName, airLineName, airlinePrefix, username
+            // 3. Log the Event
+            String timestamp = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
+
+            String logEntry = String.format(
+                    "[%s]%n"
+                    + "EVENT  : AIRLINE_MANAGER_REGISTRATION%n"
+                    + "ACTION : New airline manager registered%n"
+                    + "ACTOR  : SYSTEM%n%n"
+                    + "DETAILS%n"
+                    + "--------%n"
+                    + "Manager Name : %s%n"
+                    + "Airline Name : %s%n"
+                    + "Fl. Prefix   : %s%n"
+                    + "Username     : %s%n"
+                    + "Role         : AIRLINE_MANAGER%n%n"
+                    + "Status       : PENDING%n%n"
+                    + "----------------------------------------%n%n",
+                    timestamp, fullName, airLineName, airlinePrefix, username
             );
 
             logs.writeLog(logEntry);
 
             JOptionPane.showMessageDialog(this, "Registration successful! Request will be sent, Please wait for the account to be accepted.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            // Go back to login form
             new LoginForm().setVisible(true);
             this.dispose();
 
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving registration data: " + e.getMessage(), "File Write Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error saving to file");
+            e.printStackTrace();
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
 

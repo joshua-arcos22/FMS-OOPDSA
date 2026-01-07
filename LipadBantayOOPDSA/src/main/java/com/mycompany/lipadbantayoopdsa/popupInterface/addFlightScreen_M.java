@@ -3,20 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.lipadbantayoopdsa.popupInterface;
-import com.mycompany.lipadbantayoopdsa.MainFlightDisplayAdmin;
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
-import com.mycompany.lipadbantayoopdsa.distanceCalculator;
-import com.mycompany.lipadbantayoopdsa.AircraftFinder;
 import com.mycompany.lipadbantayoopdsa.ArrivalTimetableGenerator;
 import com.mycompany.lipadbantayoopdsa.Logs.logs;
 
 
 import java.util.*;
 import java.io.*;
-import javax.swing.BorderFactory;
+
 import java.awt.Color;
-import javax.swing.*;
-import javax.swing.border.*;
 
 
 /**
@@ -27,10 +22,7 @@ public class addFlightScreen_M extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(addFlightScreen_M.class.getName());
 
-    /**
-     * Creates new form addFlightScreen
-     */
-    
+   
     
     public String Airline_Name;
     public String Ac_Type;
@@ -758,19 +750,14 @@ public class addFlightScreen_M extends javax.swing.JFrame {
     
     
     private void verifyAndAddRoute(String airlineName, String aircraft, String origin, String destination) {
-        // 1. Build the correct file path
-        String projectRoot = System.getProperty("user.dir");
-        String filename = "Routes_" + Airline_Name.trim().toUpperCase() + ".txt";
-        String routePath = java.nio.file.Paths.get(projectRoot,
-                "src", "main", "java", "com", "mycompany", "lipadbantayoopdsa",
-                "Database", "Routes", filename).toString();
+        
+        String filename = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Routes/Routes_" + airlineName.trim().toUpperCase() + ".txt";
+        File file = new File(filename);
 
-        File file = new File(routePath);
-
-        // 2. Create file if it doesn't exist
+   
         if (!file.exists()) {
             try {
-                file.getParentFile().mkdirs(); // Create directories if missing
+                file.getParentFile().mkdirs(); 
                 file.createNewFile();
             } catch (IOException e) {
                 System.out.println("Error creating route file: " + e.getMessage());
@@ -778,9 +765,10 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             }
         }
 
-        // 3. Check if route already exists
+
         boolean routeExists = false;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) {
@@ -788,7 +776,7 @@ public class addFlightScreen_M extends javax.swing.JFrame {
                 }
 
                 String[] parts = line.split("-");
-                // Check Format: Aircraft-Origin-Destination-Price
+                // Format: Aircraft-Origin-Destination-Price
                 if (parts.length >= 3) {
                     if (parts[0].equalsIgnoreCase(aircraft)
                             && parts[1].equalsIgnoreCase(origin)
@@ -802,12 +790,11 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             System.out.println("Error reading route file");
         }
 
-        // 4. If route does NOT exist, append it with a default price of 0.00
+       
         if (!routeExists) {
-            try (java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(file, true))) {
-                // Ensure we start on a new line
-                
-                // Format: Aircraft-Origin-Destination-0.00
+            try (BufferedWriter writer = new BufferedWriter(new java.io.FileWriter(file, true))) {
+                                
+              
                 String newRouteLine = aircraft + "-" + origin + "-" + destination + "-0.00";
                 writer.write(newRouteLine);
                 writer.newLine();
@@ -822,23 +809,23 @@ public class addFlightScreen_M extends javax.swing.JFrame {
     
     
     private void btn_addFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addFlightActionPerformed
-        // 1. GET RAW INPUTS
+    
         String selectedAc = ac_drpdwn.getSelectedItem().toString().trim();
-        // Airline Name is locked to 'Airline_Name' variable from constructor
+       
         String flightNumInput = flnField.getText().trim().toUpperCase();
         String timeInput = timeField.getText().trim();
-        String paxInput = "0"; // Managers init with 0 for new flights (or get from UI if you enable it)
-        String cargoInput = "0"; // Managers init with 0
+        String paxInput = "0"; // Deauflt of 0 pax for the flight
+        String cargoInput = "0"; // Deauflt of 0 cargo for the  flgith
         String statusInput = "Scheduled"; // Default status
 
-        // 2. INITIALIZE VALIDATION FLAGS
+       
         boolean Flt_No_Valid = true;
         boolean time_Valid = true;
         boolean runway_Valid = true;
         boolean pax_Valid = true;
         boolean cargo_Valid = true;
 
-        // --- A. FLIGHT NUMBER VALIDATION ---
+        //FLIGHT NUMBER VALIDATION --------
         if (flightNumInput.isEmpty()) {
             errorFLTNO.setText("Required");
             errorFLTNO.setForeground(Color.red);
@@ -864,7 +851,7 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             this.Flight_Number = flightNumInput;
         }
 
-        // --- B. TIME VALIDATION ---
+        //TIME VALIDATION --------
         if (timeInput.length() != 4 || !timeInput.matches("\\d+")) {
             errorTIME.setText("Use HHMM");
             errorTIME.setForeground(Color.red);
@@ -882,7 +869,7 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             }
         }
 
-        // --- C. AIRCRAFT LIMITS ---
+        //AIRCRAFT LIMITS --------
         try {
             File acFile = new File(AdminOperations.Database_Aircarfts_Path);
             Scanner reader = new Scanner(acFile);
@@ -930,21 +917,21 @@ public class addFlightScreen_M extends javax.swing.JFrame {
             System.out.println("AC Database Error");
         }
 
-        // --- D. RUNWAY VALIDATION ---
+        //RUNWAY VALIDATION -------------
         if (originRWYLn.getForeground() == Color.red || destRWYLn.getForeground() == Color.red || acRWYLn.getForeground() == Color.red) {
             runway_Valid = false;
         }
 
-        // 3. FINAL EXECUTION
+    
         if (Flt_No_Valid && time_Valid && runway_Valid && pax_Valid && cargo_Valid) {
 
             this.Ac_Type = selectedAc;
 
-            // Short Codes
+         
             this.Origin_Airport = origin_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
             this.Destination_Airport = destination_drpdwn.getSelectedItem().toString().substring(0, 4).trim();
 
-            // Full Names
+       
             String originFull = origin_drpdwn.getSelectedItem().toString().trim();
             String destFull = destination_drpdwn.getSelectedItem().toString().trim();
 

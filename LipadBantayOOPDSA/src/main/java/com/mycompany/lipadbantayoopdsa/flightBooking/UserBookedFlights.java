@@ -5,8 +5,6 @@
 package com.mycompany.lipadbantayoopdsa.flightBooking;
 
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import java.io.BufferedReader;
 import java.awt.Color;
@@ -16,10 +14,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JOptionPane;
-import java.util.logging.Logger;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.UserDashboard;
 
 /**
@@ -29,16 +23,9 @@ import com.mycompany.lipadbantayoopdsa.userAuthentication.UserDashboard;
 public class UserBookedFlights extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(UserBookedFlights.class.getName());
-
-    
     
     private String username;
-    private final String bookingsPath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
-    private final String cancelledBookings = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/cancellation_requests.txt";
     
-    
-    private final String departureMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
-    private final String arrivalMaster = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
     
     /**
      * Creates new form UserBookedFlights
@@ -53,14 +40,14 @@ public class UserBookedFlights extends javax.swing.JFrame {
     public UserBookedFlights(String username) {
         this.username = username;
         initComponents();
-        applyColorRenderer(); // Apply colors to the Status column
-        loadUserBookings(); // Load data
+        applyColorRenderer(); 
+        loadUserBookings(); 
     }
     
     
     
     private String getRealTimeStatus(String flightNum) {
-        String[] files = {departureMaster, arrivalMaster};
+        String[] files = {AdminOperations.Database_TimeTable_Departure_Path, AdminOperations.Database_TimeTable_Arrivals_Path};
 
         for (String path : files) {
             File file = new File(path);
@@ -73,34 +60,34 @@ public class UserBookedFlights extends javax.swing.JFrame {
                 while ((line = br.readLine()) != null) {
                     // Line Format: Airline-AcType-Origin-Dest-Freq-Time-FlightNo-Pax-Cargo-Status
                     String[] data = line.split("-");
-                    // Check if Flight Number matches (Index 6)
+                
                     if (data.length >= 10 && data[6].trim().equalsIgnoreCase(flightNum.trim())) {
-                        return data[9].trim(); // Return the LIVE status (Index 9)
+                        return data[9].trim(); 
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return null; // Return null if flight not found in master (use old status)
+        return null; 
     }
     
     
     private void applyColorRenderer() {
-        // Define a single renderer to be used by ALL columns
+      
         javax.swing.table.DefaultTableCellRenderer rowRenderer = new javax.swing.table.DefaultTableCellRenderer() {
             @Override
             public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
                     boolean isSelected, boolean hasFocus, int row, int column) {
 
-                // Call super to get default formatting (font, borders, etc.)
+               
                 java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                // 1. Get the Status from Column 0 of the current row
+               
                 Object statusObj = table.getValueAt(row, 0);
                 String status = (statusObj != null) ? statusObj.toString().toUpperCase() : "";
 
-                // 2. Set Colors based on Status (Only if row is NOT selected)
+               
                 if (!isSelected) {
                     switch (status) {
                         case "SCHEDULED":
@@ -121,7 +108,7 @@ public class UserBookedFlights extends javax.swing.JFrame {
                             break;
                     }
                 } else {
-                    // If selected, use the default blue selection color
+                   
                     c.setBackground(table.getSelectionBackground());
                     c.setForeground(table.getSelectionForeground());
                 }
@@ -130,7 +117,7 @@ public class UserBookedFlights extends javax.swing.JFrame {
             }
         };
 
-        // 3. Apply this renderer to EVERY column in the table
+        
         for (int i = 0; i < jTable2.getColumnCount(); i++) {
             jTable2.getColumnModel().getColumn(i).setCellRenderer(rowRenderer);
         }
@@ -145,7 +132,7 @@ public class UserBookedFlights extends javax.swing.JFrame {
         model.setRowCount(0);
 
         String userHeader = "(" + this.username + ")";
-        File file = new File(bookingsPath);
+        File file = new File(AdminOperations.Database_Bookings_Path);
 
         if (!file.exists()) {
             return;
@@ -164,19 +151,19 @@ public class UserBookedFlights extends javax.swing.JFrame {
                     continue;
                 }
 
-                if (insideUser) {
-                    // FORMAT: Airline - Aircraft - Origin - Dest - Time - FNo - Day - Status - Date
+                if (insideUser && trimmed.contains(" - ")) {
                     String[] parts = trimmed.split(" - ");
 
-                    if (parts.length >= 17) {
+                    if (parts.length >= 12) {
                         String flightNum = parts[5];
-                        String oldStatus = parts[parts.length - 1];
+
+                        String oldStatus = parts[7];
                         String liveStatus = getRealTimeStatus(flightNum);
-                        
                         String statusToDisplay = (liveStatus != null) ? liveStatus : oldStatus;
 
                         String seat = parts[9];
-                        
+                        String paymentStatus = parts[parts.length - 1];
+
                         model.addRow(new Object[]{
                             statusToDisplay,
                             parts[0],
@@ -188,7 +175,7 @@ public class UserBookedFlights extends javax.swing.JFrame {
                             parts[5],
                             parts[8],
                             seat,
-                            oldStatus // Or Payment Status column
+                            paymentStatus
                         });
                     }
                 }
@@ -211,7 +198,7 @@ public class UserBookedFlights extends javax.swing.JFrame {
         model.setRowCount(0);
 
         String userHeader = "(" + this.username + ")";
-        try (BufferedReader br = new BufferedReader(new FileReader(bookingsPath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(AdminOperations.Database_Bookings_Path))) {
             String line;
             boolean insideUserSection = false;
             while ((line = br.readLine()) != null) {
@@ -225,9 +212,27 @@ public class UserBookedFlights extends javax.swing.JFrame {
 
                 if (insideUserSection && line.toLowerCase().contains(query)) {
                     String[] parts = line.split(" - ");
-                    if (parts.length >= 8) {
+
+                    if (parts.length >= 17) {
+                        String flightNum = parts[5];
+                        String oldStatus = parts[7];
+                        String paymentStatus = parts[parts.length - 1];
+                        String liveStatus = getRealTimeStatus(flightNum);
+                        String statusToDisplay = (liveStatus != null) ? liveStatus : oldStatus;
+                        String seat = parts[9];
+
                         model.addRow(new Object[]{
-                            parts[6], parts[0], parts[5], parts[3], parts[1], parts[2], parts[4], parts[7]
+                            statusToDisplay,
+                            parts[0],
+                            parts[1],
+                            parts[6],
+                            parts[4],
+                            parts[2],
+                            parts[3],
+                            parts[5],
+                            parts[8],
+                            seat,
+                            paymentStatus
                         });
                     }
                 }
@@ -241,7 +246,7 @@ public class UserBookedFlights extends javax.swing.JFrame {
     
     private void saveCancellationRequest(String requestData) {
         try {
-            File file = new File(cancelledBookings);
+            File file = new File(AdminOperations.Database_CancelRequests_Path);
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
                 bw.write(requestData);
                 bw.newLine();
@@ -251,16 +256,28 @@ public class UserBookedFlights extends javax.swing.JFrame {
         }
     }
     
-    private boolean isCancellationPending(String flightNumber) {
-        File file = new File(cancelledBookings);
+    private boolean isCancellationPending(String flightNumber, String seatNumber) {
+        File file = new File(AdminOperations.Database_CancelRequests_Path);
         if (!file.exists()) {
             return false;
         }
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.contains(this.username) && line.contains(flightNumber) && line.contains("PENDING")) {
-                    return true;
+                
+                String[] parts = line.split(" \\| ");
+
+                if (parts.length >= 6) {
+                    boolean userMatch = parts[0].trim().equals(this.username);
+                    boolean flightMatch = parts[2].trim().equalsIgnoreCase(flightNumber);
+                    boolean statusMatch = line.contains("PENDING");
+
+                    // Check if the seat matches (Index 4 based on your save format)
+                    boolean seatMatch = parts[4].trim().equalsIgnoreCase(seatNumber.trim());
+
+                    if (userMatch && flightMatch && seatMatch && statusMatch) {
+                        return true;
+                    }
                 }
             }
         } catch (IOException e) {
@@ -476,17 +493,19 @@ public class UserBookedFlights extends javax.swing.JFrame {
         }
 
         String flightNum = jTable2.getValueAt(selectedRow, 7).toString();
+        String seat = jTable2.getValueAt(selectedRow, 9).toString(); 
 
-        if (isCancellationPending(flightNum)) {
-            JOptionPane.showMessageDialog(this, "A request is already pending for this flight.");
+        
+        if (isCancellationPending(flightNum, seat)) {
+            JOptionPane.showMessageDialog(this, "A request is already pending for this specific ticket.");
             return;
         }
 
         String airline = jTable2.getValueAt(selectedRow, 1).toString();
         String day = jTable2.getValueAt(selectedRow, 8).toString();
 
-        String request = String.format("%s | %s | %s | %s | REQUESTED | PENDING",
-                this.username, airline, flightNum, day);
+        String request = String.format("%s | %s | %s | %s | %s | REQUESTED | PENDING",
+                this.username, airline, flightNum, day, seat);
 
         saveCancellationRequest(request);
         JOptionPane.showMessageDialog(this, "Cancellation request sent to Airline.");

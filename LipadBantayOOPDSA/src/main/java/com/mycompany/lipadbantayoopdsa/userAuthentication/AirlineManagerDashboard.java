@@ -1,13 +1,14 @@
 package com.mycompany.lipadbantayoopdsa.userAuthentication;
 
+import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayManagers;
 import com.mycompany.lipadbantayoopdsa.popupInterface.ManageBookingChoice;
 import com.mycompany.lipadbantayoopdsa.popupInterface.fareEditor_M;
-import com.mycompany.lipadbantayoopdsa.Logs.logs;
-import java.time.format.DateTimeFormatter;
 import java.io.*;
 import java.nio.file.Paths;
 import javax.swing.JOptionPane;
+import java.time.*;
+import java.time.format.*;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -37,11 +38,11 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     public AirlineManagerDashboard(String currentAirlineName, String currentAirlinePrefix) {
         initComponents();
 
-        // 1. Set the Airline and Prefix labels immediately
+       
         AIRLINE.setText(currentAirlineName);
         FLPREFIX.setText(currentAirlinePrefix);
 
-        // 2. Find the Manager's Name using the Airline Name (since we don't have the username here)
+        
         ManagerData data = findManagerDetailsByAirline(currentAirlineName);
 
         if (data != null) {
@@ -241,17 +242,15 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        String logFilePath = Paths.get(System.getProperty("user.dir"),
-                                       "src", "main", "java", "com", "mycompany",
-                                       "lipadbantayoopdsa", "Logs",
-                                       "logs.txt").toString();
+        
 
         // Get current timestamp in the exact format
-        java.time.LocalDateTime now = java.time.LocalDateTime.now();
-        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
         String timestamp = now.format(formatter);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath, true))) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(AdminOperations.Database_logs_Path, true))) {
+            
             writer.write(String.format("[%s]%n", timestamp));
             writer.write("EVENT  : LOGOUT \n");
             writer.write("ACTION : User Logged Out \n");
@@ -316,15 +315,13 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     
     
     private ManagerData findManagerDetails(String targetUsername) {
-        String filePath = Paths.get(System.getProperty("user.dir"), 
-                                    "src", "main", "java", "com", "mycompany", 
-                                    "lipadbantayoopdsa", "userAuthentication", 
-                                    "user_credentials.txt").toString();
+        
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(AdminOperations.Database_UserCredentials_Path))) {
+            
             String line;
 
-            // Variables to hold data while we read each block
+            
             String tempManager = "";
             String tempAirline = "";
             String tempUsername = "";
@@ -356,7 +353,7 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage());
+            System.out.println("Error loading Data");
         }
 
         return null;
@@ -364,12 +361,10 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     
     
     private ManagerData findManagerDetailsByAirline(String targetAirline) {
-        String filePath = Paths.get(System.getProperty("user.dir"),
-                "src", "main", "java", "com", "mycompany",
-                "lipadbantayoopdsa", "userAuthentication",
-                "user_credentials.txt").toString();
+        
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(AdminOperations.Database_UserCredentials_Path))) {
+            
             String line;
             String tempManager = "";
             String tempAirline = "";
@@ -402,7 +397,7 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading credentials: " + e.getMessage());
+            System.out.println("Error reading credentials");
         }
         return null;
     }

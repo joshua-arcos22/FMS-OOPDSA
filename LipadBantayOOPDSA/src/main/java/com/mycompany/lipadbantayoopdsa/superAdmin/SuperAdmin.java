@@ -30,7 +30,7 @@ public class SuperAdmin extends javax.swing.JFrame {
     DefaultTableModel model = (DefaultTableModel) UserTable.getModel();
     model.setRowCount(0); 
 
-    // Adjust path if file is in project root
+   
     String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/userAuthentication/user_credentials.txt"; 
     String separator = "----------------------------";
 
@@ -42,14 +42,14 @@ public class SuperAdmin extends javax.swing.JFrame {
             line = line.trim();
             if (line.equals(separator)) {
                 if (!username.isEmpty()) {
-                    // Logic to determine button text based on current status
+                    
                     if (status.equalsIgnoreCase("PENDING")) action = "[Validate]";
                     else if (status.equalsIgnoreCase("ACTIVE")) action = "[Disable]";
                     else if (status.equalsIgnoreCase("DISABLED")) action = "[Enable]";
 
                     model.addRow(new Object[]{fullName, username, role, status, action});
                 }
-                // Reset for next block
+               
                 fullName = ""; username = ""; role = ""; status = ""; 
             } else if (line.contains(": ")) {
                 String[] parts = line.split(": ", 2);
@@ -67,7 +67,7 @@ public class SuperAdmin extends javax.swing.JFrame {
     }
 }
     private void updateAccountStatus(String targetUsername, String newStatus) {
-        String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/userAuthentication/user_credentials.txt";
+    String filePath = "src/main/java/com/mycompany/lipadbantayoopdsa/userAuthentication/user_credentials.txt";
     String tempPath = "src/main/java/com/mycompany/lipadbantayoopdsa/userAuthentication/user_credentials_temp.txt";
     
     java.io.File inputFile = new java.io.File(filePath);
@@ -80,35 +80,35 @@ public class SuperAdmin extends javax.swing.JFrame {
         boolean isTargetBlock = false;
         boolean statusUpdatedInBlock = false;
         
-        // Use a StringBuilder as a small buffer for the current user block only
+        
         StringBuilder currentBlock = new StringBuilder();
 
         while ((line = br.readLine()) != null) {
             currentBlock.append(line).append("\n");
 
-            // Check if this block belongs to the user we want to update
+           
             if (line.trim().equals("USERNAME: " + targetUsername)) {
                 isTargetBlock = true;
             }
 
-            // Once we hit the separator, process the block buffer
+            
             if (line.trim().equals("----------------------------")) {
                 String blockText = currentBlock.toString();
                 
                 if (isTargetBlock) {
-                    // Replace existing status or inject it if missing
+                    
                     if (blockText.contains("STATUS:")) {
-                        // regex to replace the line starting with STATUS:
+                        
                         blockText = blockText.replaceAll("STATUS: .*", "STATUS: " + newStatus);
                     } else {
-                        // Inject STATUS before the separator
+                       
                         blockText = blockText.replace("----------------------------", 
                                                       "STATUS: " + newStatus + "\n----------------------------");
                     }
                 }
                 
                 bw.write(blockText);
-                // Reset for the next user block
+             
                 currentBlock.setLength(0);
                 isTargetBlock = false;
             }
@@ -118,7 +118,7 @@ public class SuperAdmin extends javax.swing.JFrame {
         return;
     }
 
-    // Critical Step: Replace the old file with the updated one
+   
     if (inputFile.delete()) {
         if (!tempFile.renameTo(inputFile)) {
             javax.swing.JOptionPane.showMessageDialog(this, "Could not rename temporary file.");
@@ -129,7 +129,7 @@ public class SuperAdmin extends javax.swing.JFrame {
     }
     private void performSearch() {
     DefaultTableModel model = (DefaultTableModel) UserTable.getModel();
-    model.setRowCount(0); // Clear current table rows
+    model.setRowCount(0); 
 
     String searchText = searchField.getText().toLowerCase().trim();
     String filterType = searchFilter.getSelectedItem().toString();
@@ -145,13 +145,13 @@ public class SuperAdmin extends javax.swing.JFrame {
             line = line.trim();
             if (line.equals(separator)) {
                 if (!username.isEmpty()) {
-                    // Decide if this user matches the search criteria
+                    
                     boolean matches = false;
                     if (filterType.equals("Full Name") && fullName.toLowerCase().contains(searchText)) matches = true;
                     else if (filterType.equals("Username") && username.toLowerCase().contains(searchText)) matches = true;
                     else if (filterType.equals("Role") && role.toLowerCase().contains(searchText)) matches = true;
                     
-                    // If no search text, show everyone
+                    
                     if (searchText.isEmpty() || matches) {
                         if (status.equalsIgnoreCase("PENDING")) action = "[Validate]";
                         else if (status.equalsIgnoreCase("ACTIVE")) action = "[Disable]";
@@ -349,28 +349,27 @@ public class SuperAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:// 1. Close the current SuperAdmin dashboard to free up resources
     this.dispose(); 
     
-    // 2. Create and display the AccountApproval frame
-    // This allows the admin to view and process PENDING airline manager requests
+    
     new AccountApproval().setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // 1. Prompt the user for the current Master Key to authorize the action
+        
     String checkKey = javax.swing.JOptionPane.showInputDialog(this, "Enter Master Key to authorize registration:");
     
-    // 2. Security Check: The key must match "ken"
+   
     if ("ken".equals(checkKey)) {
-        // 3. Open the AddSuperadmin registration window
-        this.dispose(); // Close the dashboard
-        new AddSuperadmin().setVisible(true); // Launch the registration frame
+       
+        this.dispose(); 
+        new AddSuperadmin().setVisible(true); 
     } else if (checkKey != null) {
-        // 4. Access Denied if the key is incorrect
+        
         javax.swing.JOptionPane.showMessageDialog(this, "Unauthorized Access!", "Security Alert", javax.swing.JOptionPane.ERROR_MESSAGE);
-    }        // TODO add your handling code here:
+    }        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void UserTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UserTableMouseClicked
-        int row = UserTable.getSelectedRow();
+    int row = UserTable.getSelectedRow();
     int col = UserTable.getSelectedColumn();
 
     if (col == 4 && row != -1) {
@@ -379,7 +378,8 @@ public class SuperAdmin extends javax.swing.JFrame {
 
         String key = javax.swing.JOptionPane.showInputDialog(this, "Enter Master Key:");
         
-        // Security Check (Replace "ken" with your desired key)
+        
+        // CHNAGE THE MASTER KEYYYY
         if ("ken".equals(key)) {
             String newStatus = "";
             if (action.equals("[Validate]") || action.equals("[Enable]")) newStatus = "ACTIVE";

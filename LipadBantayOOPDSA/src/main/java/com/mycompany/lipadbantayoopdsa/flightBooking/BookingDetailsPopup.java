@@ -4,6 +4,7 @@
  */
 package com.mycompany.lipadbantayoopdsa.flightBooking;
 
+import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.Aircraftseats.a320;
 import com.mycompany.lipadbantayoopdsa.Aircraftseats.a321;
 import com.mycompany.lipadbantayoopdsa.Aircraftseats.a330;
@@ -12,9 +13,7 @@ import com.mycompany.lipadbantayoopdsa.Aircraftseats.atr42;
 import com.mycompany.lipadbantayoopdsa.Aircraftseats.atr72;
 import com.mycompany.lipadbantayoopdsa.Aircraftseats.b777;
 import com.mycompany.lipadbantayoopdsa.Aircraftseats.q400;
-import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeListener;
@@ -29,7 +28,7 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
     
     private String airline, aircraft, day, time, origin, dest, flightNum, username, status, bookingDate;
     private Double calculatedPrice;
-    private double currentTotalFare = 0.0; // <--- ADD THIS VARIABLE
+    private double currentTotalFare = 0.0;
     private final double baseFare = 2500.00;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BookingDetailsPopup.class.getName());
 
@@ -40,7 +39,7 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
             String dest, String flightNum, String status, String bookingDate, String priceStr, String username) {
 
         this.airline = airline;
-        this.aircraft = aircraft; // NEW
+        this.aircraft = aircraft; 
         this.day = day;
         this.time = time;
         this.origin = origin;
@@ -50,11 +49,11 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
         this.bookingDate = bookingDate;
         this.username = username;
 
-        // Parse the price passed from table (e.g., "3500.50")
+        // Parse the price 
         try {
             this.calculatedPrice = Double.parseDouble(priceStr);
         } catch (NumberFormatException e) {
-            this.calculatedPrice = 2500.0; // Fallback default
+            this.calculatedPrice = 2500.0; // Fallback default of 2500 
         }
 
         initComponents();
@@ -77,7 +76,6 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
         int infants = (int) spnrInfant.getValue();
         int luggage = (int) spnrLuggage.getValue();
 
-        // Use the DYNAMIC price calculated in FlightBooking
         double adultRate = this.calculatedPrice;
         double childRate = adultRate * 0.75;
         double luggageRate = 100.00;
@@ -111,16 +109,13 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
     }
     
     private void saveBookingToTxt(String record) {
-        String filePath = Paths.get(System.getProperty("user.dir"),
-                "src", "main", "java", "com", "mycompany",
-                "lipadbantayoopdsa", "flightBooking", "bookings.txt").toString();
-
+        
         List<String> allLines = new ArrayList<>();
         String userHeader = "(" + this.username + ")";
         boolean sectionFound = false;
 
         try {
-            File file = new File(filePath);
+            File file = new File(AdminOperations.Database_Bookings_Path);
             if (file.exists()) {
                 try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                     String line;
@@ -150,7 +145,7 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Save Error: " + e.getMessage());
+            System.out.println("There was na error in saving the File");
         }
     }
 
@@ -352,7 +347,7 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
         int infants = (int) spnrInfant.getValue();
 
         int totalPassengers = adults + children + infants;
-        int seatsNeeded = adults + children; // Infants don't get seats
+        int seatsNeeded = adults + children; 
 
         if (totalPassengers == 0) {
             JOptionPane.showMessageDialog(this, "Please select at least one passenger.");
@@ -364,70 +359,74 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
             return;
         }
 
-        // 1. Create the PARTIAL Record (Format: ... - Status - Date)
-        // We do NOT add the seat here yet.
+        
         String partialRecord = String.format("%s - %s - %s - %s - %s - %s - %s - %s - %s",
-                airline, aircraft, origin, dest, time, flightNum, day, status, bookingDate);
+                airline, aircraft, origin, dest, time, flightNum, day, status, bookingDate); 
 
-        // 2. Pass this string to the aircraft window
+        
         openSeatSelection(seatsNeeded, partialRecord);
-
-        // 3. Close this popup. DO NOT SAVE HERE.
+        
+        
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void openSeatSelection(int seatsNeeded, String partialRecord) {
         String type = this.aircraft.toLowerCase().trim();
-
-        // --- MODIFIED: Combine Luggage and Price ---
-        // This forces the format: ... - SEAT - LUGGAGE - PRICE ...
-        // when the aircraft window saves the file.
+        
         int luggageVal = (int) spnrLuggage.getValue();
         String price = String.format("%.2f", this.currentTotalFare);
 
-        // The Payload becomes: "10 - 4565.63"
+     
         String pricePayload = luggageVal + " - " + price;
 
         try {
             switch (type) {
-                // Pass 'pricePayload' instead of just 'price'
+                // Passes the values to the appropiate screen seat picker screen
                 case "q400":
-                    new q400(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
+                    q400 displayq400 = new q400(flightNum, seatsNeeded, partialRecord, username, pricePayload);
+                    displayq400.setVisible(true);
                     break;
                 case "a320":
-                    new a320(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
+                    a320 displaya320 = new a320(flightNum, seatsNeeded, partialRecord, username, pricePayload);
+                    displaya320.setVisible(true);
                     break;
                 case "a321":
-                    new a321(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
+                    a321 displaya321 =  new a321(flightNum, seatsNeeded, partialRecord, username, pricePayload);
+                    displaya321.setVisible(true);
                     break;
                 case "atr72":
-                    new atr72(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
+                    atr72 displayatr72 =  new atr72(flightNum, seatsNeeded, partialRecord, username, pricePayload);
+                    displayatr72.setVisible(true);
                     break;
                 case "atr42":
-                    new atr42(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
+                    atr42 displayatr42 = new atr42(flightNum, seatsNeeded, partialRecord, username, pricePayload);
+                    displayatr42.setVisible(true);
                     break;
                 case "a330":
-                    new a330(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
+                    a330 displaya330 = new a330(flightNum, seatsNeeded, partialRecord, username, pricePayload);
+                    displaya330.setVisible(true);
                     break;
                 case "a350":
-                    new a350(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
+                    a350 displaya350 = new a350(flightNum, seatsNeeded, partialRecord, username, pricePayload);
+                    displaya350.setVisible(true);
                     break;
                 case "b777":
-                    new b777(flightNum, seatsNeeded, partialRecord, username, pricePayload).setVisible(true);
+                    b777 displayb777 = new b777(flightNum, seatsNeeded, partialRecord, username, pricePayload);
+                    displayb777.setVisible(true);
                     break;
                 default:
                     JOptionPane.showMessageDialog(this, "Seat map not found.");
                     break;
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("There was an error in Finding the aircraft");
         }
     }
     
     
     
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-        // TODO add your handling code here:
+
         // resets value 
         spnrAdult.setValue(0);
         spnrChildren.setValue(0);
@@ -435,7 +434,7 @@ public class BookingDetailsPopup extends javax.swing.JFrame {
         spnrLuggage.setValue(0);
 
         updateFareSummary();
-        lblRemainingSeats.setForeground(new java.awt.Color(0, 102, 0)); // Back to Green
+        lblRemainingSeats.setForeground(new java.awt.Color(0, 102, 0)); 
     }//GEN-LAST:event_btnResetActionPerformed
 
     /**

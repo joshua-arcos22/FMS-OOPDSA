@@ -4,6 +4,7 @@
  */
 package com.mycompany.lipadbantayoopdsa.Aircraftseats;
 
+import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
 import com.mycompany.lipadbantayoopdsa.flightBooking.UserBookedFlights;
 import com.mycompany.lipadbantayoopdsa.flightBooking.paymentOptions;
@@ -26,8 +27,8 @@ public class a350 extends javax.swing.JFrame {
     private String username;
     private int seatsNeeded;
     private String price;
-    private final String bookingsPath = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
-    private List<String> takenSeats = new ArrayList<>();
+    private String[] takenSeatsArray = new String[450];
+    private int takenCount = 0;
 
     
     public a350() {
@@ -43,8 +44,8 @@ public class a350 extends javax.swing.JFrame {
         this.price = price;
 
         initComponents();
-        loadTakenSeats();      // 1. Find what seats are gone
-        initializeDynamicUI(); // 2. Show only needed dropdowns
+        loadTakenSeats();
+        initializeDynamicUI();
     }
 
     
@@ -189,6 +190,12 @@ public class a350 extends javax.swing.JFrame {
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(containerLayout.createSequentialGroup()
                         .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(SeatCat4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PAX5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SeatNum4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(containerLayout.createSequentialGroup()
+                        .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(PAX1)
                             .addGroup(containerLayout.createSequentialGroup()
                                 .addComponent(SeatCat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -213,14 +220,7 @@ public class a350 extends javax.swing.JFrame {
                                 .addComponent(SeatCat3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(SeatNum3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(PAX4)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, containerLayout.createSequentialGroup()
-                        .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(SeatCat4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(PAX5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SeatNum4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(82, 82, 82)))
+                            .addComponent(PAX4))))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
         containerLayout.setVerticalGroup(
@@ -255,13 +255,13 @@ public class a350 extends javax.swing.JFrame {
                         .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(SeatCat3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(SeatNum3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(27, 27, 27)
+                .addGap(18, 18, 18)
                 .addComponent(PAX5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SeatCat4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SeatNum4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -281,47 +281,60 @@ public class a350 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void back1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back1ActionPerformed
-        List<String> selectedSeats = new ArrayList<>();
+        
+        // Max of 5 tix per user
+        String[] selectedSeats = new String[5];
+        int selectionCount = 0;
+        // reads the selected items
         try {
             if (seatsNeeded >= 1) {
-                selectedSeats.add(SeatCat.getSelectedItem() + "" + SeatNum.getSelectedItem());
+                selectedSeats[selectionCount] = SeatCat.getSelectedItem() + "" + SeatNum.getSelectedItem();
+                selectionCount++;
             }
             if (seatsNeeded >= 2) {
-                selectedSeats.add(SeatCat1.getSelectedItem() + "" + SeatNum1.getSelectedItem());
+                selectedSeats[selectionCount] = SeatCat1.getSelectedItem() + "" + SeatNum1.getSelectedItem();
+                selectionCount++;
             }
             if (seatsNeeded >= 3) {
-                selectedSeats.add(SeatCat2.getSelectedItem() + "" + SeatNum2.getSelectedItem());
+                selectedSeats[selectionCount] = SeatCat2.getSelectedItem() + "" + SeatNum2.getSelectedItem();
+                selectionCount++;
             }
             if (seatsNeeded >= 4) {
-                selectedSeats.add(SeatCat3.getSelectedItem() + "" + SeatNum3.getSelectedItem());
+                selectedSeats[selectionCount] = SeatCat3.getSelectedItem() + "" + SeatNum3.getSelectedItem();
+                selectionCount++;
             }
             if (seatsNeeded >= 5) {
-                selectedSeats.add(SeatCat4.getSelectedItem() + "" + SeatNum4.getSelectedItem());
+                selectedSeats[selectionCount] = SeatCat4.getSelectedItem() + "" + SeatNum4.getSelectedItem();
+                selectionCount++;
             }
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error reading selection.");
+            System.out.println("Error in reading the selected items");
             return;
         }
 
-        // 2. Check Duplicates (Keep your existing logic)
-        Set<String> uniqueCheck = new HashSet<>(selectedSeats);
-        if (uniqueCheck.size() < selectedSeats.size()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "You cannot assign the same seat to multiple passengers!");
-            return;
+        // Shows an error if the seats are the same 
+        for (int i = 0; i < selectionCount; i++) {
+            for (int j = i + 1; j < selectionCount; j++) {
+                if (selectedSeats[i].equals(selectedSeats[j])) {
+                    JOptionPane.showMessageDialog(this, "You cannot assign the same seat (" + selectedSeats[i] + ") to multiple passengers!");
+                    return;
+                }
+            }
         }
 
-        // 3. Construct the Data String
-        String finalSeatString = String.join(",", selectedSeats);
+        // adds a "," for seperatign the seats in the bookings.txt
+        String finalSeatString = "";
+        for (int i = 0; i < selectionCount; i++) {
+            finalSeatString += selectedSeats[i];
+            if (i < selectionCount - 1) {
+                finalSeatString += ",";
+            }
+        }
 
-        // Format: ... - Date - Seat - Price
-        // (I removed "PENDING" because the PaymentWindow usually confirms the booking)
+        // updates the bookings.txt line 
         String finalRecord = partialRecord + " - " + finalSeatString + " - " + this.price;
-
         paymentOptions payment = new paymentOptions(finalRecord, this.price, this.username);
-
         payment.setVisible(true);
-
-        // 5. Close this window
         this.dispose();
     }//GEN-LAST:event_back1ActionPerformed
 
@@ -331,8 +344,7 @@ public class a350 extends javax.swing.JFrame {
 
     
     private void initializeDynamicUI() {
-        // Group components for easy looping
-        // Format: {Label, CategoryBox, NumberBox}
+
         Component[][] seatGroups = {
             {PAX1, SeatCat, SeatNum},
             {PAX2, SeatCat1, SeatNum1},
@@ -341,18 +353,14 @@ public class a350 extends javax.swing.JFrame {
             {PAX5, SeatCat4, SeatNum4}
         };
 
-        // Loop through all 5 possible groups
         for (int i = 0; i < 5; i++) {
             boolean isVisible = i < this.seatsNeeded;
 
-            // Set visibility
             for (Component c : seatGroups[i]) {
                 c.setVisible(isVisible);
             }
 
-            // Initialize ComboBoxes only for visible rows
             if (isVisible) {
-                // Safe cast because we know these components ARE JComboBoxes in the initComponents
                 JComboBox<String> catBox = (JComboBox<String>) seatGroups[i][1];
                 JComboBox<String> numBox = (JComboBox<String>) seatGroups[i][2];
                 setupComboBoxes(catBox, numBox);
@@ -362,7 +370,8 @@ public class a350 extends javax.swing.JFrame {
     
     
     private void loadTakenSeats() {
-        File file = new File(bookingsPath);
+        // loads and reads the loaded seats inthe flight number 
+        File file = new File(AdminOperations.Database_Bookings_Path);
         if (!file.exists()) {
             return;
         }
@@ -370,22 +379,25 @@ public class a350 extends javax.swing.JFrame {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Check if this line is for the SAME FLIGHT NUMBER
-                // Format: ... - FlightNum - ... - Date - SEATS
+
                 if (line.contains(this.flightNum)) {
                     String[] parts = line.split(" - ");
-                    // If file format is length 10, the last part (index 9) is the Seat(s)
+
                     if (parts.length >= 10) {
-                        String seats = parts[9]; // e.g., "A1,B2"
+                        String seats = parts[9];
                         String[] seatArray = seats.split(",");
+                        
                         for (String s : seatArray) {
-                            takenSeats.add(s.trim());
+                            if (takenCount < takenSeatsArray.length) {
+                                takenSeatsArray[takenCount] = s.trim();
+                                takenCount++;
+                            }
                         }
                     }
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error in reading the taken Seats");;
         }
     }
     
@@ -402,73 +414,39 @@ public class a350 extends javax.swing.JFrame {
         catBox.addItem("H");
         catBox.addItem("I");
 
-        // Add listener to update numbers when letter changes
+        // Constantly updates the comboboxes 
         catBox.addActionListener(e -> updateSeatNumbers(catBox, numBox));
-
-        // Initial population
         updateSeatNumbers(catBox, numBox);
     }
     
     
-
     private void updateSeatNumbers(JComboBox<String> catBox, JComboBox<String> numBox) {
+        
         String selectedCat = (String) catBox.getSelectedItem();
         if (selectedCat == null) {
             return;
         }
 
         numBox.removeAllItems();
-        int limit = 50;
+        int limit = 50; // This is the rwos chanegs this if there is an update towards the airarcfts.txt 
 
+        
         for (int i = 1; i <= limit; i++) {
-            String seatID = selectedCat + i; // e.g., "A1"
+            String seatID = selectedCat + i;
+            
+            boolean isTaken = false;
+            for (int k = 0; k < takenCount; k++) {
+                if (takenSeatsArray[k] != null && takenSeatsArray[k].equals(seatID)) {
+                    isTaken = true;
+                    break;
+                }
+            }
 
-            if (!takenSeats.contains(seatID)) {
+            if (!isTaken) {
                 numBox.addItem(String.valueOf(i));
             }
         }
     }
-        
-        
-        
-    private void saveFinalBooking(String record) {
-        File file = new File(bookingsPath);
-        List<String> allLines = new ArrayList<>();
-        String userHeader = "(" + this.username + ")";
-        boolean sectionFound = false;
-
-        try {
-            if (file.exists()) {
-                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        allLines.add(line);
-                    }
-                }
-            }
-            for (int i = 0; i < allLines.size(); i++) {
-                if (allLines.get(i).trim().equals(userHeader)) {
-                    allLines.add(i + 1, record);
-                    sectionFound = true;
-                    break;
-                }
-            }
-            if (!sectionFound) {
-                allLines.add(userHeader);
-                allLines.add(record);
-            }
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-                for (String line : allLines) {
-                    bw.write(line);
-                    bw.newLine();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
     
     
     /**

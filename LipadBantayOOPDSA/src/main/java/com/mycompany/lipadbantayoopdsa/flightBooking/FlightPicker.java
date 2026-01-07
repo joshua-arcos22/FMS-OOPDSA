@@ -22,13 +22,15 @@ public class FlightPicker extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FlightPicker.class.getName());
 
-    
-    private java.util.HashMap<String, String> airportMap = new java.util.HashMap<>();
+    // there are 408 active airports in the philippines but just chanhe this value  if theres an addition of an airport 
+    private int activeAirportCount = 60;
+    private String[] airportNames = new String[activeAirportCount]; 
+    private String[] airportCodes = new String[activeAirportCount];
+    private int airportCount = 0; 
     
     private String currentUserName; 
-    /**
-     * Creates new form FlightPicker
-     */
+    
+    
     public FlightPicker() {
         this("Test");
     }
@@ -38,11 +40,9 @@ public class FlightPicker extends javax.swing.JFrame {
         this.currentUserName = loggedInUsername;
         intializeComboBoxes();
         
-        // Prevents user from pciking past dates
         DateChooser.setMinSelectableDate(new Date());
         DateChooser.getDateEditor().setEnabled(false);
         
-        //initialize the errorhandling labels 
         errorDate.setText(" ");
         errorOrigin.setText(" ");
         errorDest.setText(" ");
@@ -242,7 +242,7 @@ public class FlightPicker extends javax.swing.JFrame {
         destinationDropDown.removeAllItems();
         originDropDown.addItem("N/A");
         destinationDropDown.addItem("N/A");
-        airportMap.clear(); // Clear old data
+        airportCount = 0;
 
         try {
             File master = new File(AdminOperations.Database_Aiports_Path);
@@ -259,8 +259,12 @@ public class FlightPicker extends javax.swing.JFrame {
                     String cityName = parts[0]; // Alcantara
                     String icaoCode = parts[1]; // RPVU
 
-                    // Store the mapping
-                    airportMap.put(cityName, icaoCode);
+                   
+                    if (airportCount < airportNames.length) {
+                        airportNames[airportCount] = cityName;
+                        airportCodes[airportCount] = icaoCode;
+                        airportCount++;
+                    }
 
                     // Display only the name
                     originDropDown.addItem(cityName);
@@ -272,7 +276,6 @@ public class FlightPicker extends javax.swing.JFrame {
             System.out.println("Airport file not found");
         }
     }
-    
     
     
     
@@ -291,57 +294,66 @@ public class FlightPicker extends javax.swing.JFrame {
             String originName = originDropDown.getSelectedItem().toString();
             String destName = destinationDropDown.getSelectedItem().toString();
 
-            // CONVERT NAME TO ICAO CODE
-            String originCode = airportMap.getOrDefault(originName, "");
-            String destCode = airportMap.getOrDefault(destName, "");
+
+            String originCode = "";
+            for (int i = 0; i < airportCount; i++) {
+                if (airportNames[i].equals(originName)) {
+                    originCode = airportCodes[i];
+                    break;
+                }
+            }
+
+            String destCode = "";
+            for (int i = 0; i < airportCount; i++) {
+                if (airportNames[i].equals(destName)) {
+                    destCode = airportCodes[i];
+                    break;
+                }
+            }
+            
 
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             String finalDate = sdf.format(DateChooser.getDate());
 
-            // Pass the CODES (RPVU), not the names
+            // Filters out the Flights in the Fligth Bookings
             FlightBooking bookingScreen = new FlightBooking(this.currentUserName, originCode, destCode, finalDate);
             bookingScreen.setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_FindFlightsActionPerformed
 
-    
-    
-    
-    
-    
-    //Checker 
-    public boolean checkValidty(){
-        
+ 
+    public boolean checkValidty() {
+
         boolean isValid = true;
 
-        // 1. Get Dropdown Values
+
         String origin = originDropDown.getSelectedItem().toString();
         String dest = destinationDropDown.getSelectedItem().toString();
         java.util.Date dateObj = DateChooser.getDate();
 
-        // 3. Validate ORIGIN
+
         if (origin.equals("N/A")) {
             errorOrigin.setText("Please select an origin");
             errorOrigin.setForeground(Color.RED);
             isValid = false;
         }
 
-        // 4. Validate DESTINATION
+ 
         if (dest.equals("N/A")) {
             errorDest.setText("Please select a destination");
             errorDest.setForeground(Color.RED);
             isValid = false;
         }
 
-        // 5. Check if airports are the SAME (Only if both are not N/A)
+    
         if (!origin.equals("N/A") && !dest.equals("N/A") && origin.equals(dest)) {
             errorDest.setText("Dest cannot be same as Origin"); // Set error on Dest label
             errorDest.setForeground(Color.RED);
             isValid = false;
         }
 
-        // 6. Validate DATE
+  
         if (dateObj == null) {
             errorDate.setText("Please select a date");
             errorDate.setForeground(Color.RED);
@@ -349,12 +361,8 @@ public class FlightPicker extends javax.swing.JFrame {
         }
 
         return isValid;
-        
-        
-        
-        
+
     }
-    
     
     
     /**

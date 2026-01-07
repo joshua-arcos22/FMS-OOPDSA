@@ -5,22 +5,18 @@
 package com.mycompany.lipadbantayoopdsa.popupInterface;
 
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
-import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunction;
-import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunctionA;
-import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
+
 import com.mycompany.lipadbantayoopdsa.ArrivalTimetableGenerator;
-import com.mycompany.lipadbantayoopdsa.MainFlightDisplayAdmin;
+
 import com.mycompany.lipadbantayoopdsa.MainFlightDisplayManagers;
 import com.mycompany.lipadbantayoopdsa.distanceCalculator;
-import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
-import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
 import java.util.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.*;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -40,7 +36,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
     public archiveScreen_M() {
         initComponents();
         intializeComboBoxes();
-        loadArchiveData(); // Load the archive file on startup
+        loadArchiveData(); 
     }
     
     public archiveScreen_M(String currentAirlineName, String currentAirlinePrefix) {
@@ -48,7 +44,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
         this.currentAirlineName = currentAirlineName;
         this.currentAirlinePrefix = currentAirlinePrefix;
         intializeComboBoxes();
-        loadArchiveData(); // Load the archive file on startup
+        loadArchiveData(); 
     }
 
 
@@ -377,8 +373,8 @@ public class archiveScreen_M extends javax.swing.JFrame {
     public void loadArchiveData() {
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
-        // Admin empty row
-        model.addRow(new String[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
+       
+          
 
         File file = new File(AdminOperations.Database_TimeTable_Archive_Path);
 
@@ -387,12 +383,13 @@ public class archiveScreen_M extends javax.swing.JFrame {
             try {
                 file.createNewFile();
             } catch (IOException e) {
+                System.out.println("File Does not exist Creatung Archive Master");
             }
             return;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
+                        String line;
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
@@ -403,13 +400,13 @@ public class archiveScreen_M extends javax.swing.JFrame {
                     
                     
                     if (rowData.length >= 10) {
-                        // Re-use your existing logic to calculate distances/ETA
+                        
                         processAndAddSearchRow(model, rowData);
                     }
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error loading archive", e);
+            System.out.println("Error loading archive");
         }
     }
     
@@ -432,7 +429,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
         model.setRowCount(0);
 
         // Admin requirement: Empty first row
-        model.addRow(new String[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
+          
 
         for (String filePath : filesToFilter) {
             File file = new File(filePath);
@@ -441,7 +438,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
             }
 
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
+                                String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) {
                         continue;
@@ -452,13 +449,13 @@ public class archiveScreen_M extends javax.swing.JFrame {
                         continue;
                     }
 
-                    // Match checks
+                    
                     boolean matchesSearch = searchTerm.equals(placeholder) || searchTerm.isEmpty() || line.toLowerCase().contains(searchTerm);
                     boolean matchesStatus = selStatus.equals("N/A") || rowData[9].equalsIgnoreCase(selStatus);
                     boolean matchesAirline = selAirline.equals("N/A") || rowData[0].equalsIgnoreCase(selAirline);
                     boolean matchesAircraft = selAircraft.equals("N/A") || rowData[1].equalsIgnoreCase(selAircraft);
 
-                    // Flexible matching for Origin/Dest
+                    
                     boolean matchesOrigin = selOrigin.equals("N/A") || rowData[2].toLowerCase().contains(selOrigin.toLowerCase());
                     boolean matchesDest = selDest.equals("N/A") || rowData[3].toLowerCase().contains(selDest.toLowerCase());
 
@@ -467,7 +464,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
                     }
                 }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Filter error on " + filePath, e);
+                System.out.println("Error in Filtering");
             }
         }
     }
@@ -488,14 +485,14 @@ public class archiveScreen_M extends javax.swing.JFrame {
 
             distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
 
-            // Calculate Distance and Duration
+            
             double distVal = calc.calculateDistanceKm();
             String distanceStr = String.format("%.0f km", distVal);
 
             int totalMinutes = calc.calculateFlightDurationMinutes();
             String durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
 
-            // ETA Math (1230 -> 12:30 + Duration)
+    
             int etdHours = Integer.parseInt(ETD.substring(0, 2));
             int etdMins = Integer.parseInt(ETD.substring(2, 4));
             int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
@@ -508,7 +505,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
 
             applyTableStyle(flightStatus);
         } catch (Exception e) {
-            // Skip malformed rows safely
+            System.out.println("Calculation Error");
         }
     }
     
@@ -567,7 +564,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
 
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
-        model.addRow(new String[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
+          
 
         String[] filesToSearch = {
             AdminOperations.Database_TimeTable_Archive_Path
@@ -580,7 +577,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
             }
 
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
+                                String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) {
                         continue;
@@ -600,7 +597,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Error reading file: " + filePath);
+                System.out.println("Error reading file");
             }
         }
     }
@@ -609,7 +606,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
     
     
     private void SearchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchFieldFocusGained
-        // if search text field is clicked then remove the palceholder text
+       
         SearchField.setText("");
         SearchField.setForeground(Color.BLACK);
     }//GEN-LAST:event_SearchFieldFocusGained
@@ -630,12 +627,12 @@ public class archiveScreen_M extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchFieldFocusLost
 
     private void SearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFieldActionPerformed
-        // if enter is pressed then search function
+        
         searchFlights();
     }//GEN-LAST:event_SearchFieldActionPerformed
 
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
-        // same procces for the textfield but in a button form
+
         searchFlights();
     }//GEN-LAST:event_SearchButtonActionPerformed
 
@@ -655,23 +652,72 @@ public class archiveScreen_M extends javax.swing.JFrame {
         applyFilters();
     }//GEN-LAST:event_resetFiltersActionPerformed
 
+    
+    private void deleteBookingsForFlight(String flightNum) {
+        File file = new File(AdminOperations.Database_Bookings_Path);
+        if (!file.exists()) {
+            return;
+        }
+
+        List<String> remainingLines = new ArrayList<>();
+        boolean changesMade = false;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String trimmed = line.trim();
+
+                
+                if (trimmed.isEmpty() || (trimmed.startsWith("(") && trimmed.endsWith(")"))) {
+                    remainingLines.add(line);
+                    continue;
+                }
+
+                
+                String[] parts = trimmed.split(" - ");
+                
+                
+                if (parts.length >= 6 && parts[5].trim().equalsIgnoreCase(flightNum)) {
+                    changesMade = true; 
+                } else {
+                    remainingLines.add(line); 
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading bookings file.");
+        }
+
+        
+        if (changesMade) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                for (String s : remainingLines) {
+                    bw.write(s);
+                    bw.newLine();
+                }
+            } catch (IOException e) {
+                System.out.println("Error saving updated bookings.");
+            }
+        }
+    }
+    
     private void deleteFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFlightActionPerformed
         // PERMANENT DELETE BUTTON
         int selectedRow = FlightTable.getSelectedRow();
 
-        if (selectedRow == -1 || selectedRow == 0) {
+        if (selectedRow == -1) {
             javax.swing.JOptionPane.showMessageDialog(this, "Select a flight to permanently delete.");
             return;
         }
 
+        
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
-                "Are you sure? This will PERMANENTLY delete the record.",
+                "Are you sure? This will PERMANENTLY delete the record and ALL associated user bookings.",
                 "Delete Forever",
                 javax.swing.JOptionPane.YES_NO_OPTION);
 
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
 
-            // READ TABLE VALUES FIRST
+            
             String flightNumber = FlightTable.getValueAt(selectedRow, 8).toString();
             String airline = FlightTable.getValueAt(selectedRow, 0).toString();
             String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
@@ -683,19 +729,22 @@ public class archiveScreen_M extends javax.swing.JFrame {
             String cargo = FlightTable.getValueAt(selectedRow, 7).toString();
 
             try {
-                // DELETE FROM ARCHIVE FILE
+                
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Archive_Path, flightNumber);
 
-                // ================= MASTER LOG (PERMANENT DELETE) =================
-                java.time.format.DateTimeFormatter dtf =
-                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+                
+                deleteBookingsForFlight(flightNumber);
+
+                
+                java.time.format.DateTimeFormatter dtf
+                        = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
                 String timestamp = java.time.LocalDateTime.now().format(dtf);
 
                 StringBuilder logEntry = new StringBuilder();
 
                 logEntry.append("[").append(timestamp).append("]\n");
                 logEntry.append("EVENT  : FLIGHT_DELETE\n");
-                logEntry.append("ACTION : Flight permanently deleted\n");
+                logEntry.append("ACTION : Flight and associated bookings deleted\n");
                 logEntry.append("ACTOR  : SYSTEM\n\n");
 
                 logEntry.append("DETAILS\n");
@@ -716,34 +765,37 @@ public class archiveScreen_M extends javax.swing.JFrame {
                 // ================================================================
 
                 loadArchiveData(); // Refresh table
-                javax.swing.JOptionPane.showMessageDialog(this, "Flight deleted permanently.");
+                javax.swing.JOptionPane.showMessageDialog(this, "Flight and bookings deleted permanently.");
 
             } catch (IOException e) {
-                System.out.println("Error deleting: " + e.getMessage());
+                System.out.println("Error deleting");
             }
         }
     }
-    // Helper to move string from Archive -> Departure
+    
     private void restoreLineToMain(String flightNum) throws IOException {
         File archiveFile = new File(AdminOperations.Database_TimeTable_Archive_Path);
         File departureFile = new File(AdminOperations.Database_TimeTable_Departure_Path);
 
-        try (Scanner scanner = new Scanner(archiveFile); BufferedWriter writer = new BufferedWriter(new FileWriter(departureFile, true))) { // true = append
-
+        try (Scanner scanner = new Scanner(archiveFile); 
+            BufferedWriter writer = new BufferedWriter(new FileWriter(departureFile, true))) { 
+            
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split("-");
-                // Check flight number at index 6
+             
                 if (parts.length > 6 && parts[6].equalsIgnoreCase(flightNum)) {
                     writer.write(line);
                     writer.newLine();
-                    break; // Found it, stop searching
+                    break; 
                 }
             }
+        } catch (IOException e){
+            System.out.println("Error in restoring line to main ");
         }
     }
 
-    // Helper to delete line from specific file
+
     private void deleteLineFromFile(String filePath, String flightNumberToRemove) throws IOException {
         File inputFile = new File(filePath);
         File tempFile = new File(inputFile.getParent(), "temp_archive_" + inputFile.getName());
@@ -752,22 +804,27 @@ public class archiveScreen_M extends javax.swing.JFrame {
             return;
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile)); BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+            
 
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("-");
                 if (parts.length > 6 && parts[6].equalsIgnoreCase(flightNumberToRemove)) {
-                    continue; // Skip writing this line
+                    continue; 
                 }
                 writer.write(line);
                 writer.newLine();
             }
+        }   catch (IOException e){
+                System.out.println("Error deleting line");
         }
 
         if (inputFile.delete()) {
             tempFile.renameTo(inputFile);
-        }
+        } 
+        
     }//GEN-LAST:event_deleteFlightActionPerformed
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
@@ -777,23 +834,25 @@ public class archiveScreen_M extends javax.swing.JFrame {
     }//GEN-LAST:event_backActionPerformed
 
     private void unarchiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unarchiveActionPerformed
-        // UNARCHIVE BUTTON (Restore to Main Database)
+        // UNARCHIVE BUTTON
         int selectedRow = FlightTable.getSelectedRow();
 
-        if (selectedRow == -1 || selectedRow == 0) { // Check 0 to skip empty admin row
+        
+        if (selectedRow == -1) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please select a flight to restore.");
             return;
         }
 
-        int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
+        int confirm = JOptionPane.showConfirmDialog(this,
                 "Restore this flight to the Active Schedule?",
                 "Confirm Unarchive",
                 javax.swing.JOptionPane.YES_NO_OPTION);
 
-        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+        if (confirm == JOptionPane.YES_OPTION) {
 
-            // READ TABLE VALUES FIRST
+            
             String flightNumber = FlightTable.getValueAt(selectedRow, 8).toString();
+            
             String airline = FlightTable.getValueAt(selectedRow, 0).toString();
             String aircraft = FlightTable.getValueAt(selectedRow, 1).toString();
             String origin = FlightTable.getValueAt(selectedRow, 2).toString();
@@ -804,50 +863,41 @@ public class archiveScreen_M extends javax.swing.JFrame {
             String cargo = FlightTable.getValueAt(selectedRow, 7).toString();
 
             try {
-                // A. Restore to Main Database
+               
                 restoreLineToMain(flightNumber);
 
-                // B. Delete from Archive
+               
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Archive_Path, flightNumber);
 
-                // C. Regenerate Arrivals
+                
                 ArrivalTimetableGenerator.generate();
 
-                // ================= MASTER LOG (RESTORE) =================
-                java.time.format.DateTimeFormatter dtf =
-                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+               
+                java.time.format.DateTimeFormatter dtf
+                        = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
                 String timestamp = java.time.LocalDateTime.now().format(dtf);
 
                 StringBuilder logEntry = new StringBuilder();
-
                 logEntry.append("[").append(timestamp).append("]\n");
                 logEntry.append("EVENT  : FLIGHT_RESTORE\n");
                 logEntry.append("ACTION : Flight restored to active schedule\n");
                 logEntry.append("ACTOR  : SYSTEM\n\n");
 
-                logEntry.append("DETAILS\n");
-                logEntry.append("--------\n");
+                
+                logEntry.append("DETAILS\n--------\n");
                 logEntry.append("Flight Number       : ").append(flightNumber).append("\n");
                 logEntry.append("Airline Name        : ").append(airline).append("\n");
-                logEntry.append("Aircraft Type       : ").append(aircraft).append("\n");
-                logEntry.append("Origin Airport      : ").append(origin).append("\n");
-                logEntry.append("Destination Airport : ").append(destination).append("\n");
-                logEntry.append("Time                : ").append(time).append("\n");
-                logEntry.append("Frequency           : ").append(frequency).append("\n");
-                logEntry.append("PAX Capacity        : ").append(pax).append("\n");
-                logEntry.append("Cargo Capacity      : ").append(cargo).append("\n");
                 logEntry.append("Status              : Restored\n\n");
                 logEntry.append("----------------------------------------\n\n");
 
                 com.mycompany.lipadbantayoopdsa.Logs.logs.writeLog(logEntry.toString());
-                // =========================================================
 
-                // D. Refresh View
+                
                 loadArchiveData();
-                javax.swing.JOptionPane.showMessageDialog(this, "Flight restored successfully.");
+                JOptionPane.showMessageDialog(this, "Flight restored successfully.");
 
             } catch (IOException e) {
-                System.out.println("Error restoring flight: " + e.getMessage());
+                System.out.println("Error restoring flight");
             }
         }
     }//GEN-LAST:event_unarchiveActionPerformed

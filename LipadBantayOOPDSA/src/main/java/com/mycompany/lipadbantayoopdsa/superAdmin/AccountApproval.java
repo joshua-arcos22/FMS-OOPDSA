@@ -119,17 +119,17 @@ public class AccountApproval extends javax.swing.JFrame {
         jTable1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "", "Manager Name", "Airline", "Username", "Prefix", "Status"
+                "Manager Name", "Airline", "Username", "Prefix", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -219,7 +219,7 @@ public class AccountApproval extends javax.swing.JFrame {
         String prefix = jTable1.getValueAt(row, 3).toString();
 
         if (updateUserStatus(username, "ACTIVE")) {
-            // 2. Update Airlines_Master.txt
+           
             try {
                 new File(AIRLINES_DB_PATH).mkdirs(); 
                 try (BufferedWriter bw = new BufferedWriter(new FileWriter(AIRLINES_MASTER_PATH, true))) {
@@ -230,7 +230,7 @@ public class AccountApproval extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Master List Error: " + e.getMessage());
             }
 
-            // 3. Create Routes_AirlineName.txt
+            
             try {
                 new File(ROUTES_DB_PATH).mkdirs(); 
                 String routesFile = ROUTES_DB_PATH + "Routes_" + airlineName + ".txt";
@@ -240,7 +240,7 @@ public class AccountApproval extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Routes File Error: " + e.getMessage());
             }
 
-            JOptionPane.showMessageDialog(this, managerName + " Approved successfully!");
+            JOptionPane.showMessageDialog(this, airlineName + " Approved successfully!");
             loadPendingRequests(); 
         }
     }//GEN-LAST:event_button3ActionPerformed

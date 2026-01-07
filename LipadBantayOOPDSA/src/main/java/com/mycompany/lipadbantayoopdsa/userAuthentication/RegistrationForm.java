@@ -4,6 +4,7 @@ package com.mycompany.lipadbantayoopdsa.userAuthentication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AuthenticationForm;
 import com.mycompany.lipadbantayoopdsa.Logs.logs;
@@ -136,11 +137,10 @@ public class RegistrationForm extends javax.swing.JFrame {
                                 .addComponent(lblUsn))
                             .addComponent(lblFN))
                         .addGap(38, 38, 38)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(pwdReg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtRegUsn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtFN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtRegUsn, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtFN, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pwdReg, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(170, 170, 170))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -205,28 +205,25 @@ public class RegistrationForm extends javax.swing.JFrame {
         String fullName = txtFN.getText().trim();
         String role = "USER";
 
-        // Only save if all fields are filled
+        
         if (username.isEmpty() || password.isEmpty() || fullName.isEmpty()) {
             return;
         }
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter("user_credentials.txt", true))) {
-            writer.println(username + "," + password + "," + role);
+        try(PrintWriter writer = new PrintWriter(new FileWriter("user_credentials.txt", true))){
+                        writer.println(username + "," + password + "," + role);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Auto-save failed: " + e.getMessage());
         }
     }
     
     private boolean checkExistingUsername(String username) {
-        String credFilePath = Paths.get(System.getProperty("user.dir"), 
-                                        "src", "main", "java", "com", "mycompany", 
-                                        "lipadbantayoopdsa", "userAuthentication", 
-                                        "user_credentials.txt").toString();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(credFilePath))) {
+    
+        try(BufferedReader reader = new BufferedReader(new FileReader(AdminOperations.Database_UserCredentials_Path))) {
+            
             String line;
             while((line = reader.readLine()) != null) {
-                // Skip empty lines
+                
                 line = line.trim();
                 if(line.isEmpty() || !line.startsWith("USERNAME:")) continue;
 
@@ -236,7 +233,7 @@ public class RegistrationForm extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            // File may not exist yet, ignore
+            System.out.println("Erorr in loading File");
         }
         return false;
     }
@@ -247,7 +244,7 @@ public class RegistrationForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        // Read user input
+       
         String username = txtRegUsn.getText().trim();
         String password = String.valueOf(pwdReg.getPassword());
         String fullName = txtFN.getText().trim();
@@ -257,41 +254,30 @@ public class RegistrationForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         if (checkExistingUsername(username)) {
             JOptionPane.showMessageDialog(this, "Username already exists.", "Duplicate Username", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Absolute paths for the files
-        String credFilePath = Paths.get(System.getProperty("user.dir"), 
-                                        "src", "main", "java", "com", "mycompany", 
-                                        "lipadbantayoopdsa", "userAuthentication", 
-                                        "user_credentials.txt").toString();
+       
+        try (PrintWriter credWriter = new PrintWriter(new FileWriter(AdminOperations.Database_UserCredentials_Path, true)); 
+                PrintWriter profileWriter = new PrintWriter(new FileWriter(AdminOperations.Database_UserProfiles_Path, true))) {
 
-        String profileFilePath = Paths.get(System.getProperty("user.dir"), 
-                                           "src", "main", "java", "com", "mycompany", 
-                                           "lipadbantayoopdsa", "userAuthentication", 
-                                           "user_profiles.txt").toString();
+            String credRecord
+                    = "FULLNAME: " + fullName + System.lineSeparator()
+                    + "USERNAME: " + username + System.lineSeparator()
+                    + "PASSWORD: " + password + System.lineSeparator()
+                    + "ROLE: " + role + System.lineSeparator()
+                    + "STATUS: ACTIVE" + System.lineSeparator()
+                    + "----------------------------";
 
-        try (
-            PrintWriter credWriter = new PrintWriter(new FileWriter(credFilePath, true));
-            PrintWriter profileWriter = new PrintWriter(new FileWriter(profileFilePath, true))
-        ) {
-            // Write credentials
-            String credRecord = 
-                    "FULLNAME: " + fullName + System.lineSeparator() +
-                    "USERNAME: " + username + System.lineSeparator() +
-                    "PASSWORD: " + password + System.lineSeparator() +
-                    "ROLE: " + role + System.lineSeparator() +
-                    "STATUS: ACTIVE" + System.lineSeparator() +
-                    "----------------------------";
-            credWriter.println(credRecord);
+            credWriter.println(credRecord); 
 
             String profileRecord = String.format("%s,%s,%s", username, fullName, "User");
-            profileWriter.println(profileRecord);
-            
-            // Logging section
+            profileWriter.println(profileRecord); 
+
+         
             String timestamp = java.time.LocalDateTime.now()
                     .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
 
@@ -299,8 +285,8 @@ public class RegistrationForm extends javax.swing.JFrame {
                     "[%s]%nEVENT  : USER_REGISTRATION%nACTION : New user registered%nACTOR  : SYSTEM%n%nDETAILS%n--------%nUsername  : %s%nFull Name : %s%nRole      : USER%nStatus    : ACTIVE%n%n----------------------------------------%n%n",
                     timestamp, username, fullName
             );
-            
-            logs.writeLog(logEntry); 
+
+            logs.writeLog(logEntry);
 
             JOptionPane.showMessageDialog(this, "Registration successful! You can now sign in.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
@@ -308,7 +294,8 @@ public class RegistrationForm extends javax.swing.JFrame {
             this.dispose();
 
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving registration data: " + e.getMessage(), "File Write Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error in Registering User: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error saving data: " + e.getMessage());
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
 

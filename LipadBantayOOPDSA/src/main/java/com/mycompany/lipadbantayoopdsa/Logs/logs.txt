@@ -357,3 +357,3453 @@ ACTOR  : joshua_123
 
 ----------------------------------------
 
+[2026-01-06 | 15:03:37]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:03:50]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 15:04:44]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:05:17]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 15:06:19]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:07:03]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 15:07:09]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:11:11]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:11:14]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 15:11:19]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:11:25]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : AL1123
+Seat          : A1,B1,C1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-06 | 15:33:03]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:34:54]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:34:58]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 15:35:06]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:38:13]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:38:43]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 15:39:20]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:39:40]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J2538
+Seat          : A1,B1,C1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-06 | 15:40:25]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J2538
+Seat          : A1,B1,C1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-06 | 15:43:41]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:43:46]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J2538
+Seat          : A1,B1,C1
+New Status    : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 15:43:55]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J2538
+Airline       : CEBUPAC
+Aircraft      : A320
+Origin        : RPLL(Manila)
+Destination   : RPLK(Daraga)
+Time          : 0445
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 15:44:02]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J2538
+Seat          : A1,B1,C1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-06 | 15:44:21]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 15:51:08]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:51:15]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J2538
+Seat          : A1,B1,C1
+New Status    : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 15:51:21]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J2538
+Seat          : A1,B1,C1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-06 | 15:51:53]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J2538
+Airline       : CEBUPAC
+Aircraft      : A320
+Origin        : RPLL(Manila)
+Destination   : RPLK(Daraga)
+Time          : 0445
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 15:52:01]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J2538
+Seat          : A1,B1,C1
+New Status    : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 15:52:10]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J2538
+Seat          : A1,B1,C1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-06 | 15:55:19]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 15:55:46]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J5665
+Airline       : CEBUPAC
+Aircraft      : ATR42
+Origin        : RPMN
+Destination   : RPVU
+Time          : 1230
+Frequency     : TH
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 15:58:42]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 16:07:10]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 16:08:24]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 16:08:31]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 19:20:38]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 19:21:36]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 19:21:42]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 19:21:52]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : AL1123
+Seat          : B1,C1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-06 | 19:22:01]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 20:06:20]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 20:06:26]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 20:06:32]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : AEL_joshua
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 20:06:55]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 20:09:13]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 20:11:13]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 20:15:17]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 20:16:35]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 20:17:08]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 20:43:42]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 20:43:55]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 22:12:40]
+EVENT  : USER_REGISTRATION
+ACTION : New user registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Username  : joshua_oliver
+Full Name : Joshua Arcos
+Role      : USER
+Status    : ACTIVE
+
+----------------------------------------
+
+[2026-01-06 | 22:13:45]
+EVENT  : USER_REGISTRATION
+ACTION : New user registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Username  : joshua_oliver
+Full Name : joshua_oliver
+Role      : USER
+Status    : ACTIVE
+
+----------------------------------------
+
+[2026-01-06 | 22:16:34]
+EVENT  : USER_REGISTRATION
+ACTION : New user registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Username  : rober123
+Full Name : Robert
+Role      : USER
+Status    : ACTIVE
+
+----------------------------------------
+
+[2026-01-06 | 22:18:51]
+EVENT  : USER_REGISTRATION
+ACTION : New user registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Username  : joshua
+Full Name : robert
+Role      : USER
+Status    : ACTIVE
+
+----------------------------------------
+
+[2026-01-06 | 22:21:44]
+EVENT  : USER_REGISTRATION
+ACTION : New user registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Username  : joshua-123
+Full Name : Joshua Oliver
+Role      : USER
+Status    : ACTIVE
+
+----------------------------------------
+
+[2026-01-06 | 22:24:26]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua-123
+
+----------------------------------------
+
+[2026-01-06 | 22:24:58]
+EVENT  : AIRLINE_MANAGER_REGISTRATION
+ACTION : New airline manager registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Manager Name : Joshua Oliver
+Airline Name : AZURE
+Fl. Prefix   : AZ
+Username     : AZ_Manager
+Role         : AIRLINE_MANAGER
+
+Status       : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 22:27:56]
+EVENT  : AIRLINE_MANAGER_REGISTRATION
+ACTION : New airline manager registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Manager Name : Joshua Arcos
+Airline Name : AZURE
+Fl. Prefix   : AZ
+Username     : AZ_Manager
+Role         : AIRLINE_MANAGER
+
+Status       : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 22:29:03]
+EVENT  : AIRLINE_MANAGER_REGISTRATION
+ACTION : New airline manager registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Manager Name : jshua
+Airline Name : azure
+Fl. Prefix   : az
+Username     : az123
+Role         : AIRLINE_MANAGER
+
+Status       : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 22:31:43]
+EVENT  : AIRLINE_MANAGER_REGISTRATION
+ACTION : New airline manager registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Manager Name : asd
+Airline Name : asd
+Fl. Prefix   : as
+Username     : asd123
+Role         : AIRLINE_MANAGER
+
+Status       : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 22:34:40]
+EVENT  : AIRLINE_MANAGER_REGISTRATION
+ACTION : New airline manager registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Manager Name : asd
+Airline Name : asd
+Fl. Prefix   : asasd
+Username     : asd1
+Role         : AIRLINE_MANAGER
+
+Status       : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 22:35:29]
+EVENT  : AIRLINE_MANAGER_REGISTRATION
+ACTION : New airline manager registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Manager Name : Joshua Arcos
+Airline Name : AZURE
+Fl. Prefix   : AZ
+Username     : az_123
+Role         : AIRLINE_MANAGER
+
+Status       : PENDING
+
+----------------------------------------
+
+[2026-01-06 | 22:37:15]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLL
+Destination   : RPLK
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 22:37:25]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 22:37:35]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 22:59:04]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 22:59:12]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 22:59:34]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 22:59:54]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 22:59:59]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:00:21]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 23:00:29]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : AZURE
+Aircraft      : A320
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 23:00:36]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : Delayed
+Aircraft      : AZURE
+Origin        : A320
+Destination   : RPLL(Manila)
+Time          : RPLK(Legazpi)
+Frequency     : TH/F
+PAX           : 1230
+Cargo         : 1252
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-06 | 23:00:46]
+EVENT  : FLIGHT_RESTORE
+ACTION : Flight restored to active schedule
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AZ9935
+Airline Name        : Delayed
+Aircraft Type       : AZURE
+Origin Airport      : A320
+Destination Airport : RPLL(Manila)
+Time                : RPLK(Legazpi)
+Frequency           : TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1252
+Status              : Restored
+
+----------------------------------------
+
+[2026-01-06 | 23:00:52]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : AZURE
+Aircraft      : A320
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 23:01:07]
+EVENT  : AIRLINE_RATE_EDIT
+ACTION : Rate per Km updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Airline Name        : AZURE
+
+CHANGES
+--------
+Rate per Km (Before): PHP 0.0
+Rate per Km (After) : PHP 2.5
+
+----------------------------------------
+
+[2026-01-06 | 23:01:18]
+EVENT  : ROUTE_EDIT
+ACTION : Base fare updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Aircraft Type       : Q400
+Origin Airport      : RPLL(Manila)
+Destination Airport : RPLK(Legazpi)
+
+CHANGES
+--------
+Base Fare (Before)  : 0.00
+Base Fare (After)   : 1500
+
+----------------------------------------
+
+[2026-01-06 | 23:01:23]
+EVENT  : ROUTE_EDIT
+ACTION : Base fare updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Aircraft Type       : A320
+Origin Airport      : RPLL(Manila)
+Destination Airport : RPLK(Legazpi)
+
+CHANGES
+--------
+Base Fare (Before)  : 0.00
+Base Fare (After)   : 1500
+
+----------------------------------------
+
+[2026-01-06 | 23:01:37]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 23:02:01]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:02:26]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ4456
+Airline       : AZURE
+Aircraft      : ATR42
+Origin        : RPVM
+Destination   : RPLK
+Time          : 1230
+Frequency     : ST/TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 23:04:16]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : AZ9935
+Airline       : Scheduled
+Aircraft      : AZURE
+Origin        : A320
+Destination   : RPLL(Manila)
+Time          : RPLK(Legazpi)
+Frequency     : TH/F
+PAX           : 1230
+Cargo         : 1252
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-06 | 23:10:40]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:14:19]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:14:43]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ1123
+Airline       : AZURE
+Aircraft      : ATR72
+Origin        : RPVS
+Destination   : RPSP
+Time          : 1230
+Frequency     : TH
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 23:14:51]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : AZ1123
+Airline       : Scheduled
+Aircraft      : AZURE
+Origin        : ATR72
+Destination   : RPVS(Antique)
+Time          : RPSP(Bohol)
+Frequency     : TH
+PAX           : 1230
+Cargo         : 1258
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-06 | 23:14:54]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : AZ4456
+Airline       : Scheduled
+Aircraft      : AZURE
+Origin        : ATR42
+Destination   : RPVM(Cebu)
+Time          : RPLK(Legazpi)
+Frequency     : ST/TH/F
+PAX           : 1230
+Cargo         : 1304
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-06 | 23:14:57]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight permanently deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AZ9935
+Airline Name        : Scheduled
+Aircraft Type       : AZURE
+Origin Airport      : A320
+Destination Airport : RPLL(Manila)
+Time                : RPLK(Legazpi)
+Frequency           : TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1252
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-06 | 23:14:59]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight permanently deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AZ1123
+Airline Name        : Scheduled
+Aircraft Type       : AZURE
+Origin Airport      : ATR72
+Destination Airport : RPVS(Antique)
+Time                : RPSP(Bohol)
+Frequency           : TH
+PAX Capacity        : 1230
+Cargo Capacity      : 1258
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-06 | 23:15:01]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight permanently deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AZ4456
+Airline Name        : Scheduled
+Aircraft Type       : AZURE
+Origin Airport      : ATR42
+Destination Airport : RPVM(Cebu)
+Time                : RPLK(Legazpi)
+Frequency           : ST/TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1304
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-06 | 23:15:23]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ1123
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPVM
+Destination   : RPUB
+Time          : 1230
+Frequency     : TH
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 23:16:47]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 23:18:44]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:20:24]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:24:00]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:24:08]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : AZ1123
+Airline       : Scheduled
+Aircraft      : AZURE
+Origin        : Q400
+Destination   : RPVM(Cebu)
+Time          : RPUB(Baguio)
+Frequency     : TH
+PAX           : 1230
+Cargo         : 1339
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-06 | 23:24:11]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight permanently deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AZ1123
+Airline Name        : Scheduled
+Aircraft Type       : AZURE
+Origin Airport      : Q400
+Destination Airport : RPVM(Cebu)
+Time                : RPUB(Baguio)
+Frequency           : TH
+PAX Capacity        : 1230
+Cargo Capacity      : 1339
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-06 | 23:24:52]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ4453
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLK
+Destination   : RPVM
+Time          : 1230
+Frequency     : W/TH
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 23:24:57]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ4453
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLK(Legazpi)
+Destination   : RPVM(Cebu City)
+Time          : 1230
+Frequency     : W/TH
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 23:25:09]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ4454
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLK(Legazpi)
+Destination   : RPVM(Cebu City)
+Time          : 1230
+Frequency     : W/TH
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 23:25:14]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : AZ4454
+Airline       : AZURE
+Aircraft      : Q400
+Origin        : RPLK(Legazpi)
+Destination   : RPVM(Cebu City)
+Time          : 1230
+Frequency     : W/TH
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-06 | 23:25:19]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : AZ4454
+Airline       : Scheduled
+Aircraft      : AZURE
+Origin        : Q400
+Destination   : RPLK(Legazpi)
+Time          : RPVM(Cebu City)
+Frequency     : W/TH
+PAX           : 1230
+Cargo         : 1258
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-06 | 23:25:27]
+EVENT  : FLIGHT_RESTORE
+ACTION : Flight restored to active schedule
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AZ4454
+Airline Name        : Scheduled
+Aircraft Type       : AZURE
+Origin Airport      : Q400
+Destination Airport : RPLK(Legazpi)
+Time                : RPVM(Cebu City)
+Frequency           : W/TH
+PAX Capacity        : 1230
+Cargo Capacity      : 1258
+Status              : Restored
+
+----------------------------------------
+
+[2026-01-06 | 23:25:44]
+EVENT  : AIRLINE_RATE_EDIT
+ACTION : Rate per Km updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Airline Name        : AZURE
+
+CHANGES
+--------
+Rate per Km (Before): PHP 0.0
+Rate per Km (After) : PHP 1.5
+
+----------------------------------------
+
+[2026-01-06 | 23:25:52]
+EVENT  : ROUTE_EDIT
+ACTION : Base fare updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Aircraft Type       : Q400
+Origin Airport      : RPLK(Legazpi)
+Destination Airport : RPVM(Cebu City)
+
+CHANGES
+--------
+Base Fare (Before)  : 0.00
+Base Fare (After)   : 2500
+
+----------------------------------------
+
+[2026-01-06 | 23:26:09]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 23:26:19]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:26:47]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-06 | 23:28:00]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua-123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:30:04]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:30:42]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 23:30:48]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua-123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:34:29]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua-123
+
+----------------------------------------
+
+[2026-01-06 | 23:34:36]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:34:51]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua-123
+Flight No     : AZ4454
+Seat          : A1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-06 | 23:35:04]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 23:35:12]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua-123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:35:36]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua-123
+
+----------------------------------------
+
+[2026-01-06 | 23:35:48]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:36:13]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-06 | 23:36:25]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua-123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-06 | 23:36:40]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua-123
+
+----------------------------------------
+
+[2026-01-06 | 23:43:02]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : admin_joshua
+ROLE   : ADMIN
+
+----------------------------------------
+
+
+[2026-01-06 | 23:47:42]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : admin_joshua
+ROLE   : ADMIN
+
+----------------------------------------
+
+
+[2026-01-06 | 23:48:07]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : PR5408
+Airline       : PAL
+Aircraft      : A320
+Origin        : RPLL(Manila)
+Destination   : RPLI(Laoag)
+Time          : 1935
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-06 | 23:48:22]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : PR5408
+Airline Name        : Delayed
+Aircraft Type       : PAL
+Origin Airport      : A320
+Destination Airport : RPLL(Manila)
+Time                : RPLI(Laoag)
+Frequency           : E
+PAX Capacity        : 1935
+Cargo Capacity      : 2003
+Status              : Archived
+
+----------------------------------------
+
+[2026-01-06 | 23:48:28]
+EVENT  : FLIGHT_RESTORE
+ACTION : Flight restored to active schedule
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : PR5408
+Airline Name        : Delayed
+Aircraft Type       : PAL
+Origin Airport      : A320
+Destination Airport : RPLL(Manila)
+Time                : RPLI(Laoag)
+Frequency           : E
+PAX Capacity        : 1935
+Cargo Capacity      : 2003
+Status              : Restored
+
+----------------------------------------
+
+[2026-01-06 | 23:48:33]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AL1123
+Airline Name        : Scheduled
+Aircraft Type       : AEL
+Origin Airport      : A320
+Destination Airport : RPLL(Manila)
+Time                : RPLK(Legazpi)
+Frequency           : W/TH
+PAX Capacity        : 1230
+Cargo Capacity      : 1252
+Status              : Archived
+
+----------------------------------------
+
+[2026-01-06 | 23:48:38]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight permanently deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AL1123
+Airline Name        : Scheduled
+Aircraft Type       : AEL
+Origin Airport      : A320
+Destination Airport : RPLL(Manila)
+Time                : RPLK(Legazpi)
+Frequency           : W/TH
+PAX Capacity        : 1230
+Cargo Capacity      : 1252
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-07 | 02:00:56]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 02:03:13]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 02:07:48]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 02:08:43]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 02:10:20]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 02:11:26]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 02:19:13]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 02:19:55]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-07 | 02:26:26]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : az_123
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 02:26:30]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : AZ4454
+Airline       : Scheduled
+Aircraft      : AZURE
+Origin        : Q400
+Destination   : RPLK(Legazpi)
+Time          : RPVM(Cebu City)
+Frequency     : W/TH
+PAX           : 1230
+Cargo         : 1258
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-07 | 02:26:50]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : Joshua Arcos
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-07 | 02:26:56]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 02:30:45]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AZ4454
+Airline Name        : Scheduled
+Aircraft Type       : AZURE
+Origin Airport      : Q400
+Destination Airport : RPLK(Legazpi)
+Time                : RPVM(Cebu City)
+Frequency           : E
+PAX Capacity        : 1230
+Cargo Capacity      : 1258
+Status              : Archived
+
+----------------------------------------
+
+[2026-01-07 | 02:30:54]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight and associated bookings deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : AZ4454
+Airline Name        : Scheduled
+Aircraft Type       : AZURE
+Origin Airport      : Q400
+Destination Airport : RPLK(Legazpi)
+Time                : RPVM(Cebu City)
+Frequency           : W/TH
+PAX Capacity        : 1230
+Cargo Capacity      : 1258
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-07 | 10:17:11]
+EVENT  : USER_REGISTRATION
+ACTION : New user registered
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Username  : joshua_67
+Full Name : joshuaArcos
+Role      : USER
+Status    : ACTIVE
+
+----------------------------------------
+
+[2026-01-07 | 10:17:17]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_67
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 10:20:58]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_67
+
+----------------------------------------
+
+[2026-01-07 | 10:21:06]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 10:21:18]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7732
+Airline       : CEBUPAC
+Aircraft      : ATR72
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 1318
+Frequency     : W/TH
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 10:21:37]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : 5J2538
+Airline       : Delayed
+Aircraft      : CEBUPAC
+Origin        : A320
+Destination   : RPLL(Manila)
+Time          : RPLK(Legazpi)
+Frequency     : E
+PAX           : 0445
+Cargo         : 0507
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-07 | 10:26:09]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 10:26:16]
+EVENT  : FLIGHT_RESTORE
+ACTION : Flight restored to active schedule
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J2538
+Airline Name        : Delayed
+Status              : Restored
+
+----------------------------------------
+
+[2026-01-07 | 10:26:21]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : 5J2538
+Airline       : Delayed
+Aircraft      : CEBUPAC
+Origin        : A320
+Destination   : RPLL(Manila)
+Time          : RPLK(Legazpi)
+Frequency     : E
+PAX           : 0445
+Cargo         : 0507
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-07 | 10:26:25]
+EVENT  : FLIGHT_RESTORE
+ACTION : Flight restored to active schedule
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J2538
+Airline Name        : Delayed
+Status              : Restored
+
+----------------------------------------
+
+[2026-01-07 | 10:27:09]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J2538
+Airline       : CEBUPAC
+Aircraft      : ATR72
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 0445
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 10:28:04]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A1,B1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 10:28:08]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : B4,A4
+New Status    : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 10:28:26]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : B4,A4
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 10:28:28]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A3,B3
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 10:28:43]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : B4,A4
+New Status    : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 10:28:45]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A3,B3
+New Status    : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 10:28:46]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A1,B1
+New Status    : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 10:28:57]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : B4,A4
+New Status    : PENDING
+
+----------------------------------------
+
+[2026-01-07 | 10:28:59]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A3,B3
+New Status    : PENDING
+
+----------------------------------------
+
+[2026-01-07 | 10:29:01]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A1,B1
+New Status    : PENDING
+
+----------------------------------------
+
+[2026-01-07 | 10:29:57]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : B4,A4
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 10:30:00]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A3,B3
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 10:30:01]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A1,B1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 10:31:16]
+EVENT  : ROUTE_EDIT
+ACTION : Base fare updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Aircraft Type       : ATR72
+Origin Airport      : RPLK(Legazpi)
+Destination Airport : RPLL(Manila)
+
+CHANGES
+--------
+Base Fare (Before)  : 1500.00
+Base Fare (After)   : 1400.00
+
+----------------------------------------
+
+[2026-01-07 | 10:33:38]
+EVENT  : ROUTE_EDIT
+ACTION : Base fare updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Aircraft Type       : ATR72
+Origin Airport      : RPLL(Manila)
+Destination Airport : RPLK(Legazpi)
+
+CHANGES
+--------
+Base Fare (Before)  : 0.00
+Base Fare (After)   : 1500
+
+----------------------------------------
+
+[2026-01-07 | 10:34:29]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7735
+Airline       : CEBUPAC
+Aircraft      : ATR72
+Origin        : RPLL
+Destination   : RPLK
+Time          : 1230
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 10:35:36]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7735
+Airline       : CEBUPAC
+Aircraft      : ATR72
+Origin        : RPLL(Manila)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 10:36:32]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-07 | 10:36:52]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_67
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 10:37:07]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_67
+
+----------------------------------------
+
+[2026-01-07 | 10:37:17]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 10:37:27]
+EVENT  : CANCELLATION_REQUEST
+ACTION : Declined
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User       : joshua_67
+Flight No  : 5J2538
+Status     : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 10:38:55]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-07 | 10:39:03]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_67
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 10:41:37]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_67
+
+----------------------------------------
+
+[2026-01-07 | 10:41:47]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 10:42:05]
+EVENT  : CANCELLATION_REQUEST
+ACTION : Declined
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User       : joshua_67
+Flight No  : 5J2538
+Status     : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 10:42:20]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A1,B1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 10:42:22]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : B2,C2
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 10:42:36]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : 5J2538
+Airline       : Scheduled
+Aircraft      : CEBUPAC
+Origin        : ATR72
+Destination   : RPLL(Manila)
+Time          : RPLK(Legazpi)
+Frequency     : E
+PAX           : 0445
+Cargo         : 0523
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-07 | 10:42:39]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight and associated bookings deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J2538
+Airline Name        : Scheduled
+Aircraft Type       : CEBUPAC
+Origin Airport      : ATR72
+Destination Airport : RPLL(Manila)
+Time                : RPLK(Legazpi)
+Frequency           : E
+PAX Capacity        : 0445
+Cargo Capacity      : 0523
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-07 | 10:53:16]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_67
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 10:53:21]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_67
+
+----------------------------------------
+
+[2026-01-07 | 10:53:34]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 10:53:51]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A1,B1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 10:56:42]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : B2,C2
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 11:03:49]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:07:47]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:09:56]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:12:47]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:16:19]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:16:22]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : A1,B1
+New Status    : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 11:16:24]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J2538
+Seat          : B2,C2
+New Status    : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 11:17:43]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J6516
+Seat          : A1,B1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 11:17:44]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_67
+Flight No     : 5J6516
+Seat          : B2,C2
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 11:25:23]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:28:26]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:30:37]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:34:28]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:34:37]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-07 | 11:34:45]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:35:11]
+EVENT  : CANCELLATION_REQUEST
+ACTION : Declined
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User        : joshua_123
+Flight No   : 5J6516
+Seat        : A1,B1
+Status      : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 11:35:55]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J6516
+Seat          : A1,B1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 11:35:57]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J6516
+Seat          : A3,B3
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 11:36:20]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J6516
+Seat          : A1,B1
+New Status    : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 11:36:22]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J6516
+Seat          : A3,B3
+New Status    : DECLINED
+
+----------------------------------------
+
+[2026-01-07 | 11:36:44]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J6516
+Seat          : A1,B1
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 11:36:46]
+EVENT  : TICKET_STATUS_UPDATE
+ACTION : Ticket status changed
+ACTOR  : ADMIN
+
+DETAILS
+--------
+User          : joshua_123
+Flight No     : 5J6516
+Seat          : A3,B3
+New Status    : ACCEPTED
+
+----------------------------------------
+
+[2026-01-07 | 11:36:48]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-07 | 11:36:53]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : joshua_123
+ROLE   : USER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:36:59]
+EVENT  : USER_LOGOUT
+ACTION : User logged out
+ACTOR  : joshua_123
+
+----------------------------------------
+
+[2026-01-07 | 11:37:06]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:37:24]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-07 | 11:37:32]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:39:22]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7009
+Airline       : CEBUPAC
+Aircraft      : A321
+Origin        : RPMZ
+Destination   : RPLK
+Time          : 1230
+Frequency     : ST/TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 11:39:42]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7009
+Airline       : CEBUPAC
+Aircraft      : A321
+Origin        : RPMN(Tawi Tawi)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : ST/TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 11:39:52]
+EVENT  : ROUTE_EDIT
+ACTION : Base fare updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Aircraft Type       : A321
+Origin Airport      : RPMN(Tawi Tawi)
+Destination Airport : RPLK(Legazpi)
+
+CHANGES
+--------
+Base Fare (Before)  : 0.00
+Base Fare (After)   : 1500
+
+----------------------------------------
+
+[2026-01-07 | 11:39:59]
+EVENT  : ROUTE_EDIT
+ACTION : Base fare updated
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Aircraft Type       : A321
+Origin Airport      : RPMZ(Zamboanga)
+Destination Airport : RPLK(Legazpi)
+
+CHANGES
+--------
+Base Fare (Before)  : 0.00
+Base Fare (After)   : 2400
+
+----------------------------------------
+
+[2026-01-07 | 11:41:13]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight archived
+ACTOR  : FLIGHT MANAGER
+
+DETAILS
+--------
+Flight No     : 5J7009
+Airline       : Scheduled
+Aircraft      : CEBUPAC
+Origin        : A321
+Destination   : RPMN(Tawi Tawi)
+Time          : RPLK(Legazpi)
+Frequency     : ST/TH/F
+PAX           : 1230
+Cargo         : 1339
+Status        : ARCHIVED
+
+----------------------------------------
+
+[2026-01-07 | 11:41:16]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight and associated bookings deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J7009
+Airline Name        : Scheduled
+Aircraft Type       : CEBUPAC
+Origin Airport      : A321
+Destination Airport : RPMN(Tawi Tawi)
+Time                : RPLK(Legazpi)
+Frequency           : ST/TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1339
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-07 | 11:41:36]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7009
+Airline       : CEBUPAC
+Aircraft      : A320
+Origin        : RPMZ
+Destination   : RPLK
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 11:41:48]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7009
+Airline       : CEBUPAC
+Aircraft      : A321
+Origin        : RPMZ(Zamboanga)
+Destination   : RPLK(Legazpi)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 11:42:08]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7009
+Airline       : CEBUPAC
+Aircraft      : Q400
+Origin        : RPMN(Tawi Tawi)
+Destination   : RPLL(Manila)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 11:42:25]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-07 | 11:43:07]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:43:41]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-07 | 11:51:44]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:56:30]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : CC_Manager
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+
+[2026-01-07 | 11:58:28]
+EVENT  : LOGOUT 
+ACTION : User Logged Out 
+ACTOR  : CEBU MANAGER
+ROLE   : AIRLINE_MANAGER
+
+----------------------------------------
+
+[2026-01-07 | 11:59:04]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : admin_joshua
+ROLE   : ADMIN
+
+----------------------------------------
+
+
+[2026-01-07 | 11:59:25]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7009
+Airline       : CEBUPAC
+Aircraft      : A330
+Origin        : RPMN(Tawi Tawi)
+Destination   : RPLL(Manila)
+Time          : 1230
+Frequency     : ST/SU/TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 12:01:28]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J7009
+Airline Name        : Scheduled
+Aircraft Type       : CEBUPAC
+Origin Airport      : A330
+Destination Airport : RPMN(Tawi Tawi)
+Time                : RPLL(Manila)
+Frequency           : ST/SU/TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1340
+Status              : Archived
+
+----------------------------------------
+
+[2026-01-07 | 12:05:41]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : admin_joshua
+ROLE   : ADMIN
+
+----------------------------------------
+
+
+[2026-01-07 | 12:06:11]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7009
+Airline       : CEBUPAC
+Aircraft      : ATR42
+Origin        : RPUN
+Destination   : RPLK
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 12:06:41]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : 5J7009
+Airline       : CEBUPAC
+Aircraft      : Q400
+Origin        : RPUN(Naga City)
+Destination   : RPLL(Manila)
+Time          : 1230
+Frequency     : TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Delayed
+
+----------------------------------------
+
+[2026-01-07 | 12:07:13]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : admin_joshua
+ROLE   : ADMIN
+
+----------------------------------------
+
+
+[2026-01-07 | 12:07:22]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J7009
+Airline Name        : Delayed
+Aircraft Type       : CEBUPAC
+Origin Airport      : Q400
+Destination Airport : RPUN(Naga City)
+Time                : RPLL(Manila)
+Frequency           : TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1254
+Status              : Archived
+
+----------------------------------------
+
+[2026-01-07 | 12:07:26]
+EVENT  : FLIGHT_RESTORE
+ACTION : Flight restored to active schedule
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J7009
+Airline Name        : Delayed
+Aircraft Type       : CEBUPAC
+Origin Airport      : Q400
+Destination Airport : RPUN(Naga City)
+Time                : RPLL(Manila)
+Frequency           : TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1254
+Status              : Restored
+
+----------------------------------------
+
+[2026-01-07 | 12:07:38]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J7009
+Airline Name        : Scheduled
+Aircraft Type       : CEBUPAC
+Origin Airport      : A330
+Destination Airport : RPMN(Tawi Tawi)
+Time                : RPLL(Manila)
+Frequency           : ST/SU/TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1340
+Status              : Archived
+
+----------------------------------------
+
+[2026-01-07 | 12:07:42]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight and associated bookings deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : 5J7009
+Airline Name        : Scheduled
+Aircraft Type       : CEBUPAC
+Origin Airport      : A330
+Destination Airport : RPMN(Tawi Tawi)
+Time                : RPLL(Manila)
+Frequency           : ST/SU/TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1340
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-07 | 12:07:57]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : admin_joshua
+ROLE   : ADMIN
+
+----------------------------------------
+
+
+[2026-01-07 | 12:08:18]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : PR3458
+Airline       : PAL
+Aircraft      : A320
+Origin        : RPLK
+Destination   : RPMZ
+Time          : 1230
+Frequency     : ST/TH/F
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 12:09:31]
+EVENT  : FLIGHT_ADDITION
+ACTION : New flight added
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : PR5332
+Airline       : PAL
+Aircraft      : ATR42
+Origin        : RPLK
+Destination   : RPMN
+Time          : 1230
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 12:10:23]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : PR5332
+Airline       : PAL
+Aircraft      : Q400
+Origin        : RPLK(Legazpi)
+Destination   : RPMN(Tawi Tawi)
+Time          : 1230
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 12:10:35]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : PR5332
+Airline       : PAL
+Aircraft      : ATR72
+Origin        : RPLK(Legazpi)
+Destination   : RPMN(Tawi Tawi)
+Time          : 1230
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 12:10:41]
+EVENT  : FLIGHT_EDIT
+ACTION : Flight details updated
+ACTOR  : ADMIN
+
+DETAILS
+--------
+Flight No     : PR5332
+Airline       : PAL
+Aircraft      : ATR42
+Origin        : RPLK(Legazpi)
+Destination   : RPMN(Tawi Tawi)
+Time          : 1230
+Frequency     : E
+PAX           : 0
+Cargo         : 0
+Status        : Scheduled
+
+----------------------------------------
+
+[2026-01-07 | 12:10:53]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : PR5332
+Airline Name        : Scheduled
+Aircraft Type       : PAL
+Origin Airport      : ATR42
+Destination Airport : RPLK(Legazpi)
+Time                : RPMN(Tawi Tawi)
+Frequency           : E
+PAX Capacity        : 1230
+Cargo Capacity      : 1417
+Status              : Archived
+
+----------------------------------------
+
+[2026-01-07 | 12:13:58]
+EVENT  : LOGIN
+ACTION : User Logged In
+ACTOR  : admin_joshua
+ROLE   : ADMIN
+
+----------------------------------------
+
+
+[2026-01-07 | 12:14:16]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : PR3458
+Airline Name        : Scheduled
+Aircraft Type       : PAL
+Origin Airport      : A320
+Destination Airport : RPLK(Legazpi)
+Time                : RPMZ(Zamboanga)
+Frequency           : ST/TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1319
+Status              : Archived
+
+----------------------------------------
+
+[2026-01-07 | 12:14:22]
+EVENT  : FLIGHT_RESTORE
+ACTION : Flight restored to active schedule
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : PR3458
+Airline Name        : Scheduled
+Status              : Restored
+
+----------------------------------------
+
+[2026-01-07 | 12:14:25]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight and associated bookings deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : PR5332
+Airline Name        : Scheduled
+Aircraft Type       : PAL
+Origin Airport      : ATR42
+Destination Airport : RPLK(Legazpi)
+Time                : RPMN(Tawi Tawi)
+Frequency           : E
+PAX Capacity        : 1230
+Cargo Capacity      : 1417
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-07 | 12:14:37]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : PR3458
+Airline Name        : Scheduled
+Aircraft Type       : PAL
+Origin Airport      : A320
+Destination Airport : RPLK(Legazpi)
+Time                : RPMZ(Zamboanga)
+Frequency           : ST/TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1319
+Status              : Archived
+
+----------------------------------------
+
+[2026-01-07 | 12:14:40]
+EVENT  : FLIGHT_DELETE
+ACTION : Flight and associated bookings deleted
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : PR3458
+Airline Name        : Scheduled
+Aircraft Type       : PAL
+Origin Airport      : A320
+Destination Airport : RPLK(Legazpi)
+Time                : RPMZ(Zamboanga)
+Frequency           : ST/TH/F
+PAX Capacity        : 1230
+Cargo Capacity      : 1319
+Status              : Permanently Deleted
+
+----------------------------------------
+
+[2026-01-07 | 12:22:38]
+EVENT  : FLIGHT_ARCHIVE
+ACTION : Flight moved to archive
+ACTOR  : SYSTEM
+
+DETAILS
+--------
+Flight Number       : Z27743
+Airline Name        : Scheduled
+Aircraft Type       : AIRASIA
+Origin Airport      : A320
+Destination Airport : RPLK(Legazpi)
+Time                : RPLC(Clark)
+Frequency           : W/TH
+PAX Capacity        : 1308
+Cargo Capacity      : 1336
+Status              : Archived
+
+----------------------------------------
+

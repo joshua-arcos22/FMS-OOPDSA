@@ -12,3 +12,8 @@ joshua,joshua,Test,Manager
 it_joshua,Joshua Arcos,ITAIrlines,Manager
 AEL_joshua,Joshua Arcos,AEL,Manager
 AEL_joshua,Joshua Arcos,AEL,Manager
+joshua,robert,User
+joshua-123,Joshua Oliver,User
+asd1,asd,asd,Manager
+az_123,Joshua Arcos,AZURE,Manager
+joshua_67,joshuaArcos,User

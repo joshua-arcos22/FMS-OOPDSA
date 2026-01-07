@@ -8,7 +8,7 @@ import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
 import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
-
+import java.io.*;
 /**
  *
  * @author Joshua
@@ -25,7 +25,7 @@ public class userTixManager extends javax.swing.JFrame {
      */
     public userTixManager() {
         initComponents();
-        loadBookings(); // <--- Add this line
+        loadBookings(); 
     }
     
     public userTixManager(String airlineName, String prefix) {
@@ -41,32 +41,32 @@ public class userTixManager extends javax.swing.JFrame {
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
 
-        // DEBUG: Make sure this path is correct. If using relative path, ensure working directory is right.
-        java.io.File file = new java.io.File(AdminOperations.Database_Bookings_Path);
+       
+        File file = new File(AdminOperations.Database_Bookings_Path);
         if (!file.exists()) {
             System.out.println("Bookings file not found at: " + file.getAbsolutePath());
             return;
         }
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+        try  {
+            BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
             String currentUserAccount = "Unknown";
 
             while ((line = br.readLine()) != null) {
                 String trimmed = line.trim();
 
-                // 1. Detect User Header
+              
                 if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
                     currentUserAccount = trimmed.substring(1, trimmed.length() - 1);
                     continue;
                 }
 
-                // 2. Parse Flight Line
+                
                 if (!trimmed.isEmpty() && trimmed.contains(" - ")) {
                     String[] parts = trimmed.split(" - ");
 
-                    // CHECK AIRLINE: Ensure 'currentAirlineName' matches the file (e.g. "AEL")
-                    // If you are testing via Main method, change "TEST" to "AEL" at the top of your class.
+                    
                     if (parts.length > 0 && parts[0].equalsIgnoreCase(currentAirlineName)) {
 
                         String flightNo = "";
@@ -76,27 +76,25 @@ public class userTixManager extends javax.swing.JFrame {
                         String mode = "";
                         String status = "";
 
-                        // --- OPTION A: NEW FORMAT (With Luggage) ---
-                        // AEL-A320-Origin-Dest-Time-FNo-Day-Stat-Date-Seats-LUGGAGE-Price-Mode...
+                     
                         if (parts.length >= 17) {
                             flightNo = parts[5];
                             date = parts[8];
                             seat = parts[9];
-                            // index 10 is Luggage (skip for table)
+                           
                             price = parts[11];
                             mode = parts[12];
                             status = parts[parts.length - 1];
-                        } // --- OPTION B: OLD FORMAT (No Luggage) ---
-                        // Backwards compatibility for existing data
+                        }
                         else if (parts.length >= 16) {
                             flightNo = parts[5];
                             date = parts[8];
                             seat = parts[9];
-                            price = parts[10]; // Price is earlier here
+                            price = parts[10]; 
                             mode = parts[11];
                             status = parts[parts.length - 1];
                         } else {
-                            continue; // Skip malformed lines
+                            continue;
                         }
 
                         model.addRow(new Object[]{
@@ -111,8 +109,8 @@ public class userTixManager extends javax.swing.JFrame {
                     }
                 }
             }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+        } catch (  IOException e) {
+            System.out.println("Error in reading File");
         }
     }
     
@@ -123,45 +121,44 @@ public class userTixManager extends javax.swing.JFrame {
             return;
         }
 
-        // Get identifying info from the selected row
-        String targetUser = jTable1.getValueAt(selectedRow, 0).toString();   // Name/User
-        String targetFlight = jTable1.getValueAt(selectedRow, 1).toString(); // Flight No
-        String targetSeat = jTable1.getValueAt(selectedRow, 3).toString();   // Seat
+        // Get valeus from the selectrd row on the table
+        String targetUser = jTable1.getValueAt(selectedRow, 0).toString();   
+        String targetFlight = jTable1.getValueAt(selectedRow, 1).toString(); 
+        String targetSeat = jTable1.getValueAt(selectedRow, 3).toString();   
 
-        java.io.File file = new java.io.File(AdminOperations.Database_Bookings_Path);
+        File file = new   File(AdminOperations.Database_Bookings_Path);
         java.util.List<String> allLines = new java.util.ArrayList<>();
         boolean updateSuccess = false;
-
-        try {
-            // Read all lines
-            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+            
+            try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+                
                 String line;
                 String currentUserContext = "";
 
                 while ((line = br.readLine()) != null) {
                     String trimmed = line.trim();
 
-                    // Track which user section we are in
+                    
                     if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
                         currentUserContext = trimmed.substring(1, trimmed.length() - 1);
                         allLines.add(line);
                         continue;
                     }
 
-                    // Check if this is the target line
+                   
                     if (!trimmed.isEmpty() && trimmed.contains(" - ")) {
                         String[] parts = trimmed.split(" - ");
 
-                        // Match User + Flight + Seat
+                      
                         if (currentUserContext.equals(targetUser) &&
                             parts.length >= 16 &&
                             parts[5].equals(targetFlight) &&
                             parts[9].equals(targetSeat)) {
 
-                            // UPDATE STATUS (The last element)
+                           
                             parts[parts.length - 1] = newStatus;
 
-                            // Rebuild the line
+                            
                             String newLine = String.join(" - ", parts);
                             allLines.add(newLine);
                             updateSuccess = true;
@@ -187,35 +184,37 @@ public class userTixManager extends javax.swing.JFrame {
                                 timestamp, targetUser, targetFlight, targetSeat, newStatus
                             );
 
-                            logs.writeLog(logEntry); // Assuming 'logs' is your logging instance
+                            logs.writeLog(logEntry); 
 
                         } else {
-                            allLines.add(line); // Not the target, keep as is
+                            allLines.add(line);
                         }
                     } else {
-                        allLines.add(line); // Empty lines
+                        allLines.add(line);
                     }
                 }
+            } catch (IOException e ){
+                System.out.println("Error in updating the Status");
             }
 
-            // Write back to file
+            
             if (updateSuccess) {
-                try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
-                    for (String s : allLines) {
+                try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                                        for (String s : allLines) {
                         bw.write(s);
                         bw.newLine();
                     }
+                } catch (IOException e){
+                    System.out.println("Error in Writing the file");
                 }
                 javax.swing.JOptionPane.showMessageDialog(this, "Ticket Status Updated to: " + newStatus);
-                loadBookings(); // Refresh table
+                loadBookings(); 
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "No matching ticket found to update.");
             }
 
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
-    }
+} 
+    
     
     
     
@@ -223,45 +222,45 @@ public class userTixManager extends javax.swing.JFrame {
     private void searchFlights() {
         String query = SearchField.getText().toLowerCase().trim();
         
-        // Reload all if search is empty
+      
         if (query.isEmpty() || query.equals("search for a flight")) {
             loadBookings();
             return;
         }
 
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0); // Clear table
+        model.setRowCount(0); 
 
-        java.io.File file = new java.io.File("src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt");
+        File file = new File(AdminOperations.Database_Bookings_Path);
         if (!file.exists()) return;
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+        try(BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            String currentUserAccount = "Unknown"; // To track the header (username)
+            String currentUserAccount = "Unknown"; 
 
             while ((line = br.readLine()) != null) {
                 String trimmed = line.trim();
                 
-                // 1. Detect User Header (e.g., "(joshua_123)")
+              
                 if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
                     currentUserAccount = trimmed.substring(1, trimmed.length() - 1);
                     continue;
                 }
 
-                // 2. Parse Booking Line
+                
                 if (!trimmed.isEmpty() && trimmed.contains(" - ")) {
                     String[] parts = trimmed.split(" - ");
                     
-                    // Check if it belongs to THIS airline
+                 
                     if (parts.length >= 16 && parts[0].equalsIgnoreCase(currentAirlineName)) {
                         
-                        // 3. SEARCH CHECK: Does the query match Name, Flight, Date, or Status?
+                       
                         boolean match = false;
                         
-                        // Check Username
+                       
                         if (currentUserAccount.toLowerCase().contains(query)) match = true;
                         
-                        // Check other fields in the line
+                       
                         for (String part : parts) {
                             if (part.toLowerCase().contains(query)) {
                                 match = true;
@@ -270,7 +269,7 @@ public class userTixManager extends javax.swing.JFrame {
                         }
 
                         if (match) {
-                            // Add to Table
+                            
                             model.addRow(new Object[]{
                                 currentUserAccount,       // Name
                                 parts[5],                 // Flight No
@@ -284,13 +283,13 @@ public class userTixManager extends javax.swing.JFrame {
                     }
                 }
             }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+        } catch (  IOException e) {
+            System.out.println("Error in Searching Flights");
         }
     }
     
     private boolean updateMasterFile(String flightNum, int paxToAdd, int luggageToAdd) {
-        java.io.File file = new java.io.File(AdminOperations.Database_TimeTable_Departure_Path);
+          File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
         if (!file.exists()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error: Master Timetable file not found.");
             return false;
@@ -299,22 +298,22 @@ public class userTixManager extends javax.swing.JFrame {
         java.util.List<String> allLines = new java.util.ArrayList<>();
         boolean updated = false;
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+        try(BufferedReader br = new BufferedReader(new FileReader(file)))  {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("-");
 
-                // Index 6 is Flight Number
+              
                 if (parts.length >= 10 && parts[6].trim().equalsIgnoreCase(flightNum)) {
                     try {
                         int currentPax = Integer.parseInt(parts[7].trim());
                         int currentCargo = Integer.parseInt(parts[8].trim());
 
-                        // Calculate new values
+                       
                         int newPax = currentPax + paxToAdd;
                         int newLuggage = currentCargo + luggageToAdd;
 
-                        // SAFETY CHECK: Prevent negatives
+                       
                         if (newPax < 0) {
                             newPax = 0;
                         }
@@ -335,19 +334,20 @@ public class userTixManager extends javax.swing.JFrame {
                     allLines.add(line);
                 }
             }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+        } catch (  IOException e) {
+            System.out.println("Error in Updating the File");
             return false;
         }
 
         if (updated) {
-            try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(file))) {
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                
                 for (String s : allLines) {
                     bw.write(s);
                     bw.newLine();
                 }
                 return true;
-            } catch (java.io.IOException e) {
+            } catch (IOException e) {
                 return false;
             }
         }
@@ -357,18 +357,19 @@ public class userTixManager extends javax.swing.JFrame {
     
     
     private void processCapacityChange(String targetUser, String targetFlight, String targetSeat, boolean isAdding) {
-        java.io.File bookingFile = new java.io.File(AdminOperations.Database_Bookings_Path);
+          File bookingFile = new File(AdminOperations.Database_Bookings_Path);
         int paxCount = 0;
         int luggageCount = 0;
         boolean found = false;
 
-        // 1. Calculate Pax from Seat String (Comma separated)
+    
         if (targetSeat != null && !targetSeat.isEmpty()) {
             paxCount = targetSeat.split(",").length;
         }
 
-        // 2. Read File to find Luggage (Index 10)
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(bookingFile))) {
+       
+        try(BufferedReader br = new BufferedReader(new FileReader(bookingFile))) {
+            
             String line;
             String currentUserContext = "";
             while ((line = br.readLine()) != null) {
@@ -388,14 +389,17 @@ public class userTixManager extends javax.swing.JFrame {
                             luggageCount = Integer.parseInt(parts[10].trim());
                             found = true;
                             break;
-                        } catch (NumberFormatException e) { luggageCount = 0; }
+                        } catch (NumberFormatException e) {
+                            luggageCount = 0; 
+                        }
                     }
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) { 
+            System.out.println("Error in updating The PAX"); 
+        }
 
-        // 3. Update Master File
-        // If isAdding is true, we pass positive numbers. If false (deducting), we pass negative.
+      
         int finalPax = isAdding ? paxCount : -paxCount;
         int finalLuggage = isAdding ? luggageCount : -luggageCount;
         
@@ -638,7 +642,7 @@ public class userTixManager extends javax.swing.JFrame {
 
         String currentStatus = jTable1.getValueAt(selectedRow, 6).toString();
 
-        // Prevent double adding if already accepted
+       
         if (currentStatus.equalsIgnoreCase("ACCEPTED")) {
             javax.swing.JOptionPane.showMessageDialog(this, "This ticket is already accepted.");
             return;
@@ -648,7 +652,7 @@ public class userTixManager extends javax.swing.JFrame {
         String flight = jTable1.getValueAt(selectedRow, 1).toString();
         String seat = jTable1.getValueAt(selectedRow, 3).toString();
 
-        // Add capacity (true)
+        
         processCapacityChange(user, flight, seat, true);
 
         updateTicketStatus("ACCEPTED");
@@ -666,7 +670,7 @@ public class userTixManager extends javax.swing.JFrame {
         String flight = jTable1.getValueAt(selectedRow, 1).toString();
         String seat = jTable1.getValueAt(selectedRow, 3).toString();
 
-        // Only deduct if it was previously ACCEPTED
+       
         if (currentStatus.equalsIgnoreCase("ACCEPTED")) {
             processCapacityChange(user, flight, seat, false); // false = deduct
         }
@@ -686,7 +690,7 @@ public class userTixManager extends javax.swing.JFrame {
         String flight = jTable1.getValueAt(selectedRow, 1).toString();
         String seat = jTable1.getValueAt(selectedRow, 3).toString();
 
-        // Only deduct if it was previously ACCEPTED
+       
         if (currentStatus.equalsIgnoreCase("ACCEPTED")) {
             processCapacityChange(user, flight, seat, false); // false = deduct
         }

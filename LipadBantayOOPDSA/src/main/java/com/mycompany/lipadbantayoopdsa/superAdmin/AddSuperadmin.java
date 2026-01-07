@@ -187,7 +187,7 @@ public class AddSuperadmin extends javax.swing.JFrame {
             bw.write("STATUS: ACTIVE"); bw.newLine();
             bw.write("----------------------------"); bw.newLine();
 
-            JOptionPane.showMessageDialog(this, "Super Admin registered successfully!");
+            JOptionPane.showMessageDialog(this, "Admin registered successfully!");
             
             // Return to main dashboard after success
             returnToDashboard();

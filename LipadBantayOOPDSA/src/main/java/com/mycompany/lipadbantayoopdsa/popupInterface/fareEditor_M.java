@@ -7,12 +7,8 @@ package com.mycompany.lipadbantayoopdsa.popupInterface;
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
 import com.mycompany.lipadbantayoopdsa.distanceCalculator;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.AirlineManagerDashboard;
-import com.mycompany.lipadbantayoopdsa.Logs.logs;
 import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -121,16 +117,16 @@ public class fareEditor_M extends javax.swing.JFrame {
     }
     
     public void loadAirlineDetails() {
-        // Assuming AdminOperations has the path to your master airline file
+        
         File file = new File(AdminOperations.Database_Airlines_Path); 
         
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
+                        String line;
             while ((line = br.readLine()) != null) {
                 // Format: AIRASIA-Z2-2.50
                 String[] data = line.split("-");
                 
-                // Check if this line belongs to the current airline
+            
                 if (data.length >= 3 && data[0].equalsIgnoreCase(currentAirlineName)) {
                     try {
                         this.currentRatePerKm = Double.parseDouble(data[2]);
@@ -138,11 +134,11 @@ public class fareEditor_M extends javax.swing.JFrame {
                         System.out.println("Error parsing rate: " + data[2]);
                         this.currentRatePerKm = 0.0;
                     }
-                    break; // Stop searching once found
+                    break; 
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error loading airline details", e);
+            System.out.println("Error loading airline details");
         }
     }
     
@@ -151,29 +147,28 @@ public class fareEditor_M extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
 
-        // 1. Add the empty Admin row at the top
-
+   
         File file = new File(airlineRoutesPath);
 
         if (!file.exists()) {
-            return; // File doesn't exist yet, just show empty table
+            return; 
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
+                        String line;
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
-                    // Route File Format: A320-RPLC(Clark)-RPVE(Caticlan)-1500
+                    // Format: A320-RPLC(Clark)-RPVE(Caticlan)-1500
                     String[] rowData = line.split("-");
 
-                    // JUST call the helper method. It handles calculation and adding the row.
+                   
                     if (rowData.length >= 4) {
                         processAndAddSearchRow(model, rowData);
                     }
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error loading routes", e);
+            System.out.println("Error loading routes");
         }
     }
     
@@ -468,7 +463,7 @@ public class fareEditor_M extends javax.swing.JFrame {
         String searchTerm = SearchField.getText().trim().toLowerCase();
         String placeholderText = "search for a flight".toLowerCase();
 
-        // If search is empty, just reload all data
+       
         if (searchTerm.equals(placeholderText) || searchTerm.isEmpty()) {
             loadArchiveData();
             return;
@@ -477,7 +472,7 @@ public class fareEditor_M extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
 
-        // CHANGE: Search specifically in the Airline Routes Path, not the Departure Timetable
+ 
         File file = new File(airlineRoutesPath);
 
         if (!file.exists()) {
@@ -485,6 +480,7 @@ public class fareEditor_M extends javax.swing.JFrame {
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) {
@@ -493,7 +489,6 @@ public class fareEditor_M extends javax.swing.JFrame {
 
                 String[] rowData = line.split("-");
 
-                // Check if line matches search term
                 boolean match = false;
                 if (line.toLowerCase().contains(searchTerm)) {
                     match = true;
@@ -512,7 +507,7 @@ public class fareEditor_M extends javax.swing.JFrame {
     public void applyFilters() {
         File file = new File(airlineRoutesPath);
 
-        // Get selected string values
+     
         String selAircraft = Combo_Aircraft.getSelectedItem().toString();
         String selOrigin = Combo_Origin.getSelectedItem().toString();
         String selDest = Combo_Destination.getSelectedItem().toString();
@@ -524,7 +519,8 @@ public class fareEditor_M extends javax.swing.JFrame {
             return;
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+            
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) {
@@ -536,8 +532,7 @@ public class fareEditor_M extends javax.swing.JFrame {
                     continue;
                 }
 
-                // FIX 1: Treat "N/A" as "Ignore this filter"
-                // FIX 2: Use .contains() instead of .equals() to handle "RPLL(Manila)" matching "RPLL"
+                
                 boolean matchesAircraft = selAircraft.equals("N/A")
                         || selAircraft.isEmpty()
                         || rowData[0].equalsIgnoreCase(selAircraft);
@@ -555,7 +550,7 @@ public class fareEditor_M extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Filter error", e);
+            System.out.println("Error in Filtering");
         }
     }
     
@@ -565,7 +560,9 @@ public class fareEditor_M extends javax.swing.JFrame {
         File inputFile = new File(airlineRoutesPath);
         File tempFile = new File(inputFile.getParent(), "temp_" + inputFile.getName());
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile)); java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(tempFile))) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(inputFile)); 
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+            
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -575,28 +572,27 @@ public class fareEditor_M extends javax.swing.JFrame {
 
                 String[] parts = line.split("-");
 
-                // Check if this is the line we want to edit
-                // Matches Aircraft, Origin, and Destination
+         
                 if (parts.length >= 4
                         && parts[0].equals(targetAircraft)
                         && parts[1].equals(targetOrigin)
                         && parts[2].equals(targetDest)) {
 
-                    // Write the UPDATED line: Aircraft-Org-Dest-NEWPRICE
+                    // Format sline: Aircraft-Org-Dest-NEWPRICE
                     writer.write(parts[0] + "-" + parts[1] + "-" + parts[2] + "-" + newPrice);
                 } else {
-                    // Write the original line exactly as it was
+                    
                     writer.write(line);
                 }
                 writer.newLine();
             }
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error updating route file", e);
+            System.out.println("Error updating route file");
             return;
         }
 
-        // Delete old file and rename temp file
+      
         if (inputFile.delete()) {
             tempFile.renameTo(inputFile);
         } else {
@@ -646,7 +642,7 @@ public class fareEditor_M extends javax.swing.JFrame {
     private void editFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFlightActionPerformed
         int selectedRow = FlightTable.getSelectedRow();
 
-        // Check if empty row or no selection
+    
         if (selectedRow == -1 || FlightTable.getValueAt(selectedRow, 0).toString().isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please select a valid route to edit.");
             return;
@@ -709,18 +705,18 @@ public class fareEditor_M extends javax.swing.JFrame {
     
     
     private void farekmeditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_farekmeditorActionPerformed
-        // 1. Prompt user for input, pre-filled with current rate
+  
         String newRateStr = javax.swing.JOptionPane.showInputDialog(this,
                 "Enter new Rate per Km for " + currentAirlineName + ":",
                 String.valueOf(currentRatePerKm));
 
-        // Check if user clicked cancel or entered nothing
+       
         if (newRateStr == null || newRateStr.trim().isEmpty()) {
             return;
         }
 
         try {
-            // 2. Validate input
+
             double newRate = Double.parseDouble(newRateStr);
 
             if (newRate < 0) {
@@ -728,14 +724,14 @@ public class fareEditor_M extends javax.swing.JFrame {
                 return;
             }
 
-            // Keep BEFORE value
+        
             double oldRate = currentRatePerKm;
 
-            // 3. Update the text file
+            
             boolean success = updateAirlineRateInDatabase(newRate);
 
             if (success) {
-                // 4. Update the memory variable
+             
                 this.currentRatePerKm = newRate;
 
                 // ================= MASTER LOG (RATE EDIT) =================
@@ -764,7 +760,7 @@ public class fareEditor_M extends javax.swing.JFrame {
                 com.mycompany.lipadbantayoopdsa.Logs.logs.writeLog(logEntry.toString());
                 // ==========================================================
 
-                // 5. Refresh the table calculations
+                
                 loadArchiveData();
 
                 javax.swing.JOptionPane.showMessageDialog(this,
@@ -782,10 +778,12 @@ public class fareEditor_M extends javax.swing.JFrame {
     
     private boolean updateAirlineRateInDatabase(double newRate) {
         File inputFile = new File(AdminOperations.Database_Airlines_Path);
-        // Create a temp file in the same folder
+        
         File tempFile = new File(inputFile.getParent(), "temp_" + inputFile.getName());
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile)); java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(tempFile))) {
+        try( BufferedReader reader = new BufferedReader(new FileReader(inputFile)); 
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+           
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -796,26 +794,25 @@ public class fareEditor_M extends javax.swing.JFrame {
                 String[] parts = line.split("-");
 
                 // File Format: AIRLINE-PREFIX-RATE
-                // Check if this line matches the logged-in airline
+
                 if (parts.length >= 2 && parts[0].equalsIgnoreCase(currentAirlineName)) {
 
-                    // Write the line with the NEW rate
-                    // parts[0] is Name, parts[1] is Prefix
+                 
                     writer.write(parts[0] + "-" + parts[1] + "-" + String.format("%.2f", newRate));
 
                 } else {
-                    // Write the original line exactly as it was (for other airlines)
+                   
                     writer.write(line);
                 }
                 writer.newLine();
             }
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error updating airline rate", e);
+            System.out.println("Error updating airline rate");
             return false;
         }
 
-        // Delete old file and rename temp file to replace it
+        
         if (inputFile.delete()) {
             return tempFile.renameTo(inputFile);
         } else {
@@ -834,20 +831,20 @@ public class fareEditor_M extends javax.swing.JFrame {
 
             double baseFare = Double.parseDouble(baseFareStr);
 
-            // 1. Calculate Distance
+         
             distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
             double distance = calc.calculateDistanceKm();
 
-            // 2. Calculate Total
+          
             double totalFare = (distance * currentRatePerKm) + baseFare;
 
-            // 3. Format strings
+       
             String distDisplay = String.format("%.0f km", distance);
             String baseDisplay = String.format("%.2f", baseFare);
             String rateDisplay = String.format("%.2f", currentRatePerKm);
             String totalDisplay = String.format("PHP %.2f", totalFare);
 
-            // 4. Add to Table
+        
             model.addRow(new Object[]{
                 currentAirlineName,
                 aircraft,
@@ -860,7 +857,7 @@ public class fareEditor_M extends javax.swing.JFrame {
             });
 
         } catch (Exception e) {
-            // Silently ignore malformed lines to prevent crashes
+            System.out.println("Error in Calculating");
         }
     }
     
