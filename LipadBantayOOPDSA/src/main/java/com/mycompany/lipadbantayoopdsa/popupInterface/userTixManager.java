@@ -271,13 +271,13 @@ public class userTixManager extends javax.swing.JFrame {
                         if (match) {
                             
                             model.addRow(new Object[]{
-                                currentUserAccount,       // Name
-                                parts[5],                 // Flight No
-                                parts[8],                 // Date
-                                parts[9],                 // Seat
-                                parts[11],                // Price
-                                parts[12],                // Mode
-                                parts[parts.length - 1]   // Status
+                                currentUserAccount,       
+                                parts[5],                 
+                                parts[8],                 
+                                parts[9],                 
+                                parts[11],                
+                                parts[12],                
+                                parts[parts.length - 1]   
                             });
                         }
                     }
@@ -672,7 +672,7 @@ public class userTixManager extends javax.swing.JFrame {
 
        
         if (currentStatus.equalsIgnoreCase("ACCEPTED")) {
-            processCapacityChange(user, flight, seat, false); // false = deduct
+            processCapacityChange(user, flight, seat, false); 
         }
 
         updateTicketStatus("PENDING");
@@ -692,7 +692,7 @@ public class userTixManager extends javax.swing.JFrame {
 
        
         if (currentStatus.equalsIgnoreCase("ACCEPTED")) {
-            processCapacityChange(user, flight, seat, false); // false = deduct
+            processCapacityChange(user, flight, seat, false); 
         }
 
         updateTicketStatus("DECLINED");

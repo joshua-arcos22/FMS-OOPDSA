@@ -190,7 +190,7 @@ public class editFlightScreen_1 extends javax.swing.JFrame {
                 while (scanner.hasNextLine()) {
                     String[] parts = scanner.nextLine().split("-");
                
-                    // Dropdown format: ICAO(City) - RPLK(Daraga)
+                    // format: ICAO(City) - RPLK(Daraga)
                     String itemText = parts[1] + "(" + parts[0] + ")";
 
                

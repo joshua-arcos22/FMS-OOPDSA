@@ -244,7 +244,7 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         
 
-        // Get current timestamp in the exact format
+        
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
         String timestamp = now.format(formatter);
@@ -384,12 +384,12 @@ public class AirlineManagerDashboard extends javax.swing.JFrame {
                     tempPrefix = line.substring("PREFIX:".length()).trim();
                 } else if (line.startsWith("----------------------------")) {
 
-                    // CHECK: Does the AIRLINE match?
+                    
                     if (tempAirline.equalsIgnoreCase(targetAirline)) {
                         return new ManagerData(tempManager, tempAirline, tempUsername, tempPrefix);
                     }
 
-                    // Reset for next block
+                    
                     tempManager = "";
                     tempAirline = "";
                     tempUsername = "";

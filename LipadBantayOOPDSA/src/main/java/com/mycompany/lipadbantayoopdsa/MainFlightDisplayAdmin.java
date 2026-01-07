@@ -999,11 +999,11 @@ public class MainFlightDisplayAdmin extends javax.swing.JFrame {
                 }
 
                 String[] parts = line.split("-");
-                // Check if this is the correct flight (Index 6 is Flight Number)
+               
                 if (parts.length > 6 && parts[6].equalsIgnoreCase(flightNum)) {
                     writer.write(line);
                     writer.newLine();
-                    break; // Found and archived, exit loop
+                    break; 
                 }
             }
         } catch(IOException e){

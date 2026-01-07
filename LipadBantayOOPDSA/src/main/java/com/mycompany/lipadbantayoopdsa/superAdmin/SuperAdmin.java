@@ -387,7 +387,7 @@ public class SuperAdmin extends javax.swing.JFrame {
 
             updateAccountStatus(username, newStatus);
             javax.swing.JOptionPane.showMessageDialog(this, "Account " + username + " is now " + newStatus);
-            loadUserData(); // Refresh table
+            loadUserData(); 
         } else if (key != null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Invalid Master Key!", "Security Alert", javax.swing.JOptionPane.ERROR_MESSAGE);
         }

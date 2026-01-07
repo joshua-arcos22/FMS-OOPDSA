@@ -62,12 +62,12 @@ public class userCancelRequests extends javax.swing.JFrame {
                     String airline = parts[1];
                     if (airline.trim().equalsIgnoreCase(currentAirlineName)) {
                         model.addRow(new Object[]{
-                            parts[0], // User
-                            parts[1], // Airline
-                            parts[2], // Flight No
-                            parts[3], // Date
-                            parts[4], // Seat (A1,B1)
-                            parts[6] // Status (PENDING)
+                            parts[0],
+                            parts[1], 
+                            parts[2], 
+                            parts[3], 
+                            parts[4], 
+                            parts[6] 
                         });
                     }
                 }

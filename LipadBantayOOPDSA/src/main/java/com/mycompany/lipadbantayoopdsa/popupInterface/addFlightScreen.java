@@ -49,14 +49,7 @@ public class addFlightScreen extends javax.swing.JFrame {
         errorPAX.setText(" ");
         errorCARGO.setText(" ");
 
-        
-        //initialize ac dropdown
-        
-        
-        
-        
-        // Status 
-        
+       
        
         //Aricraft combo box
         ac_drpdwn.removeAllItems();
@@ -593,7 +586,7 @@ public class addFlightScreen extends javax.swing.JFrame {
         int NF_acType_Choice = 0;
 
        
-        if (originChoice.equalsIgnoreCase(destChoice)) { // if the same airport
+        if (originChoice.equalsIgnoreCase(destChoice)) { 
             originRWYLn.setText("Same Airport As Dest");
             originRWYLn.setForeground(Color.red);
             destRWYLn.setText("Same Airport As Origin");

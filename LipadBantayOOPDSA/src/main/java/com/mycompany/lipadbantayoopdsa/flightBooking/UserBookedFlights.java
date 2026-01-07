@@ -272,7 +272,7 @@ public class UserBookedFlights extends javax.swing.JFrame {
                     boolean flightMatch = parts[2].trim().equalsIgnoreCase(flightNumber);
                     boolean statusMatch = line.contains("PENDING");
 
-                    // Check if the seat matches (Index 4 based on your save format)
+                    
                     boolean seatMatch = parts[4].trim().equalsIgnoreCase(seatNumber.trim());
 
                     if (userMatch && flightMatch && seatMatch && statusMatch) {

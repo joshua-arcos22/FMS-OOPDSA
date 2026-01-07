@@ -342,7 +342,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
         try {
             File originMaster = new File(AdminOperations.Database_Aiports_Path);
             Scanner originReader = new Scanner(originMaster);
-            // adds options for the combobox, reads from the ac database
+            // adds options for the combobox, reads from the origin database
             while (originReader.hasNextLine()) {
                 String originStringLine = originReader.nextLine();
                 String originStringLineArray[] = originStringLine.split("-");
@@ -358,7 +358,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
         try {
             File destinationMaster = new File(AdminOperations.Database_Aiports_Path);
             Scanner destiantionReader = new Scanner(destinationMaster);
-            // adds options for the combobox, reads from the ac database
+            // adds options for the combobox, reads from the dest database
             while (destiantionReader.hasNextLine()) {
                 String destinationStringLine = destiantionReader.nextLine();
                 String destinationStringLineArray[] = destinationStringLine.split("-");
@@ -378,7 +378,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
 
         File file = new File(AdminOperations.Database_TimeTable_Archive_Path);
 
-        // Create file if not exists to prevent crash
+        // Create file if not exists fail safe measure
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -428,7 +428,7 @@ public class archiveScreen_M extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
 
-        // Admin requirement: Empty first row
+        
           
 
         for (String filePath : filesToFilter) {

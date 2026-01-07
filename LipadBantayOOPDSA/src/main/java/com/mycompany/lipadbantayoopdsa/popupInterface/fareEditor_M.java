@@ -654,14 +654,14 @@ public class fareEditor_M extends javax.swing.JFrame {
         String destination = FlightTable.getValueAt(selectedRow, 3).toString();
         String currentBaseFare = FlightTable.getValueAt(selectedRow, 5).toString();
 
-        // Input dialog for new Base Fare
+        
         String newBaseFare = javax.swing.JOptionPane.showInputDialog(this,
                 "Edit Base Fare for " + origin + " to " + destination,
                 currentBaseFare);
 
         if (newBaseFare != null && !newBaseFare.isEmpty()) {
             try {
-                Double.parseDouble(newBaseFare); // Validate number
+                Double.parseDouble(newBaseFare); 
 
                 // UPDATE FILE
                 updateRouteFile(aircraft, origin, destination, newBaseFare);

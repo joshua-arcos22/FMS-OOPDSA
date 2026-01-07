@@ -164,10 +164,10 @@ public class AddSuperadmin extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
-        String fullName = textField1.getText().trim();
+    String fullName = textField1.getText().trim();
     String username = textField2.getText().trim();
     String password = new String(jPasswordField1.getPassword());
-    String masterKey = textField4.getText().trim(); // Using textField4 for Master Key
+    String masterKey = textField4.getText().trim(); 
     
     if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || masterKey.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -189,7 +189,7 @@ public class AddSuperadmin extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(this, "Admin registered successfully!");
             
-            // Return to main dashboard after success
+            
             returnToDashboard();
             
         } catch (IOException e) {
@@ -202,8 +202,8 @@ public class AddSuperadmin extends javax.swing.JFrame {
         returnToDashboard();        // TODO add your handling code here:
     }//GEN-LAST:event_button2ActionPerformed
         private void returnToDashboard() {
-        this.dispose(); // Close the current registration frame
-        new SuperAdmin().setVisible(true); // Open the Super Admin main dashboard
+        this.dispose(); 
+        new SuperAdmin().setVisible(true); 
     }
 
     /**

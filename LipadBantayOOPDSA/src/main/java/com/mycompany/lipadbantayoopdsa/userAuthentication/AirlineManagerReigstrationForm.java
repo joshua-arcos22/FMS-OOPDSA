@@ -321,11 +321,11 @@ public class AirlineManagerReigstrationForm extends javax.swing.JFrame {
                     + "----------------------------";
             credWriter.println(credRecord);
 
-            // 2. Write Profile
+            
             String profileRecord = String.format("%s,%s,%s,%s", username, fullName, airLineName, "Manager");
             profileWriter.println(profileRecord);
 
-            // 3. Log the Event
+            
             String timestamp = java.time.LocalDateTime.now()
                     .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
 
