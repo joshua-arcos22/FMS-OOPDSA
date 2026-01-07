@@ -66,31 +66,11 @@ public class AircraftFinder {
                 break;
             } 
         }
-       
-        
-        //unimplemented methods 
-
-        
-        // IT GAMBLES THE VALUE OF THE PAYLOAD CARGO NOT GURANTEED TO WORK >>:((
-        // random paylaod generator for the flight for cargo airlines 
-//        if (aircraft_MaxPax == 0){
-//            Random aircraftPayloadGenerator_Freighter = new Random();
-//            int aircraft_payloadCargo = aircraftPayloadGenerator_Freighter.nextInt(aircraft_MaxCargo);
-//            System.out.println("Current Passenger Load : " + 0 + " PAX");
-//            System.out.println("Current Cargo Load: " + aircraft_payloadCargo  + " KG");
-//        } 
         
         // random paylaod generator for the flight for commercial airlines
         if (aircraft_MaxPax > 0) {
             Random aircraftPayloadGenerator_Commercial = new Random();
             int aircraft_payloadPax = aircraftPayloadGenerator_Commercial.nextInt(aircraft_MaxPax);
-
-
-//            int payloadMax_ForPax = aircraft_MaxCargo - (aircraft_payloadPax * 100);
-//            int aircraft_payloadCargo = aircraftPayloadGenerator_Commercial.nextInt(payloadMax_ForPax);
-
-            
-
             System.out.println("Current Passenger Load : " + aircraft_payloadPax + " PAX");
             System.out.println("Current Cargo Load: " + 100  + " KG");
         }

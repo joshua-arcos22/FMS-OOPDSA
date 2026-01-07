@@ -4,7 +4,8 @@ import java.io.*;
 import java.util.*;
 
 public class AdminOperations {
-
+    
+    // VARIABLES ---------------------------------------------------------------------------------------
     // PATHS FOR THE DATA BASE FILES 
     public static final String Database_Aircarfts_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Aircrafts/Aircraft_Master.txt";
     public static final String Database_Airlines_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Airlines/Airlines_Master.txt"; 
@@ -14,15 +15,36 @@ public class AdminOperations {
     public static final String Database_TimeTable_Archive_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Archive_Timetable.txt";
     public static final String Database_Bookings_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/bookings.txt";
     public static final String Database_CancelRequests_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/flightBooking/cancellation_requests.txt";
-            
+    public static final String Database_logs_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/Logs/logs.txt";
+    public static final String Database_UserCredentials_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/userAuthentication/user_credentials.txt";
+    public static final String Database_UserProfiles_Path = "src/main/java/com/mycompany/lipadbantayoopdsa/userAuthentication/user_profiles.txt";
             
     private boolean runwayCapable;
 
     // VARIABLES 
-    private String Airline_Name, Ac_Type, Origin_Airport, Destination_Airport, Frequency, Time, Flight_Number, Flight_Pax, Flight_Cargo, Flight_Status;
+    private String Airline_Name;
+    private String Ac_Type;
+    private String Origin_Airport;
+    private String Destination_Airport;
+    private String Frequency;
+    private String Time;
+    private String Flight_Number;
+    private String Flight_Pax;
+    private String Flight_Cargo;
+    private String Flight_Status;
+    
+    //  --------------------------------------------------------------------------------------------------       
+            
+    
+    
+    // CONSTRUCTORS ---------------------------------------------------------------------------------------  
+    
+    // Empty Constructor 
+    public AdminOperations() {
+    }
 
-    public AdminOperations() {}
-
+    
+    // Overload Constructor for Setting up the values 
     public AdminOperations(String Airline_Name, String Ac_Type, String Origin_Airport,
                            String Destination_Airport, String Frequency, String Time,
                            String Flight_Number, String Flight_Pax, String Flight_Cargo,
@@ -38,29 +60,14 @@ public class AdminOperations {
         this.Flight_Cargo = Flight_Cargo;
         this.Flight_Status = Flight_Status;
     }
-
-    /**
-     * Appends a new flight to the Departure master file.
-     */
-    public void Admin_AddFlight() throws IOException {
-        String flightEntry = addFlightFormat(Airline_Name, Ac_Type, Origin_Airport, Destination_Airport, 
-                                            Frequency, Time, Flight_Number, Flight_Pax, Flight_Cargo, Flight_Status);
-
-        if (!runwayCapable) {
-            System.out.println("Error: Aircraft not runway capable for these airports.");
-            return;
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Database_TimeTable_Departure_Path, true))) {
-            writer.write(flightEntry);
-            writer.newLine();
-            System.out.println("Success: Flight " + Flight_Number + " added.");
-        }
-    }
-
-    /**
-     * Formats flight data into a standardized hyphen-separated string.
-     */
+    
+    //  --------------------------------------------------------------------------------------------------
+    
+    
+   
+    // FORMAT---------------------------------------------------------------------------------------------
+    // SAMPLE FORMAT (AEL-A320-RPLL(Manila)-RPLK(Legazpi)-W/TH-1230-AL1123-3-0-Scheduled) ---------------
+    //  --------------------------------------------------------------------------------------------------
     public String addFlightFormat(String Airline_Name, String Ac_Type, String Origin_Airport,
                                    String Destination_Airport, String Frequency, String Time,
                                    String Flight_Number, String Flight_Pax, String Flight_Cargo,
@@ -82,27 +89,72 @@ public class AdminOperations {
             );
             
             // Format: Airline-Aircraft-Origin(City)-Dest(City)-Freq-Time-FlightNo-Pax-Cargo-Status
-            return Airline_Name + "-" + Ac_Type + "-" +
-                   Origin_Airport.toUpperCase() + "(" + names[0] + ")-" +
-                   Destination_Airport.toUpperCase() + "(" + names[1] + ")-" +
-                   Frequency + "-" + Time + "-" + Flight_Number + "-" +
-                   Flight_Pax + "-" + Flight_Cargo + "-" + Flight_Status;
+            return Airline_Name + "-" + 
+                   Ac_Type + "-" +
+                   Origin_Airport.toUpperCase() + 
+                    "(" + names[0] + ")-" +
+                   Destination_Airport.toUpperCase() + 
+                    "(" + names[1] + ")-" +
+                   Frequency + "-" + 
+                   Time + "-" + 
+                   Flight_Number + "-" +
+                   Flight_Pax + "-" + 
+                   Flight_Cargo + "-" + 
+                   Flight_Status;
 
         } catch (FileNotFoundException e) {
             System.out.println("Database Error: " + e.getMessage());
             return "";
         }
     }
+    
+    //  --------------------------------------------------------------------------------------------------
+    
+    
+    
+    // Adds the entry on the Departure Timetable ---------------------------------------------------------
+    public void Admin_AddFlight() throws IOException {
+        String flightEntry = addFlightFormat(   Airline_Name, 
+                                                Ac_Type, 
+                                                Origin_Airport, 
+                                                Destination_Airport, 
+                                                Frequency, 
+                                                Time, 
+                                                Flight_Number, 
+                                                Flight_Pax, 
+                                                Flight_Cargo, 
+                                                Flight_Status   );
+        
+        if (!runwayCapable) {
+            System.out.println("Error: Aircraft not runway capable for these airports.");
+            return;
+        }
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Database_TimeTable_Departure_Path, true))) {
+            writer.write(flightEntry);
+            writer.newLine();
+            System.out.println("Success: Flight " + Flight_Number + " added.");
+        }
+    }
 
-    /**
-     * Replaces an existing flight entry by finding the original flight number.
-     */
+    //  --------------------------------------------------------------------------------------------------
+    
+
+    // Edits the entry on the Departure Timetable --------------------------------------------------------
     public void Admin_EditFlight(String originalFlightNum) throws IOException {
         File inputFile = new File(Database_TimeTable_Departure_Path);
         File tempFile = new File("src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/temp_timetable.txt");
 
-        String updatedEntry = addFlightFormat(Airline_Name, Ac_Type, Origin_Airport, Destination_Airport, 
-                                             Frequency, Time, Flight_Number, Flight_Pax, Flight_Cargo, Flight_Status);
+        String updatedEntry = addFlightFormat(  Airline_Name, 
+                                                Ac_Type, 
+                                                Origin_Airport, 
+                                                Destination_Airport,
+                                                Frequency, 
+                                                Time, 
+                                                Flight_Number, 
+                                                Flight_Pax, 
+                                                Flight_Cargo, 
+                                                Flight_Status );
 
         try (Scanner reader = new Scanner(inputFile);
              BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
@@ -111,7 +163,6 @@ public class AdminOperations {
                 String line = reader.nextLine();
                 String[] parts = line.split("-");
                 
-                // Flight Number is at Index 6 in your format
                 if (parts.length > 6 && parts[6].equalsIgnoreCase(originalFlightNum)) {
                     writer.write(updatedEntry);
                 } else {
@@ -121,7 +172,6 @@ public class AdminOperations {
             }
         }
 
-        // Atomic swap of files
         if (inputFile.delete()) {
             if (tempFile.renameTo(inputFile)) {
                 System.out.println("Edit Success: File updated.");
@@ -130,4 +180,8 @@ public class AdminOperations {
             }
         }
     }
+    //  --------------------------------------------------------------------------------------------------
+    
+    
 }
+

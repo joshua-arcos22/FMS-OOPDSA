@@ -20,9 +20,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -39,9 +38,9 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
     private String currentAirlineName;
     private String currentAirlinePrefix;
-    /**
-     * Creates new form MainFlightDisplay
-     */
+    
+    
+    // For the main flight display debugging
     public MainFlightDisplayManagers() {
         this("TEST", "TS");
         initComponents();
@@ -53,7 +52,6 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     
      public MainFlightDisplayManagers(String Airlinename, String Prefix) {
         initComponents();
-        // overload consteructor for the airline manager since it will get the flno prefix and the airline name 
         this.currentAirlineName = Airlinename;
         this.currentAirlinePrefix = Prefix;
         
@@ -397,6 +395,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -407,7 +406,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                         continue; 
                     }
                     
-                    // Ensure the line has enough parts to avoid ArrayIndexOutOfBoundsException
+                   
                     if (rowData.length >= 10) {
                         String airline = rowData[0];
                         String aircraft = rowData[1];
@@ -441,13 +440,13 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
                             int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
 
-                            int etaHours = (arrivalTotalMins / 60) % 24; // % 24 handles midnight rollover
+                            int etaHours = (arrivalTotalMins / 60) % 24; 
                             int etaMins = arrivalTotalMins % 60;
 
-                            ETA = String.format("%02d%02d", etaHours, etaMins);
+                            ETA = String.format("%02d%02d", etaHours, etaMins); 
 
                         } catch (Exception e) {
-                            System.out.println("Calc Error: " + e.getMessage());
+                            System.out.println("Calculation Error");
                             ETA = "N/A";
                         }
 
@@ -475,13 +474,13 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            // Log error using your existing logger
-            logger.log(Level.SEVERE, "Error loading departures", e);
+                System.out.println("Error loading departures");       
         }
         
           File fileArrival = new File(AdminOperations.Database_TimeTable_Arrivals_Path);
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileArrival))) {
+            
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -493,7 +492,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                         continue; 
                     }
                     
-                    // Ensure the line has enough parts to avoid ArrayIndexOutOfBoundsException
+                    
                     if (rowData.length >= 10) {
                         String airline = rowData[0];
                         String aircraft = rowData[1];
@@ -510,7 +509,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                         String distanceStr = "N/A";
                         String durationStr = "N/A";
 
-                        // Calculations
+                       
                         try {
                             distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
 
@@ -527,13 +526,13 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
                             int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
 
-                            int etaHours = (arrivalTotalMins / 60) % 24; // % 24 handles midnight rollover
+                            int etaHours = (arrivalTotalMins / 60) % 24; 
                             int etaMins = arrivalTotalMins % 60;
 
                             ETA = String.format("%02d%02d", etaHours, etaMins);
 
                         } catch (Exception e) {
-                            System.out.println("Calc Error: " + e.getMessage());
+                            System.out.println("Calculation Error");
                             ETA = "N/A";
                         }
 
@@ -561,8 +560,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            // Log error using your existing logger
-            logger.log(Level.SEVERE, "Error loading departures", e);
+            System.out.println("Error loading departures");
         }
         
         
@@ -622,7 +620,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         Combo_Status.addItem("Canceled");
 
         //Airline
-        airlineName.setText(currentAirlineName);
+        airlineName.setText(currentAirlineName); 
 
         //Aircraft
         Combo_Aircraft.removeAllItems();
@@ -646,7 +644,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         try {
             File originMaster = new File(AdminOperations.Database_Aiports_Path);
             Scanner originReader = new Scanner(originMaster);
-            // adds options for the combobox, reads from the ac database
+            // adds options for the combobox, reads from the airport database
             while (originReader.hasNextLine()) {
                 String originStringLine = originReader.nextLine();
                 String originStringLineArray[] = originStringLine.split("-");
@@ -662,7 +660,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         try {
             File destinationMaster = new File(AdminOperations.Database_Aiports_Path);
             Scanner destiantionReader = new Scanner(destinationMaster);
-            // adds options for the combobox, reads from the ac database
+            // adds options for the combobox, reads from the airport database
             while (destiantionReader.hasNextLine()) {
                 String destinationStringLine = destiantionReader.nextLine();
                 String destinationStringLineArray[] = destinationStringLine.split("-");
@@ -673,11 +671,9 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         }
 
     }
-    
-    
-    
-    
     //-----------------------------------------------------------------------
+    
+    
     
     public void searchFlights() {
         String searchTerm = SearchField.getText().trim().toLowerCase();
@@ -690,7 +686,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
-        model.addRow(new String[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
+          
 
         String[] filesToSearch = {
             AdminOperations.Database_TimeTable_Departure_Path,
@@ -704,6 +700,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
             }
 
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                
                 String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) {
@@ -724,7 +721,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Error reading file: " + filePath);
+                System.out.println("Error reading file");
             }
         }
     }
@@ -745,14 +742,14 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
             distanceCalculator calc = new distanceCalculator(origin, destination, aircraft);
 
-            // Calculate Distance and Duration
+            
             double distVal = calc.calculateDistanceKm();
             String distanceStr = String.format("%.0f km", distVal);
 
             int totalMinutes = calc.calculateFlightDurationMinutes();
             String durationStr = (totalMinutes / 60) + "h " + (totalMinutes % 60) + "m";
 
-            // ETA Math (1230 -> 12:30 + Duration)
+            
             int etdHours = Integer.parseInt(ETD.substring(0, 2));
             int etdMins = Integer.parseInt(ETD.substring(2, 4));
             int arrivalTotalMins = (etdHours * 60) + etdMins + totalMinutes;
@@ -765,7 +762,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
             applyTableStyle(flightStatus);
         } catch (Exception e) {
-            // Skip malformed rows safely
+            System.out.println("Calculation Error");
         }
     }
     
@@ -789,8 +786,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) FlightTable.getModel();
         model.setRowCount(0);
 
-        // Admin requirement: Empty first row
-        model.addRow(new String[]{"", "", "", "", "", "", "", "", "", "", "", "", ""});
+          
 
         for (String filePath : filesToFilter) {
             File file = new File(filePath);
@@ -798,7 +794,9 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                 continue;
             }
 
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))){
+                
+                
                 String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) {
@@ -810,13 +808,13 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                         continue;
                     }
 
-                    // Match checks
+                 
                     boolean matchesSearch = searchTerm.equals(placeholder) || searchTerm.isEmpty() || line.toLowerCase().contains(searchTerm);
                     boolean matchesStatus = selStatus.equals("N/A") || rowData[9].equalsIgnoreCase(selStatus);
                     boolean matchesAirline = selAirline.equals("N/A") || rowData[0].equalsIgnoreCase(selAirline);
                     boolean matchesAircraft = selAircraft.equals("N/A") || rowData[1].equalsIgnoreCase(selAircraft);
 
-                    // Flexible matching for Origin/Dest
+            
                     boolean matchesOrigin = selOrigin.equals("N/A") || rowData[2].toLowerCase().contains(selOrigin.toLowerCase());
                     boolean matchesDest = selDest.equals("N/A") || rowData[3].toLowerCase().contains(selDest.toLowerCase());
 
@@ -825,7 +823,7 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                     }
                 }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Filter error on " + filePath, e);
+                System.out.println("Filtering Error");
             }
         }
     }
@@ -872,18 +870,13 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     }//GEN-LAST:event_addFlightActionPerformed
 
     private void editFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFlightActionPerformed
-        
-        // 1. Get Selected Row
-        selectedRow = FlightTable.getSelectedRow();
+        int selectedRow = FlightTable.getSelectedRow();
 
         if (selectedRow == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please select a flight to edit.");
+            JOptionPane.showMessageDialog(this, "Please select a flight to edit.");
             return;
         }
 
-        // 2. Extract ALL required data from the table model
-        // Indices match your table columns: 
-        // [0]Status, [1]Airline, [2]Aircraft, [3]Origin, [4]Dest, [5]Freq, [6]ETD, [8]FltNo, [11]Pax, [12]Cargo
         String status = FlightTable.getValueAt(selectedRow, 0).toString();
         String airline = FlightTable.getValueAt(selectedRow, 1).toString();
         String aircraft = FlightTable.getValueAt(selectedRow, 2).toString();
@@ -892,14 +885,10 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         String frequency = FlightTable.getValueAt(selectedRow, 5).toString();
         String time = FlightTable.getValueAt(selectedRow, 6).toString();
         String flightNumber = FlightTable.getValueAt(selectedRow, 8).toString();
-
-        // NEW: Get Pax and Cargo
         String pax = FlightTable.getValueAt(selectedRow, 11).toString();
         String cargo = FlightTable.getValueAt(selectedRow, 12).toString();
 
-        // 3. Open the Popup with ALL 10 arguments
-        // This matches the new constructor we made earlier
-        editFlightScreen_1 editPopUp = new editFlightScreen_1(
+        editFlightScreen_M editPopUp = new editFlightScreen_M(
                 airline,
                 aircraft,
                 origin,
@@ -907,12 +896,12 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                 frequency,
                 time,
                 flightNumber,
-                pax, // Added
-                cargo, // Added
-                status // Added
+                pax,
+                cargo,
+                status,
+                this.currentAirlinePrefix
         );
 
-        // 4. Add listener to refresh table when closed
         editPopUp.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
@@ -927,20 +916,20 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         int selectedRow = FlightTable.getSelectedRow();
 
         if (selectedRow == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please select a flight to archive.");
+            JOptionPane.showMessageDialog(this, "Please select a flight to archive.");
             return;
         }
 
-        // Confirmation Dialog
-        int confirm = javax.swing.JOptionPane.showConfirmDialog(
+        
+        int confirm = JOptionPane.showConfirmDialog(
                 this,
                 "Are you sure you want to ARCHIVE this flight? It will be moved to the Archive list.",
                 "Confirm Archive",
-                javax.swing.JOptionPane.YES_NO_OPTION
+                JOptionPane.YES_NO_OPTION
         );
 
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-            // Grab all flight details from the table
+           
             String flightNumber = FlightTable.getValueAt(selectedRow, 8).toString();
             String airlineName = FlightTable.getValueAt(selectedRow, 0).toString();
             String aircraftType = FlightTable.getValueAt(selectedRow, 1).toString();
@@ -950,20 +939,19 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
             String frequency = FlightTable.getValueAt(selectedRow, 5).toString();
             String pax = FlightTable.getValueAt(selectedRow, 6).toString();
             String cargo = FlightTable.getValueAt(selectedRow, 7).toString();
-            String status = FlightTable.getValueAt(selectedRow, 9).toString(); // Adjust if needed
-
+            String status = FlightTable.getValueAt(selectedRow, 9).toString(); 
             try {
-                // 1. COPY to Archive File
+                
                 archiveFlightLine(flightNumber);
 
-                // 2. DELETE from Active Files (Departure & Arrival)
+                
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Departure_Path, flightNumber);
                 deleteLineFromFile(AdminOperations.Database_TimeTable_Arrivals_Path, flightNumber);
 
-                // 3. REFRESH TABLE
+             
                 loadFlightsToTableDeparture();
 
-                // 4. LOG ARCHIVE ACTION
+                
                 String timestamp = java.time.LocalDateTime.now()
                         .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss"));
                 
@@ -993,40 +981,42 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
 
                 logs.writeLog(logEntry);
 
-                javax.swing.JOptionPane.showMessageDialog(this, "Flight archived successfully.");
+                JOptionPane.showMessageDialog(this, "Flight archived successfully.");
 
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Archive Error", e);
-                javax.swing.JOptionPane.showMessageDialog(this, "Error archiving flight.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                System.out.println("Error archiving");
             }
         }
     }
     
     private void archiveFlightLine(String flightNum) throws IOException {
         File source = new File(AdminOperations.Database_TimeTable_Departure_Path);
-        File dest = new File(AdminOperations.Database_TimeTable_Archive_Path); // Ensure this path exists in AdminOperations
+        File dest = new File(AdminOperations.Database_TimeTable_Archive_Path); 
 
-        // Create archive file if it doesn't exist
+      
         if (!dest.exists()) {
             dest.createNewFile();
         }
 
-        try (Scanner scanner = new Scanner(source); BufferedWriter writer = new BufferedWriter(new FileWriter(dest, true))) { // 'true' = append mode
-
-            while (scanner.hasNextLine()) {
+        try (Scanner scanner = new Scanner(source); 
+            BufferedWriter writer = new BufferedWriter(new FileWriter(dest, true))){ 
+            
+                while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.trim().isEmpty()) {
                     continue;
                 }
 
                 String[] parts = line.split("-");
-                // Check if this is the correct flight (Index 6 is Flight Number)
+              
                 if (parts.length > 6 && parts[6].equalsIgnoreCase(flightNum)) {
                     writer.write(line);
                     writer.newLine();
-                    break; // Found and archived, exit loop
+                    break; 
                 }
             }
+        } catch(IOException e){
+            System.out.println("There was an error in the archive");
         }
     }
 
@@ -1042,7 +1032,8 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
         }
 
         try (Scanner reader = new Scanner(inputFile);
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+            
 
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
@@ -1053,6 +1044,8 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
                     writer.newLine();
                 }
             }
+        } catch (IOException e){
+            System.out.println("Error in deleting line");
         }
 
         
@@ -1069,44 +1062,13 @@ public class MainFlightDisplayManagers extends javax.swing.JFrame {
     }
     
 
-    private void updateTimetableFile(String airline, String aircraft, String origin, String destination, String frequency, String time, String flightNumber) {
-        File file = new File(AdminOperations.Database_TimeTable_Departure_Path);
-
-        try {
-            
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder fileContent = new StringBuilder();
-            String line;
-
-           
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    
-                    String[] rowData = line.split("-");
-
-                    
-                    if (rowData.length == 7) {
-                       if (rowData[0].equals(airline) && rowData[1].equals(aircraft) && rowData[2].equals(origin)
-                            && rowData[3].equals(destination) && rowData[4].equals(frequency) && rowData[5].equals(time)
-                            && rowData[6].equals(flightNumber)) {
-                            continue;
-                        }
-                    }
-
-                    fileContent.append(line).append(System.lineSeparator());
-                }
-            }
-
-            reader.close();
-
-          
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write(fileContent.toString());
-            writer.close();
-
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error updating flight file after deletion.", e);
-        }
+    private void updateTimetableFile(String airline, 
+                                    String aircraft, 
+                                    String origin, 
+                                    String destination, 
+                                    String frequency, 
+                                    String time, 
+                                    String flightNumber) {
     }//GEN-LAST:event_deleteFlightActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed

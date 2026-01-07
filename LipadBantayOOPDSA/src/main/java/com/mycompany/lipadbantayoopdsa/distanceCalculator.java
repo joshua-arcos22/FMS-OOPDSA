@@ -4,7 +4,7 @@ import java.io.*;
 
 public class distanceCalculator {
 
-    // Inputs
+    // VARIABLES
     private String departure_airportCode;
     private String arrival_airportCode;
     private String aircraftType;
@@ -143,7 +143,9 @@ public class distanceCalculator {
                     return Integer.parseInt(parts[1]);
                 }
             }
-        } catch (Exception e) { return 800; }
+        } catch (Exception e) { 
+            return 800; 
+        }
         return 800;
     }
 
@@ -154,6 +156,8 @@ public class distanceCalculator {
             double min = Double.parseDouble(parts[1]);
             double sec = Double.parseDouble(parts[2]);
             return deg + (min / 60.0) + (sec / 3600.0);
-        } catch (Exception e) { return 0.0; }
+        } catch (Exception e) { 
+            return 0.0;
+        }
     }
 }

@@ -4,21 +4,14 @@
  */
 package com.mycompany.lipadbantayoopdsa;
 
-import com.mycompany.lipadbantayoopdsa.popupInterface.addFlightScreen;
-import com.mycompany.lipadbantayoopdsa.popupInterface.editFlightScreen_1;
+
 import com.mycompany.lipadbantayoopdsa.AdminOperations;
-import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunction;
-import com.mycompany.lipadbantayoopdsa.Database.Timetable.SortingFunctionA;
-import com.mycompany.lipadbantayoopdsa.flightBooking.FlightBooking;
-import com.mycompany.lipadbantayoopdsa.userAuthentication.LoginForm;
 import com.mycompany.lipadbantayoopdsa.userAuthentication.UserDashboard;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableCellRenderer;
 
 
@@ -346,7 +339,6 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                 if (!line.trim().isEmpty()) {
                     String[] rowData = line.split("-");
 
-                    // Ensure the line has enough parts to avoid ArrayIndexOutOfBoundsException
                     if (rowData.length >= 10) {
                         String airline = rowData[0];
                         String aircraft = rowData[1];
@@ -388,7 +380,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                             ETA = String.format("%02d%02d", etaHours, etaMins);
 
                         } catch (Exception e) {
-                            System.out.println("Calc Error: " + e.getMessage());
+                            System.out.println("Calculation Error");
                             ETA = "N/A";
                         }
 
@@ -418,14 +410,13 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            // Log error using your existing logger
-            logger.log(Level.SEVERE, "Error loading departures", e);
+            System.out.println("Error loading departures");
         }
         
         
         File fileArrival = new File(AdminOperations.Database_TimeTable_Arrivals_Path);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(fileArrival))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileArrival))) { 
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -472,7 +463,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                             ETA = String.format("%02d%02d", etaHours, etaMins);
 
                         } catch (Exception e) {
-                            System.out.println("Calc Error: " + e.getMessage());
+                            System.out.println("Calcualtion Error");
                             ETA = "N/A";
                         }
 
@@ -500,8 +491,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                 }
             }
         } catch (IOException e) {
-            // Log error using your existing logger
-            logger.log(Level.SEVERE, "Error loading departures", e);
+            System.out.println("Error loading departures");
         }  
     }
     //-----------------------------------------------------------------------
@@ -666,6 +656,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
             }
 
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                
                 String line;
                 while ((line = br.readLine()) != null) {
                     if (!line.trim().isEmpty()) {
@@ -686,7 +677,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Error reading file: " + filePath);
+                System.out.println("Error reading file");
             }
         }
     }
@@ -727,7 +718,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
 
             model.addRow(row);
         } catch (Exception e) {
-            // Skip malformed rows
+            System.out.println("Calculation Error");
         }
     }
     
@@ -763,8 +754,8 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                 continue;
             }
 
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
+            try (BufferedReader br = new BufferedReader(new FileReader(file))){
+                                String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) {
                         continue;
@@ -801,7 +792,7 @@ public class MainFlightDisplayUsers extends javax.swing.JFrame {
                     }
                 }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Error filtering file: " + filePath, e);
+                System.out.println("Error filtering file");
             }
         }
     }

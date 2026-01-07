@@ -4,18 +4,19 @@ import java.io.*;
 import java.util.Scanner;
 
 public class ArrivalTimetableGenerator {
-
-    private static final String INPUT_PATH = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Departure_Timetable_Master.txt";
-    private static final String OUTPUT_PATH = "src/main/java/com/mycompany/lipadbantayoopdsa/Database/Timetable/Arrival_Timetable_Master.txt";
+    
+    // Get inputs from the Departure then process it and then generates the Arrival
     public static void generate() {
         try {
-            File checkFile = new File(INPUT_PATH);
+            
+            
+            File checkFile = new File(AdminOperations.Database_TimeTable_Departure_Path);
             if (!checkFile.exists()) {
                 return;
             }
 
             Scanner fileScanner = new Scanner(checkFile);
-            FileWriter writer = new FileWriter(OUTPUT_PATH);
+            FileWriter Arrivalwriter = new FileWriter(AdminOperations.Database_TimeTable_Arrivals_Path);
 
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine().trim();
@@ -40,37 +41,35 @@ public class ArrivalTimetableGenerator {
                     distanceCalculator dc = new distanceCalculator(origin, dest, aircraft);
                     int durationMinutes = dc.calculateFlightDurationMinutes();
 
-                    // 1. Calculate landing time at destination
                     String initialETA = calculateTimePlusMinutes(originalETD, durationMinutes);
-
-                    // 2. Add 10 minutes turnover (New ETD for the return leg)
                     String arrivalETD = calculateTimePlusMinutes(initialETA, 10);
 
-                    // Note: The newLine below now uses 'dest' as the origin 
-                    // and 'origin' as the destination to represent the return leg.
-                    String newLine = String.format("%s-%s-%s-%s-%s-%s-%s-%s-%s-%s",
-                            airline,
-                            aircraft,
-                            dest, // Switched: Now the starting point
-                            origin, // Switched: Now the destination
-                            freq,
-                            arrivalETD,
-                            flightNum,
-                            pax,
-                            cargo,
-                            status);
+                    String newLine =
+                            airline + "-" + 
+                            aircraft + "-" +
+                            dest + "-" +
+                            origin + "-" +
+                            freq + "-" +
+                            arrivalETD + "-" +
+                            flightNum + "-" +
+                            pax + "-" +
+                            cargo + "-" +
+                            status;
 
-                    writer.write(newLine + "\n");
+                    Arrivalwriter.write(newLine + "\n");
                 }
             }
             fileScanner.close();
-            writer.close();
+            Arrivalwriter.close();
             System.out.println("Arrival Timetable Generated with switched airports and turnover.");
+            
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error in generating ");;
         }
     }
 
+    
+    
     private static String calculateTimePlusMinutes(String startTime, int minutesToAdd) {
         try {
             int hours = Integer.parseInt(startTime.substring(0, 2));
